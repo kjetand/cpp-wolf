@@ -5,6 +5,15 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
 
+function(copy_files dir ext)
+  file(GLOB assets ${dir}/*.${ext})
+
+  foreach (asset ${assets})
+    message("-- Copy ${ext} ${asset} to ${CMAKE_BINARY_DIR}/src")
+    file(COPY ${asset} DESTINATION ${CMAKE_BINARY_DIR}/src)
+  endforeach ()
+endfunction()
+
 if (MSVC)
   if (NOT SDL_ROOT)
     message(FATAL_ERROR "${PROJECT_NAME} for Windows requires SDL 1.2.15. Please download the specified version from "
@@ -22,34 +31,15 @@ if (MSVC)
   set(SDL_LIBRARY ${SDL_ROOT}/lib/x86/SDL.lib)
   set(SDL_MIXER_LIBRARY ${SDL_MIXER_ROOT}/lib/x86/SDL_mixer.lib)
 
-  file(GLOB_RECURSE sdl_dlls ${SDL_ROOT}/lib/x86/*.dll)
-  file(GLOB_RECURSE sdl_mixer_dlls ${SDL_MIXER_ROOT}/lib/x86/*.dll)
-
-  foreach (dll ${sdl_dlls})
-    message("-- Copy DLL ${dll} to ${CMAKE_BINARY_DIR}/src")
-    file(COPY ${dll} DESTINATION ${CMAKE_BINARY_DIR}/src)
-  endforeach ()
-
-  foreach (dll ${sdl_mixer_dlls})
-    message("-- Copy DLL ${dll} to ${CMAKE_BINARY_DIR}/src")
-    file(COPY ${dll} DESTINATION ${CMAKE_BINARY_DIR}/src)
-  endforeach ()
+  copy_files(${SDL_ROOT}/lib/x86 "dll")
+  copy_files(${SDL_MIXER_ROOT}/lib/x86 "dll")
 endif ()
 
-function(copy_assets dir ext)
-  file(GLOB assets ${dir}/*.${ext})
-
-  foreach (asset ${assets})
-    message("-- Copy asset ${asset} to ${CMAKE_BINARY_DIR}/src")
-    file(COPY ${asset} DESTINATION ${CMAKE_BINARY_DIR}/src)
-  endforeach ()
-endfunction()
-
 if (CPP_WOLF_SHAREWARE_ASSETS_DIR)
-  copy_assets(${CPP_WOLF_SHAREWARE_ASSETS_DIR} "WL1")
+  copy_files(${CPP_WOLF_SHAREWARE_ASSETS_DIR} "WL1")
   add_definitions(-DUPLOAD -DGOODTIMES -DCARMACIZED)
 elseif (CPP_WOLF_FULL_ASSETS_DIR)
-  copy_assets(${CPP_WOLF_FULL_ASSETS_DIR} "WL6")
+  copy_files(${CPP_WOLF_FULL_ASSETS_DIR} "WL6")
   add_definitions(-DGOODTIMES -DCARMACIZED)
 else ()
   add_definitions(-DGOODTIMES -DCARMACIZED)
