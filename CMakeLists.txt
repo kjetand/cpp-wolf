@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 project(cpp-wolf CXX)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR}/bin)
 
 find_package(OpenGL REQUIRED)
 
@@ -9,21 +12,34 @@ function(copy_files dir ext)
   file(GLOB assets ${dir}/*.${ext})
 
   foreach (asset ${assets})
-    message("-- Copy ${ext} ${asset} to ${CMAKE_BINARY_DIR}/src")
-    file(COPY ${asset} DESTINATION ${CMAKE_BINARY_DIR}/src)
+    message("-- Copy ${ext} ${asset} to ${PROJECT_BINARY_DIR}/bin")
+    file(COPY ${asset} DESTINATION ${PROJECT_BINARY_DIR}/bin)
   endforeach ()
 endfunction()
 
 if (MSVC)
   if (NOT SDL_ROOT)
-    message(FATAL_ERROR "${PROJECT_NAME} for Windows requires SDL 1.2.15. Please download the specified version from "
-        "e.g. https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip, and specify '-DSDL_ROOT=<path-to-SDL>' in your "
-        "cmake command.")
+    if (NOT EXISTS ${CMAKE_BINARY_DIR}/SDL-1.2.15)
+      message("-- Downloading SDL")
+      file(DOWNLOAD https://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip ${CMAKE_BINARY_DIR}/SDL.zip
+          TIMEOUT 60
+          SHOW_PROGRESS)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${CMAKE_BINARY_DIR}/SDL.zip
+          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif ()
+    set(SDL_ROOT ${CMAKE_BINARY_DIR}/SDL-1.2.15)
   endif ()
+
   if (NOT SDL_MIXER_ROOT)
-    message(FATAL_ERROR "${PROJECT_NAME} for Windows requires SDL_mixer 1.2.12. Please download the specified version "
-        "from e.g. https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip, and specify "
-        "'-DSDL_MIXER_ROOT=<path-to-SDL_mixer>' in your cmake command.")
+    if (NOT EXISTS ${CMAKE_BINARY_DIR}/SDL_mixer-1.2.12)
+      message("-- Downloading SDL mixer")
+      file(DOWNLOAD https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip ${CMAKE_BINARY_DIR}/SDL_mixer.zip
+          TIMEOUT 60
+          SHOW_PROGRESS)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${CMAKE_BINARY_DIR}/SDL_mixer.zip
+          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif ()
+    set(SDL_MIXER_ROOT ${CMAKE_BINARY_DIR}/SDL_mixer-1.2.12)
   endif ()
 
   set(SDL_INCLUDE_DIR ${SDL_ROOT}/include)
