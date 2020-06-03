@@ -19,7 +19,6 @@
 
 #include "wl_def.h"
 
-
 /*
 =============================================================================
 
@@ -28,37 +27,35 @@
 =============================================================================
 */
 
-
 //
 // configuration variables
 //
 boolean MousePresent;
 boolean forcegrabmouse;
 
-
 //  Global variables
-volatile boolean    Keyboard[SDLK_LAST];
-volatile boolean    Paused;
-volatile char       LastASCII;
-volatile ScanCode   LastScan;
+volatile boolean  Keyboard[SDLK_LAST];
+volatile boolean  Paused;
+volatile char     LastASCII;
+volatile ScanCode LastScan;
 
 //KeyboardDef   KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
 static KeyboardDef KbdDefs = {
-    sc_Control,             // button0
-    sc_Alt,                 // button1
-    sc_Home,                // upleft
-    sc_UpArrow,             // up
-    sc_PgUp,                // upright
-    sc_LeftArrow,           // left
-    sc_RightArrow,          // right
-    sc_End,                 // downleft
-    sc_DownArrow,           // down
-    sc_PgDn                 // downright
+    sc_Control,    // button0
+    sc_Alt,        // button1
+    sc_Home,       // upleft
+    sc_UpArrow,    // up
+    sc_PgUp,       // upright
+    sc_LeftArrow,  // left
+    sc_RightArrow, // right
+    sc_End,        // downleft
+    sc_DownArrow,  // down
+    sc_PgDn        // downright
 };
 
-static SDL_Joystick *Joystick;
-int JoyNumButtons;
-static int JoyNumHats;
+static SDL_Joystick* Joystick;
+int                  JoyNumButtons;
+static int           JoyNumHats;
 
 static bool GrabInput = false;
 
@@ -69,53 +66,51 @@ static bool GrabInput = false;
 
 =============================================================================
 */
-byte        ASCIINames[] =      // Unshifted ASCII for scan codes       // TODO: keypad
-{
-//   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,    // 0
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,    // 1
-    ' ',0  ,0  ,0  ,0  ,0  ,0  ,39 ,0  ,0  ,'*','+',',','-','.','/',    // 2
-    '0','1','2','3','4','5','6','7','8','9',0  ,';',0  ,'=',0  ,0  ,    // 3
-    '`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o',    // 4
-    'p','q','r','s','t','u','v','w','x','y','z','[',92 ,']',0  ,0  ,    // 5
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 6
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0       // 7
-};
-byte ShiftNames[] =     // Shifted ASCII for scan codes
-{
-//   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,8  ,9  ,0  ,0  ,0  ,13 ,0  ,0  ,    // 0
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,27 ,0  ,0  ,0  ,    // 1
-    ' ',0  ,0  ,0  ,0  ,0  ,0  ,34 ,0  ,0  ,'*','+','<','_','>','?',    // 2
-    ')','!','@','#','$','%','^','&','*','(',0  ,':',0  ,'+',0  ,0  ,    // 3
-    '~','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',    // 4
-    'P','Q','R','S','T','U','V','W','X','Y','Z','{','|','}',0  ,0  ,    // 5
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 6
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0       // 7
-};
-byte SpecialNames[] =   // ASCII for 0xe0 prefixed codes
-{
-//   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 0
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,13 ,0  ,0  ,0  ,    // 1
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 2
-    0  ,0  ,0  ,0  ,0  ,'/',0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 3
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 4
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 5
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,    // 6
-    0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0       // 7
-};
+byte ASCIINames[] = // Unshifted ASCII for scan codes       // TODO: keypad
+    {
+        //   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+        0, 0, 0, 0, 0, 0, 0, 0, 8, 9, 0, 0, 0, 13, 0, 0,                                // 0
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0,                                // 1
+        ' ', 0, 0, 0, 0, 0, 0, 39, 0, 0, '*', '+', ',', '-', '.', '/',                  // 2
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 0, ';', 0, '=', 0, 0,         // 3
+        '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', // 4
+        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', 92, ']', 0, 0,      // 5
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                 // 6
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0                                  // 7
+    };
+byte ShiftNames[] = // Shifted ASCII for scan codes
+    {
+        //   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+        0, 0, 0, 0, 0, 0, 0, 0, 8, 9, 0, 0, 0, 13, 0, 0,                                // 0
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0,                                // 1
+        ' ', 0, 0, 0, 0, 0, 0, 34, 0, 0, '*', '+', '<', '_', '>', '?',                  // 2
+        ')', '!', '@', '#', '$', '%', '^', '&', '*', '(', 0, ':', 0, '+', 0, 0,         // 3
+        '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', // 4
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', 0, 0,     // 5
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                 // 6
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0                                  // 7
+    };
+byte SpecialNames[] = // ASCII for 0xe0 prefixed codes
+    {
+        //   0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // 0
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0,  // 1
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // 2
+        0, 0, 0, 0, 0, '/', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // 4
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // 5
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // 6
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0    // 7
+    };
 
+static boolean IN_Started;
 
-static  boolean     IN_Started;
-
-static  Direction   DirTable[] =        // Quick lookup for total direction
-{
-    dir_NorthWest,  dir_North,  dir_NorthEast,
-    dir_West,       dir_None,   dir_East,
-    dir_SouthWest,  dir_South,  dir_SouthEast
-};
-
+static Direction DirTable[] = // Quick lookup for total direction
+    {
+        dir_NorthWest, dir_North, dir_NorthEast,
+        dir_West, dir_None, dir_East,
+        dir_SouthWest, dir_South, dir_SouthEast
+    };
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -130,8 +125,10 @@ INL_GetMouseButtons(void)
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
     int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
     buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));
-    if(middlePressed) buttons |= 1 << 2;
-    if(rightPressed) buttons |= 1 << 1;
+    if (middlePressed)
+        buttons |= 1 << 2;
+    if (rightPressed)
+        buttons |= 1 << 1;
 
     return buttons;
 }
@@ -142,10 +139,9 @@ INL_GetMouseButtons(void)
 //      joystick (from +/-127)
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_GetJoyDelta(int *dx,int *dy)
+void IN_GetJoyDelta(int* dx, int* dy)
 {
-    if(!Joystick)
-    {
+    if (!Joystick) {
         *dx = *dy = 0;
         return;
     }
@@ -155,23 +151,26 @@ void IN_GetJoyDelta(int *dx,int *dy)
     int x = SDL_JoystickGetAxis(Joystick, 0) >> 8;
     int y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
 
-    if(param_joystickhat != -1)
-    {
+    if (param_joystickhat != -1) {
         uint8_t hatState = SDL_JoystickGetHat(Joystick, param_joystickhat);
-        if(hatState & SDL_HAT_RIGHT)
+        if (hatState & SDL_HAT_RIGHT)
             x += 127;
-        else if(hatState & SDL_HAT_LEFT)
+        else if (hatState & SDL_HAT_LEFT)
             x -= 127;
-        if(hatState & SDL_HAT_DOWN)
+        if (hatState & SDL_HAT_DOWN)
             y += 127;
-        else if(hatState & SDL_HAT_UP)
+        else if (hatState & SDL_HAT_UP)
             y -= 127;
 
-        if(x < -128) x = -128;
-        else if(x > 127) x = 127;
+        if (x < -128)
+            x = -128;
+        else if (x > 127)
+            x = 127;
 
-        if(y < -128) y = -128;
-        else if(y > 127) y = 127;
+        if (y < -128)
+            y = -128;
+        else if (y > 127)
+            y = 127;
     }
 
     *dx = x;
@@ -184,10 +183,9 @@ void IN_GetJoyDelta(int *dx,int *dy)
 //      joystick without dividing the results by 256 (from +/-127)
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_GetJoyFineDelta(int *dx, int *dy)
+void IN_GetJoyFineDelta(int* dx, int* dy)
 {
-    if(!Joystick)
-    {
+    if (!Joystick) {
         *dx = 0;
         *dy = 0;
         return;
@@ -197,11 +195,15 @@ void IN_GetJoyFineDelta(int *dx, int *dy)
     int x = SDL_JoystickGetAxis(Joystick, 0);
     int y = SDL_JoystickGetAxis(Joystick, 1);
 
-    if(x < -128) x = -128;
-    else if(x > 127) x = 127;
+    if (x < -128)
+        x = -128;
+    else if (x > 127)
+        x = 127;
 
-    if(y < -128) y = -128;
-    else if(y > 127) y = 127;
+    if (y < -128)
+        y = -128;
+    else if (y > 127)
+        y = 127;
 
     *dx = x;
     *dy = y;
@@ -217,12 +219,13 @@ void IN_GetJoyFineDelta(int *dx, int *dy)
 
 int IN_JoyButtons()
 {
-    if(!Joystick) return 0;
+    if (!Joystick)
+        return 0;
 
     SDL_JoystickUpdate();
 
     int res = 0;
-    for(int i = 0; i < JoyNumButtons && i < 32; i++)
+    for (int i = 0; i < JoyNumButtons && i < 32; i++)
         res |= SDL_JoystickGetButton(Joystick, i) << i;
     return res;
 }
@@ -232,158 +235,161 @@ boolean IN_JoyPresent()
     return Joystick != NULL;
 }
 
-static void processEvent(SDL_Event *event)
+static void processEvent(SDL_Event* event)
 {
-    switch (event->type)
-    {
-        // exit if the window is closed
-        case SDL_QUIT:
-            Quit(NULL);
+    switch (event->type) {
+    // exit if the window is closed
+    case SDL_QUIT:
+        Quit(NULL);
 
-        // check for keypresses
-        case SDL_KEYDOWN:
-        {
-            if(event->key.keysym.sym==SDLK_SCROLLOCK || event->key.keysym.sym==SDLK_F12)
-            {
-                GrabInput = !GrabInput;
-                SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
-                return;
-            }
-
-            LastScan = event->key.keysym.sym;
-            SDLMod mod = SDL_GetModState();
-            if(Keyboard[sc_Alt])
-            {
-                if(LastScan==SDLK_F4)
-                    Quit(NULL);
-            }
-
-            if(LastScan == SDLK_KP_ENTER) LastScan = SDLK_RETURN;
-            else if(LastScan == SDLK_RSHIFT) LastScan = SDLK_LSHIFT;
-            else if(LastScan == SDLK_RALT) LastScan = SDLK_LALT;
-            else if(LastScan == SDLK_RCTRL) LastScan = SDLK_LCTRL;
-            else
-            {
-                if((mod & KMOD_NUM) == 0)
-                {
-                    switch(LastScan)
-                    {
-                        case SDLK_KP2: LastScan = SDLK_DOWN; break;
-                        case SDLK_KP4: LastScan = SDLK_LEFT; break;
-                        case SDLK_KP6: LastScan = SDLK_RIGHT; break;
-                        case SDLK_KP8: LastScan = SDLK_UP; break;
-                    }
-                }
-            }
-
-            int sym = LastScan;
-            if(sym >= 'a' && sym <= 'z')
-                sym -= 32;  // convert to uppercase
-
-            if(mod & (KMOD_SHIFT | KMOD_CAPS))
-            {
-                if(sym < lengthof(ShiftNames) && ShiftNames[sym])
-                    LastASCII = ShiftNames[sym];
-            }
-            else
-            {
-                if(sym < lengthof(ASCIINames) && ASCIINames[sym])
-                    LastASCII = ASCIINames[sym];
-            }
-
-			if (LastScan<SDLK_i){
-			}
-
-			if(LastScan<SDLK_LAST){
-                Keyboard[LastScan] = 1;
-			}
-            if(LastScan == SDLK_PAUSE)
-                Paused = true;
-            break;
+    // check for keypresses
+    case SDL_KEYDOWN: {
+        if (event->key.keysym.sym == SDLK_SCROLLOCK || event->key.keysym.sym == SDLK_F12) {
+            GrabInput = !GrabInput;
+            SDL_WM_GrabInput(GrabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+            return;
         }
 
-        case SDL_KEYUP:
-        {
-            int key = event->key.keysym.sym;
-            if(key == SDLK_KP_ENTER) key = SDLK_RETURN;
-            else if(key == SDLK_RSHIFT) key = SDLK_LSHIFT;
-            else if(key == SDLK_RALT) key = SDLK_LALT;
-            else if(key == SDLK_RCTRL) key = SDLK_LCTRL;
-            else
-            {
-                if((SDL_GetModState() & KMOD_NUM) == 0)
-                {
-                    switch(key)
-                    {
-                        case SDLK_KP2: key = SDLK_DOWN; break;
-                        case SDLK_KP4: key = SDLK_LEFT; break;
-                        case SDLK_KP6: key = SDLK_RIGHT; break;
-                        case SDLK_KP8: key = SDLK_UP; break;
-                    }
-                }
-            }
-
-			if(key<SDLK_LAST){
-                Keyboard[key] = 0;
-			}
-            break;
+        LastScan = event->key.keysym.sym;
+        SDLMod mod = SDL_GetModState();
+        if (Keyboard[sc_Alt]) {
+            if (LastScan == SDLK_F4)
+                Quit(NULL);
         }
 
+        if (LastScan == SDLK_KP_ENTER)
+            LastScan = SDLK_RETURN;
+        else if (LastScan == SDLK_RSHIFT)
+            LastScan = SDLK_LSHIFT;
+        else if (LastScan == SDLK_RALT)
+            LastScan = SDLK_LALT;
+        else if (LastScan == SDLK_RCTRL)
+            LastScan = SDLK_LCTRL;
+        else {
+            if ((mod & KMOD_NUM) == 0) {
+                switch (LastScan) {
+                case SDLK_KP2:
+                    LastScan = SDLK_DOWN;
+                    break;
+                case SDLK_KP4:
+                    LastScan = SDLK_LEFT;
+                    break;
+                case SDLK_KP6:
+                    LastScan = SDLK_RIGHT;
+                    break;
+                case SDLK_KP8:
+                    LastScan = SDLK_UP;
+                    break;
+                }
+            }
+        }
+
+        int sym = LastScan;
+        if (sym >= 'a' && sym <= 'z')
+            sym -= 32; // convert to uppercase
+
+        if (mod & (KMOD_SHIFT | KMOD_CAPS)) {
+            if (sym < lengthof(ShiftNames) && ShiftNames[sym])
+                LastASCII = ShiftNames[sym];
+        } else {
+            if (sym < lengthof(ASCIINames) && ASCIINames[sym])
+                LastASCII = ASCIINames[sym];
+        }
+
+        if (LastScan < SDLK_i) {
+        }
+
+        if (LastScan < SDLK_LAST) {
+            Keyboard[LastScan] = 1;
+        }
+        if (LastScan == SDLK_PAUSE)
+            Paused = true;
+        break;
+    }
+
+    case SDL_KEYUP: {
+        int key = event->key.keysym.sym;
+        if (key == SDLK_KP_ENTER)
+            key = SDLK_RETURN;
+        else if (key == SDLK_RSHIFT)
+            key = SDLK_LSHIFT;
+        else if (key == SDLK_RALT)
+            key = SDLK_LALT;
+        else if (key == SDLK_RCTRL)
+            key = SDLK_LCTRL;
+        else {
+            if ((SDL_GetModState() & KMOD_NUM) == 0) {
+                switch (key) {
+                case SDLK_KP2:
+                    key = SDLK_DOWN;
+                    break;
+                case SDLK_KP4:
+                    key = SDLK_LEFT;
+                    break;
+                case SDLK_KP6:
+                    key = SDLK_RIGHT;
+                    break;
+                case SDLK_KP8:
+                    key = SDLK_UP;
+                    break;
+                }
+            }
+        }
+
+        if (key < SDLK_LAST) {
+            Keyboard[key] = 0;
+        }
+        break;
+    }
     }
 }
 
 void IN_WaitAndProcessEvents()
 {
     SDL_Event event;
-    if(!SDL_WaitEvent(&event)) return;
-    do
-    {
+    if (!SDL_WaitEvent(&event))
+        return;
+    do {
         processEvent(&event);
-    }
-    while(SDL_PollEvent(&event));
+    } while (SDL_PollEvent(&event));
 }
 
 void IN_ProcessEvents()
 {
     SDL_Event event;
 
-    while (SDL_PollEvent(&event))
-    {
+    while (SDL_PollEvent(&event)) {
         processEvent(&event);
     }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
 //  IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Startup(void)
+void IN_Startup(void)
 {
     if (IN_Started)
         return;
 
     IN_ClearKeysDown();
 
-    if(param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks())
-    {
+    if (param_joystickindex >= 0 && param_joystickindex < SDL_NumJoysticks()) {
         Joystick = SDL_JoystickOpen(param_joystickindex);
-        if(Joystick)
-        {
+        if (Joystick) {
             JoyNumButtons = SDL_JoystickNumButtons(Joystick);
-            if(JoyNumButtons > 32) JoyNumButtons = 32;      // only up to 32 buttons are supported
+            if (JoyNumButtons > 32)
+                JoyNumButtons = 32; // only up to 32 buttons are supported
             JoyNumHats = SDL_JoystickNumHats(Joystick);
-            if(param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
+            if (param_joystickhat < -1 || param_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
     }
 
     SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
-    if(fullscreen || forcegrabmouse)
-    {
+    if (fullscreen || forcegrabmouse) {
         GrabInput = true;
         SDL_WM_GrabInput(SDL_GRAB_ON);
     }
@@ -391,7 +397,7 @@ IN_Startup(void)
     // I didn't find a way to ask libSDL whether a mouse is present, yet...
 
     MousePresent = true;
-    
+
     IN_Started = true;
 }
 
@@ -400,13 +406,12 @@ IN_Startup(void)
 //  IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Shutdown(void)
+void IN_Shutdown(void)
 {
     if (!IN_Started)
         return;
 
-    if(Joystick)
+    if (Joystick)
         SDL_JoystickClose(Joystick);
 
     IN_Started = false;
@@ -417,14 +422,12 @@ IN_Shutdown(void)
 //  IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ClearKeysDown(void)
+void IN_ClearKeysDown(void)
 {
     LastScan = sc_None;
     LastASCII = key_None;
-    memset ((void *) Keyboard,0,sizeof(Keyboard));
+    memset((void*)Keyboard, 0, sizeof(Keyboard));
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -432,12 +435,11 @@ IN_ClearKeysDown(void)
 //      player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ReadControl(int player,ControlInfo *info)
+void IN_ReadControl(int player, ControlInfo* info)
 {
-    word        buttons;
-    int         dx,dy;
-    Motion      mx,my;
+    word   buttons;
+    int    dx, dy;
+    Motion mx, my;
 
     dx = dy = 0;
     mx = my = motion_None;
@@ -446,13 +448,13 @@ IN_ReadControl(int player,ControlInfo *info)
     IN_ProcessEvents();
 
     if (Keyboard[KbdDefs.upleft])
-        mx = motion_Left,my = motion_Up;
+        mx = motion_Left, my = motion_Up;
     else if (Keyboard[KbdDefs.upright])
-        mx = motion_Right,my = motion_Up;
+        mx = motion_Right, my = motion_Up;
     else if (Keyboard[KbdDefs.downleft])
-        mx = motion_Left,my = motion_Down;
+        mx = motion_Left, my = motion_Down;
     else if (Keyboard[KbdDefs.downright])
-        mx = motion_Right,my = motion_Down;
+        mx = motion_Right, my = motion_Down;
 
     if (Keyboard[KbdDefs.up])
         my = motion_Up;
@@ -495,76 +497,65 @@ boolean btnstate[NUMBUTTONS];
 void IN_StartAck(void)
 {
     IN_ProcessEvents();
-//
-// get initial state of everything
-//
+    //
+    // get initial state of everything
+    //
     IN_ClearKeysDown();
     memset(btnstate, 0, sizeof(btnstate));
 
     int buttons = IN_JoyButtons() << 4;
 
-    if(MousePresent)
+    if (MousePresent)
         buttons |= IN_MouseButtons();
 
-    for(int i = 0; i < NUMBUTTONS; i++, buttons >>= 1)
-        if(buttons & 1)
+    for (int i = 0; i < NUMBUTTONS; i++, buttons >>= 1)
+        if (buttons & 1)
             btnstate[i] = true;
 }
 
-
-boolean IN_CheckAck (void)
+boolean IN_CheckAck(void)
 {
     IN_ProcessEvents();
-//
-// see if something has been pressed
-//
-    if(LastScan)
+    //
+    // see if something has been pressed
+    //
+    if (LastScan)
         return true;
 
     int buttons = IN_JoyButtons() << 4;
 
-    if(MousePresent)
+    if (MousePresent)
         buttons |= IN_MouseButtons();
 
-    for(int i = 0; i < NUMBUTTONS; i++, buttons >>= 1)
-    {
-        if(buttons & 1)
-        {
-            if(!btnstate[i])
-            {
+    for (int i = 0; i < NUMBUTTONS; i++, buttons >>= 1) {
+        if (buttons & 1) {
+            if (!btnstate[i]) {
                 // Wait until button has been released
-                do
-                {
+                do {
                     IN_WaitAndProcessEvents();
                     buttons = IN_JoyButtons() << 4;
 
-                    if(MousePresent)
+                    if (MousePresent)
                         buttons |= IN_MouseButtons();
-                }
-                while(buttons & (1 << i));
+                } while (buttons & (1 << i));
 
                 return true;
             }
-        }
-        else
+        } else
             btnstate[i] = false;
     }
 
     return false;
 }
 
-
-void IN_Ack (void)
+void IN_Ack(void)
 {
-    IN_StartAck ();
+    IN_StartAck();
 
-    do
-    {
+    do {
         IN_WaitAndProcessEvents();
-    }
-    while(!IN_CheckAck ());
+    } while (!IN_CheckAck());
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -576,18 +567,17 @@ void IN_Ack (void)
 ///////////////////////////////////////////////////////////////////////////
 boolean IN_UserInput(longword delay)
 {
-    longword    lasttime;
+    longword lasttime;
 
     lasttime = GetTimeCount();
-    IN_StartAck ();
-    do
-    {
+    IN_StartAck();
+    do {
         IN_ProcessEvents();
         if (IN_CheckAck())
             return true;
         SDL_Delay(5);
     } while (GetTimeCount() - lasttime < delay);
-    return(false);
+    return (false);
 }
 
 //===========================================================================
@@ -599,7 +589,7 @@ boolean IN_UserInput(longword delay)
 =
 ===================
 */
-int IN_MouseButtons (void)
+int IN_MouseButtons(void)
 {
     if (MousePresent)
         return INL_GetMouseButtons();

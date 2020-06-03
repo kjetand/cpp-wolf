@@ -1,0 +1,6 @@
+BasedOnStyle: WebKit
+UseTab: Never
+SortIncludes: false
+AlignTrailingComments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true

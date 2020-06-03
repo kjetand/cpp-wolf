@@ -1,7 +1,7 @@
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
-#ifndef VERSIONALREADYCHOSEN              // used for batch compiling
+#ifndef VERSIONALREADYCHOSEN // used for batch compiling
 
 /* Defines used for different versions */
 
@@ -28,11 +28,11 @@
 
 //#define FIXRAINSNOWLEAKS    // Enables leaking ceilings fix (by Adam Biser, only needed if maps with rain/snow and ceilings exist)
 
-#define DEBUGKEYS             // Comment this out to compile without the Tab debug keys
+#define DEBUGKEYS // Comment this out to compile without the Tab debug keys
 #define ARTSEXTERN
 #define DEMOSEXTERN
-#define PLAYDEMOLIKEORIGINAL  // When playing or recording demos, several bug fixes do not take
-                              // effect to let the original demos work as in the original Wolf3D v1.4
-                              // (actually better, as the second demo rarely worked)
+#define PLAYDEMOLIKEORIGINAL // When playing or recording demos, several bug fixes do not take       \
+                             // effect to let the original demos work as in the original Wolf3D v1.4 \
+                             // (actually better, as the second demo rarely worked)
 
 #endif

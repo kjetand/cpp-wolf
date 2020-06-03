@@ -9,7 +9,6 @@
 #ifndef Chocolate_Wolfenstein_3D_crt_h
 #define Chocolate_Wolfenstein_3D_crt_h
 
-
 // Win32
 #ifdef _WIN32
 #include <WTypes.h>
@@ -35,6 +34,5 @@ void CRT_Init(int width);
 void CRT_DAC(void);
 
 void CRT_Screenshot(void);
-
 
 #endif
