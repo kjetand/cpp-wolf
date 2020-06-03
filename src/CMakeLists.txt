@@ -25,12 +25,12 @@ add_library(wolf3d STATIC
 target_include_directories(wolf3d PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${SDL_INCLUDE_DIR}
-    ${SDL_MIXER_INCLUDE_DIR})
+    ${SDLMIXER_INCLUDE_DIR})
 
 target_link_libraries(wolf3d PUBLIC
     ${OPENGL_LIBRARIES}
     ${SDL_LIBRARY}
-    ${SDL_MIXER_LIBRARY})
+    ${SDLMIXER_LIBRARY})
 
 add_executable(cpp-wolf main.cpp)
 target_include_directories(cpp-wolf PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

@@ -5,6 +5,7 @@ The `cpp-wolf` project aims to modernize the existing code base of
 |Compiler|Status|
 |--------|------|
 |MSVC|[![AppVeyor Build status](https://img.shields.io/appveyor/ci/kjetand/cpp-wolf.svg)](https://ci.appveyor.com/project/kjetand/cpp-wolf)|
+|GCC/Clang|[![Build Status](https://travis-ci.org/kjetand/cpp-wolf.svg?branch=master)](https://travis-ci.org/kjetand/cpp-wolf)|
 
 ## Credits
 All credit goes out to:

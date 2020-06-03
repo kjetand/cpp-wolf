@@ -7,6 +7,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BINARY_DIR}/bin)
 
 find_package(OpenGL REQUIRED)
+if (UNIX)
+  find_package(SDL REQUIRED)
+  find_package(SDL_mixer REQUIRED)
+endif ()
 
 function(copy_files dir ext)
   file(GLOB assets ${dir}/*.${ext})
@@ -43,9 +47,9 @@ if (MSVC)
   endif ()
 
   set(SDL_INCLUDE_DIR ${SDL_ROOT}/include)
-  set(SDL_MIXER_INCLUDE_DIR ${SDL_MIXER_ROOT}/include)
+  set(SDLMIXER_INCLUDE_DIR ${SDL_MIXER_ROOT}/include)
   set(SDL_LIBRARY ${SDL_ROOT}/lib/x86/SDL.lib)
-  set(SDL_MIXER_LIBRARY ${SDL_MIXER_ROOT}/lib/x86/SDL_mixer.lib)
+  set(SDLMIXER_LIBRARY ${SDL_MIXER_ROOT}/lib/x86/SDL_mixer.lib)
 
   copy_files(${SDL_ROOT}/lib/x86 "dll")
   copy_files(${SDL_MIXER_ROOT}/lib/x86 "dll")
