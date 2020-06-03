@@ -2,6 +2,10 @@
 The `cpp-wolf` project aims to modernize the existing code base of
 `Chocolate-Wolfenstein-3D` using modern `C++20` and `cmake`.
 
+|Compiler|Status|
+|--------|------|
+|MSVC|[![AppVeyor Build status](https://img.shields.io/appveyor/ci/kjetand/cpp-wolf.svg)](https://ci.appveyor.com/project/kjetand/cpp-wolf)|
+
 ## Credits
 All credit goes out to:
 
