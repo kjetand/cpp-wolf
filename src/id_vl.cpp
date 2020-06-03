@@ -99,13 +99,13 @@ void    VL_SetVGAPlaneMode (void)
     //Fab's CRT Hack
     //Adjust height so the screen is 4:3 aspect ratio
     screenHeight=screenWidth * 3.0/4.0;
-    
+
     screen = SDL_SetVideoMode(screenWidth, screenHeight, screenBits,
           (usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
         | (screenBits == 8 ? SDL_HWPALETTE : 0)
         | (fullscreen ? SDL_FULLSCREEN : 0) | SDL_OPENGL | SDL_OPENGLBLIT);
-    
-    
+
+
     if(!screen)
     {
         printf("Unable to set %ix%ix%i video mode: %s\n", screenWidth, screenHeight, screenBits, SDL_GetError());
@@ -120,11 +120,11 @@ void    VL_SetVGAPlaneMode (void)
 
     //Fab's CRT Hack
     CRT_Init(screenWidth);
-    
+
     //Fab's CRT Hack
     screenWidth=320;
     screenHeight=200;
-    
+
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
     if(!screenBuffer)
@@ -142,14 +142,14 @@ void    VL_SetVGAPlaneMode (void)
 
     scaleFactor = screenWidth/320;
     if(screenHeight/200 < scaleFactor) scaleFactor = screenHeight/200;
-    
-    
+
+
     pixelangle = (short *) malloc(screenWidth * sizeof(short));
     CHECKMALLOCRESULT(pixelangle);
     wallheight = (int *) malloc(screenWidth * sizeof(int));
     CHECKMALLOCRESULT(wallheight);
-    
-    
+
+
 }
 
 /*
@@ -215,7 +215,7 @@ void VL_FillPalette (int red, int green, int blue)
 
 void VL_SetColor    (int color, int red, int green, int blue)
 {
-    SDL_Color col = { red, green, blue };
+    SDL_Color col = { static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue) };
     curpal[color] = col;
 
     if(screenBits == 8)
@@ -692,8 +692,8 @@ void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
         }
         else
         {
-            SDL_Rect srcrect = { xsrc, ysrc, width, height };
-            SDL_Rect destrect = { scxdest, scydest, 0, 0 }; // width and height are ignored
+            SDL_Rect srcrect = { static_cast<Sint16>(xsrc), static_cast<Sint16>(ysrc), static_cast<Uint16>(width), static_cast<Uint16>(height) };
+            SDL_Rect destrect = { static_cast<Sint16>(scxdest), static_cast<Sint16>(scydest), 0, 0 }; // width and height are ignored
             SDL_BlitSurface(source, &srcrect, curSurface, &destrect);
         }
     }
