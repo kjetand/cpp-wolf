@@ -3,13 +3,15 @@
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
-
-#include <assert.h>
+#include <cassert>
 #include <fcntl.h>
-#include <math.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
+#include <array>
+#include <utility>
 // Win32
 #ifdef _WIN32
 #include <wtypes.h>
@@ -21,7 +23,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <SDL/SDL.h>
-
 #endif
 
 #if !defined O_BINARY
@@ -52,24 +53,18 @@
 #include "f_spear.h"
 #endif
 
-typedef uint8_t  byte;
-typedef uint16_t word;
-typedef int32_t  fixed;
-typedef uint32_t longword;
-// Win32
-#ifndef _WIN32
-typedef int8_t boolean;
-#endif
-typedef void* memptr;
+using byte = std::uint8_t;
+using word = std::uint16_t;
+using fixed = std::int32_t;
+using longword = std::uint32_t;
 
-typedef struct
-{
+struct Point {
     int x, y;
-} Point;
-typedef struct
-{
+};
+
+struct Rect {
     Point ul, lr;
-} Rect;
+};
 
 void Quit(const char* errorStr, ...);
 
@@ -85,7 +80,6 @@ void Quit(const char* errorStr, ...);
 
 #define MAPSPOT(x, y, plane) (mapsegs[plane][((y) << mapshift) + (x)])
 
-#define SIGN(x) ((x) > 0 ? 1 : -1)
 #define ABS(x)  ((int)(x) > 0 ? (x) : -(x))
 #define LABS(x) ((int32_t)(x) > 0 ? (x) : -(x))
 
@@ -125,19 +119,9 @@ void Quit(const char* errorStr, ...);
 //----------------
 
 #define EXTRAPOINTS 40000
-
-#define PLAYERSPEED 3000
 #define RUNSPEED    6000
-
-#define SCREENSEG 0xa000
-
 #define SCREENBWIDE 80
-
 #define HEIGHTRATIO 0.50 // also defined in id_mm.c
-
-#define BORDERCOLOR 3
-#define FLASHCOLOR  5
-#define FLASHTICS   4
 
 #ifndef SPEAR
 #define LRpack 8 // # of levels to store in endgame
@@ -157,21 +141,12 @@ void Quit(const char* errorStr, ...);
 
 #define GLOBAL1       (1l << 16)
 #define TILEGLOBAL    GLOBAL1
-#define PIXGLOBAL     (GLOBAL1 / 64)
 #define TILESHIFT     16l
 #define UNSIGNEDSHIFT 8
 
 #define ANGLES     360 // must be divisable by 4
 #define ANGLEQUAD  (ANGLES / 4)
 #define FINEANGLES 3600
-#define ANG90      (FINEANGLES / 4)
-#define ANG180     (ANG90 * 2)
-#define ANG270     (ANG90 * 3)
-#define ANG360     (ANG90 * 4)
-#define VANG90     (ANGLES / 4)
-#define VANG180    (VANG90 * 2)
-#define VANG270    (VANG90 * 3)
-#define VANG360    (VANG90 * 4)
 
 #define MINDIST (0x5800l)
 
@@ -190,25 +165,18 @@ void Quit(const char* errorStr, ...);
 #define SPRITESCALEFACTOR 2
 
 #define NORTH 0
-#define EAST  1
-#define SOUTH 2
-#define WEST  3
 
 #define STATUSLINES 40
 
 #define SCREENSIZE (SCREENBWIDE * 208)
 #define PAGE1START 0
 #define PAGE2START (SCREENSIZE)
-#define PAGE3START (SCREENSIZE * 2u)
-#define FREESTART  (SCREENSIZE * 3u)
-
-#define PIXRADIUS 512
 
 #define STARTAMMO 8
 
 // object flag values
 
-typedef enum {
+enum class objflag_t : std::uint32_t {
     FL_SHOOTABLE = 0x00000001,
     FL_BONUS = 0x00000002,
     FL_NEVERMARK = 0x00000004,
@@ -218,15 +186,13 @@ typedef enum {
     FL_AMBUSH = 0x00000040,
     FL_NONMARK = 0x00000080,
     FL_FULLBRIGHT = 0x00000100,
-
     // next free bit is   0x00001000
-} objflag_t;
+};
 
 //
 // sprite constants
 //
-
-enum {
+enum class sprite : unsigned {
     SPR_DEMO,
 #ifndef APOGEE_1_0
     SPR_DEATHCAM,
@@ -941,30 +907,47 @@ enum {
 =============================================================================
 */
 
-typedef enum {
+enum class controldir_t : byte {
     di_north,
     di_east,
     di_south,
     di_west
-} controldir_t;
+};
 
-typedef enum {
+enum class door_t : byte {
     dr_normal,
     dr_lock1,
     dr_lock2,
     dr_lock3,
     dr_lock4,
     dr_elevator
-} door_t;
+};
 
-typedef enum {
+constexpr auto to_door(const byte b)
+{
+    constexpr std::array<std::pair<byte, door_t>, 6> conversion_table { { { static_cast<byte>(door_t::dr_normal), door_t::dr_normal },
+        { static_cast<byte>(door_t::dr_lock1), door_t::dr_lock1 },
+        { static_cast<byte>(door_t::dr_lock2), door_t::dr_lock2 },
+        { static_cast<byte>(door_t::dr_lock3), door_t::dr_lock3 },
+        { static_cast<byte>(door_t::dr_lock4), door_t::dr_lock4 },
+        { static_cast<byte>(door_t::dr_elevator), door_t::dr_elevator } } };
+
+    for (auto e : conversion_table) {
+        if (b == e.first) {
+            return e.second;
+        }
+    }
+    throw;
+}
+
+enum class activetype {
     ac_badobject = -1,
     ac_no,
     ac_yes,
     ac_allways
-} activetype;
+};
 
-typedef enum {
+enum class classtype : byte {
     nothing,
     playerobj,
     inertobj,
@@ -995,9 +978,9 @@ typedef enum {
     deathobj,
     hrocketobj,
     sparkobj
-} classtype;
+};
 
-typedef enum {
+enum class wl_stat_t : byte {
     none,
     block,
     bo_gibs,
@@ -1019,9 +1002,9 @@ typedef enum {
     bo_fullheal,
     bo_25clip,
     bo_spear
-} wl_stat_t;
+};
 
-typedef enum {
+enum class dirtype {
     east,
     northeast,
     north,
@@ -1031,10 +1014,10 @@ typedef enum {
     south,
     southeast,
     nodir
-} dirtype;
+};
 
 #define NUMENEMIES 22
-typedef enum {
+enum class enemy_t : byte {
     en_guard,
     en_officer,
     en_ss,
@@ -1057,17 +1040,17 @@ typedef enum {
     en_uber,
     en_will,
     en_death
-} enemy_t;
+};
 
 typedef void (*statefunc)(void*);
 
-typedef struct statestruct {
+struct statetype {
     boolean rotate;
     short   shapenum; // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void (*think)(void*), (*action)(void*);
-    struct statestruct* next;
-} statetype;
+    struct statetype* next;
+};
 
 //---------------------
 //
@@ -1075,13 +1058,13 @@ typedef struct statestruct {
 //
 //---------------------
 
-typedef struct statstruct {
-    byte     tilex, tiley;
-    short    shapenum; // if shapenum == -1 the obj has been removed
-    byte*    visspot;
-    uint32_t flags;
-    byte     itemnumber;
-} statobj_t;
+struct statstruct {
+    byte      tilex, tiley;
+    short     shapenum; // if shapenum == -1 the obj has been removed
+    byte*     visspot;
+    uint32_t  flags;
+    wl_stat_t itemnumber;
+};
 
 //---------------------
 //
@@ -1089,20 +1072,20 @@ typedef struct statstruct {
 //
 //---------------------
 
-typedef enum {
+enum class doortype {
     dr_open,
     dr_closed,
     dr_opening,
     dr_closing
-} doortype;
+};
 
-typedef struct doorstruct {
+struct doorstruct {
     byte     tilex, tiley;
     boolean  vertical;
-    byte     lock;
+    door_t   lock;
     doortype action;
     short    ticcount;
-} doorobj_t;
+};
 
 //--------------------
 //
@@ -1110,7 +1093,7 @@ typedef struct doorstruct {
 //
 //--------------------
 
-typedef struct objstruct {
+struct objstruct {
     activetype active;
     short      ticcount;
     classtype  obclass;
@@ -1135,7 +1118,7 @@ typedef struct objstruct {
 
     short             temp1, temp2, hidden;
     struct objstruct *next, *prev;
-} objtype;
+};
 
 enum {
     bt_nobutton = -1,
@@ -1161,19 +1144,49 @@ enum {
 };
 
 #define NUMWEAPONS 4
-typedef enum {
+enum class weapontype : byte {
     wp_knife,
     wp_pistol,
     wp_machinegun,
     wp_chaingun
-} weapontype;
+};
 
-enum {
+constexpr auto to_weapontype(const byte b)
+{
+    constexpr std::array<std::pair<byte, weapontype>, 4> conversion_table { { { static_cast<byte>(weapontype::wp_knife), weapontype::wp_knife },
+        { static_cast<byte>(weapontype::wp_pistol), weapontype::wp_pistol },
+        { static_cast<byte>(weapontype::wp_machinegun), weapontype::wp_machinegun },
+        { static_cast<byte>(weapontype::wp_chaingun), weapontype::wp_chaingun } } };
+
+    for (const auto& w : conversion_table) {
+        if (w.first == b) {
+            return w.second;
+        }
+    }
+    throw;
+}
+
+enum class difficulty : byte {
     gd_baby,
     gd_easy,
     gd_medium,
     gd_hard
 };
+
+constexpr auto to_difficulty(const byte b)
+{
+    constexpr std::array<std::pair<byte, difficulty>, 4> conversion_table { { { static_cast<byte>(difficulty::gd_baby), difficulty::gd_baby },
+        { static_cast<byte>(difficulty::gd_easy), difficulty::gd_easy },
+        { static_cast<byte>(difficulty::gd_medium), difficulty::gd_medium },
+        { static_cast<byte>(difficulty::gd_hard), difficulty::gd_hard } } };
+
+    for (const auto& d : conversion_table) {
+        if (d.first == b) {
+            return d.second;
+        }
+    }
+    throw;
+}
 
 //---------------
 //
@@ -1183,7 +1196,7 @@ enum {
 
 typedef struct
 {
-    short      difficulty;
+    difficulty difficulty;
     short      mapon;
     int32_t    oldscore, score, nextextra;
     short      lives;
@@ -1202,7 +1215,7 @@ typedef struct
     boolean victoryflag; // set during victory animations
 } gametype;
 
-typedef enum {
+enum class exit_t : byte {
     ex_stillplaying,
     ex_completed,
     ex_died,
@@ -1213,7 +1226,7 @@ typedef enum {
     ex_abort,
     ex_demodone,
     ex_secretlevel
-} exit_t;
+};
 
 extern word* mapsegs[MAPPLANES];
 extern int   mapon;
@@ -1249,26 +1262,26 @@ extern char    configname[13];
 //
 // Command line parameter variables
 //
-extern boolean param_debugmode;
-extern boolean param_nowait;
-extern int     param_difficulty;
-extern int     param_tedlevel;
-extern int     param_joystickindex;
-extern int     param_joystickhat;
-extern int     param_samplerate;
-extern int     param_audiobuffer;
-extern int     param_mission;
-extern boolean param_goodtimes;
-extern boolean param_ignorenumchunks;
+extern boolean    param_debugmode;
+extern boolean    param_nowait;
+extern difficulty param_difficulty;
+extern int        param_tedlevel;
+extern int        param_joystickindex;
+extern int        param_joystickhat;
+extern int        param_samplerate;
+extern int        param_audiobuffer;
+extern int        param_mission;
+extern boolean    param_goodtimes;
+extern boolean    param_ignorenumchunks;
 
-void    NewGame(int difficulty, int episode);
+void    NewGame(difficulty difficulty, int episode);
 void    CalcProjection(int32_t focal);
 void    NewViewSize(int width);
 boolean SetViewSize(unsigned width, unsigned height);
 boolean LoadTheGame(FILE* file, int x, int y);
 boolean SaveTheGame(FILE* file, int x, int y);
 void    ShowViewSize(int width);
-void    ShutdownId(void);
+void    ShutdownId();
 
 /*
 =============================================================================
@@ -1283,16 +1296,16 @@ extern byte         bordercol;
 extern SDL_Surface* latchpics[NUMLATCHPICS];
 extern char         demoname[13];
 
-void SetupGameLevel(void);
-void GameLoop(void);
-void DrawPlayBorder(void);
+void SetupGameLevel();
+void GameLoop();
+void DrawPlayBorder();
 void DrawStatusBorder(byte color);
-void DrawPlayScreen(void);
-void DrawPlayBorderSides(void);
+void DrawPlayScreen();
+void DrawPlayBorderSides();
 void ShowActStatus();
 
 void PlayDemo(int demonumber);
-void RecordDemo(void);
+void RecordDemo();
 
 #ifdef SPEAR
 extern int32_t  spearx, speary;
@@ -1306,7 +1319,7 @@ extern boolean  spearflag;
 #define PlaySoundLocTile(s, tx, ty) PlaySoundLocGlobal(s, (((int32_t)(tx) << TILESHIFT) + (1L << (TILESHIFT - 1))), (((int32_t)ty << TILESHIFT) + (1L << (TILESHIFT - 1))))
 #define PlaySoundLocActor(s, ob)    PlaySoundLocGlobal(s, (ob)->x, (ob)->y)
 void PlaySoundLocGlobal(word s, fixed gx, fixed gy);
-void UpdateSoundLoc(void);
+void UpdateSoundLoc();
 
 /*
 =============================================================================
@@ -1323,11 +1336,11 @@ void UpdateSoundLoc(void);
 
 #define JOYSCALE 2
 
-extern byte     tilemap[MAPSIZE][MAPSIZE]; // wall values only
-extern byte     spotvis[MAPSIZE][MAPSIZE];
-extern objtype* actorat[MAPSIZE][MAPSIZE];
+extern byte       tilemap[MAPSIZE][MAPSIZE]; // wall values only
+extern byte       spotvis[MAPSIZE][MAPSIZE];
+extern objstruct* actorat[MAPSIZE][MAPSIZE];
 
-extern objtype* player;
+extern objstruct* player;
 
 extern unsigned tics;
 extern int      viewsize;
@@ -1337,22 +1350,22 @@ extern int lastgamemusicoffset;
 //
 // current user input
 //
-extern int        controlx, controly; // range from -100 to 100
-extern boolean    buttonstate[NUMBUTTONS];
-extern objtype    objlist[MAXACTORS];
-extern boolean    buttonheld[NUMBUTTONS];
-extern exit_t     playstate;
-extern boolean    madenoise;
-extern statobj_t  statobjlist[MAXSTATS];
-extern statobj_t* laststatobj;
-extern objtype *  newobj, *killerobj;
-extern doorobj_t  doorobjlist[MAXDOORS];
-extern doorobj_t* lastdoorobj;
-extern int        godmode;
+extern int         controlx, controly; // range from -100 to 100
+extern boolean     buttonstate[NUMBUTTONS];
+extern objstruct   objlist[MAXACTORS];
+extern boolean     buttonheld[NUMBUTTONS];
+extern exit_t      playstate;
+extern boolean     madenoise;
+extern statstruct  statobjlist[MAXSTATS];
+extern statstruct* laststatobj;
+extern objstruct * newobj, *killerobj;
+extern doorstruct  doorobjlist[MAXDOORS];
+extern doorstruct* lastdoorobj;
+extern int         godmode;
 
 extern boolean demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
-extern memptr  demobuffer;
+extern void*   demobuffer;
 
 //
 // control info
@@ -1363,28 +1376,28 @@ extern int     buttonscan[NUMBUTTONS];
 extern int     buttonmouse[4];
 extern int     buttonjoy[32];
 
-void InitActorList(void);
-void GetNewActor(void);
-void PlayLoop(void);
+void InitActorList();
+void GetNewActor();
+void PlayLoop();
 
 void CenterWindow(word w, word h);
 
-void InitRedShifts(void);
-void FinishPaletteShifts(void);
+void InitRedShifts();
+void FinishPaletteShifts();
 
-void RemoveObj(objtype* gone);
-void PollControls(void);
-int  StopMusic(void);
-void StartMusic(void);
+void RemoveObj(objstruct* gone);
+void PollControls();
+int  StopMusic();
+void StartMusic();
 void ContinueMusic(int offs);
 void StartDamageFlash(int damage);
-void StartBonusFlash(void);
+void StartBonusFlash();
 
 #ifdef SPEAR
 extern int32_t funnyticount; // FOR FUNNY BJ FACE
 #endif
 
-extern objtype* objfreelist; // *obj,*player,*lastobj,
+extern objstruct* objfreelist; // *obj,*player,*lastobj,
 
 extern boolean noclip, ammocheat;
 extern int     singlestep, extravbls;
@@ -1397,15 +1410,15 @@ extern int     singlestep, extravbls;
 =============================================================================
 */
 
-void IntroScreen(void);
-void PG13(void);
-void DrawHighScores(void);
+void IntroScreen();
+void PG13();
+void DrawHighScores();
 void CheckHighScore(int32_t score, word other);
-void Victory(void);
-void LevelCompleted(void);
-void ClearSplitVWB(void);
+void Victory();
+void LevelCompleted();
+void ClearSplitVWB();
 
-void PreloadGraphics(void);
+void PreloadGraphics();
 
 /*
 =============================================================================
@@ -1415,7 +1428,7 @@ void PreloadGraphics(void);
 =============================================================================
 */
 
-int DebugKeys(void);
+int DebugKeys();
 
 /*
 =============================================================================
@@ -1444,15 +1457,14 @@ extern boolean fizzlein, fpscounter;
 extern fixed viewx, viewy; // the focal point
 extern fixed viewsin, viewcos;
 
-void ThreeDRefresh(void);
-void CalcTics(void);
+void ThreeDRefresh();
+void CalcTics();
 
-typedef struct
-{
+struct t_compshape {
     word leftpix, rightpix;
     word dataofs[64];
     // table data after dataofs[rightpix-leftpix+1]
-} t_compshape;
+};
 
 /*
 =============================================================================
@@ -1465,22 +1477,22 @@ typedef struct
 #define SPDPATROL 512
 #define SPDDOG    1500
 
-void InitHitRect(objtype* ob, unsigned radius);
+void InitHitRect(objstruct* ob, unsigned radius);
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
-void NewState(objtype* ob, statetype* state);
+void NewState(objstruct* ob, statetype* state);
 
-boolean TryWalk(objtype* ob);
-void    SelectChaseDir(objtype* ob);
-void    SelectDodgeDir(objtype* ob);
-void    SelectRunDir(objtype* ob);
-void    MoveObj(objtype* ob, int32_t move);
-boolean SightPlayer(objtype* ob);
+boolean TryWalk(objstruct* ob);
+void    SelectChaseDir(objstruct* ob);
+void    SelectDodgeDir(objstruct* ob);
+void    SelectRunDir(objstruct* ob);
+void    MoveObj(objstruct* ob, int32_t move);
+boolean SightPlayer(objstruct* ob);
 
-void KillActor(objtype* ob);
-void DamageActor(objtype* ob, unsigned damage);
+void KillActor(objstruct* ob);
+void DamageActor(objstruct* ob, unsigned damage);
 
-boolean CheckLine(objtype* ob);
-boolean CheckSight(objtype* ob);
+boolean CheckLine(objstruct* ob);
+boolean CheckSight(objstruct* ob);
 
 /*
 =============================================================================
@@ -1490,18 +1502,18 @@ boolean CheckSight(objtype* ob);
 =============================================================================
 */
 
-extern short    anglefrac;
-extern int      facecount, facetimes;
-extern word     plux, pluy; // player coordinates scaled to unsigned
-extern int32_t  thrustspeed;
-extern objtype* LastAttacker;
+extern short      anglefrac;
+extern int        facecount, facetimes;
+extern word       plux, pluy; // player coordinates scaled to unsigned
+extern int32_t    thrustspeed;
+extern objstruct* LastAttacker;
 
 void Thrust(int angle, int32_t speed);
 void SpawnPlayer(int tilex, int tiley, int dir);
-void TakeDamage(int points, objtype* attacker);
+void TakeDamage(int points, objstruct* attacker);
 void GivePoints(int32_t points);
-void GetBonus(statobj_t* check);
-void GiveWeapon(int weapon);
+void GetBonus(statstruct* check);
+void GiveWeapon(weapontype weapon);
 void GiveAmmo(int ammo);
 void GiveKey(int key);
 
@@ -1510,16 +1522,16 @@ void GiveKey(int key);
 //
 
 void StatusDrawFace(unsigned picnum);
-void DrawFace(void);
-void DrawHealth(void);
+void DrawFace();
+void DrawHealth();
 void HealSelf(int points);
-void DrawLevel(void);
-void DrawLives(void);
-void GiveExtraMan(void);
-void DrawScore(void);
-void DrawWeapon(void);
-void DrawKeys(void);
-void DrawAmmo(void);
+void DrawLevel();
+void DrawLives();
+void GiveExtraMan();
+void DrawScore();
+void DrawWeapon();
+void DrawKeys();
+void DrawAmmo();
 
 /*
 =============================================================================
@@ -1529,9 +1541,9 @@ void DrawAmmo(void);
 =============================================================================
 */
 
-extern doorobj_t  doorobjlist[MAXDOORS];
-extern doorobj_t* lastdoorobj;
-extern short      doornum;
+extern doorstruct  doorobjlist[MAXDOORS];
+extern doorstruct* lastdoorobj;
+extern short       doornum;
 
 extern word doorposition[MAXDOORS];
 
@@ -1539,22 +1551,23 @@ extern byte areaconnect[NUMAREAS][NUMAREAS];
 
 extern boolean areabyplayer[NUMAREAS];
 
-extern word pwallstate;
-extern word pwallpos; // amount a pushable wall has been moved (0-63)
-extern word pwallx, pwally;
-extern byte pwalldir, pwalltile;
+extern word         pwallstate;
+extern word         pwallpos; // amount a pushable wall has been moved (0-63)
+extern word         pwallx, pwally;
+extern controldir_t pwalldir;
+extern byte         pwalltile;
 
-void InitDoorList(void);
-void InitStaticList(void);
+void InitDoorList();
+void InitStaticList();
 void SpawnStatic(int tilex, int tiley, int type);
-void SpawnDoor(int tilex, int tiley, boolean vertical, int lock);
-void MoveDoors(void);
-void MovePWalls(void);
+void SpawnDoor(int tilex, int tiley, boolean vertical, door_t lock);
+void MoveDoors();
+void MovePWalls();
 void OpenDoor(int door);
-void PlaceItemType(int itemtype, int tilex, int tiley);
-void PushWall(int checkx, int checky, int dir);
+void PlaceItemType(wl_stat_t itemtype, int tilex, int tiley);
+void PushWall(int checkx, int checky, controldir_t dir);
 void OperateDoor(int door);
-void InitAreas(void);
+void InitAreas();
 
 /*
 =============================================================================
@@ -1628,7 +1641,7 @@ extern statetype s_fatdeathcam2;
 
 void SpawnStand(enemy_t which, int tilex, int tiley, int dir);
 void SpawnPatrol(enemy_t which, int tilex, int tiley, int dir);
-void KillActor(objtype* ob);
+void KillActor(objstruct* ob);
 
 void SpawnDeadGuard(int tilex, int tiley);
 void SpawnBoss(int tilex, int tiley);
@@ -1639,15 +1652,15 @@ void SpawnWill(int tilex, int tiley);
 void SpawnDeath(int tilex, int tiley);
 void SpawnAngel(int tilex, int tiley);
 void SpawnSpectre(int tilex, int tiley);
-void SpawnGhosts(int which, int tilex, int tiley);
+void SpawnGhosts(enemy_t which, int tilex, int tiley);
 void SpawnSchabbs(int tilex, int tiley);
 void SpawnGift(int tilex, int tiley);
 void SpawnFat(int tilex, int tiley);
 void SpawnFakeHitler(int tilex, int tiley);
 void SpawnHitler(int tilex, int tiley);
 
-void A_DeathScream(objtype* ob);
-void SpawnBJVictory(void);
+void A_DeathScream(objstruct* ob);
+void SpawnBJVictory();
 
 /*
 =============================================================================
@@ -1659,8 +1672,8 @@ void SpawnBJVictory(void);
 
 extern char helpfilename[], endfilename[];
 
-extern void HelpScreens(void);
-extern void EndText(void);
+extern void HelpScreens();
+extern void EndText();
 
 /*
 =============================================================================

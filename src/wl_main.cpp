@@ -77,11 +77,11 @@ char configname[13] = "config.";
 //
 // Command line parameter variables
 //
-boolean param_debugmode = false;
-boolean param_nowait = false;
-int     param_difficulty = 1; // default is "normal"
-int     param_tedlevel = -1;  // default is not to start a level
-int     param_joystickindex = 0;
+boolean    param_debugmode = false;
+boolean    param_nowait = false;
+difficulty param_difficulty = difficulty::gd_medium; // default is "normal"
+int        param_tedlevel = -1;                    // default is not to start a level
+int        param_joystickindex = 0;
 
 int param_joystickhat = -1;
 int param_samplerate = 44100;
@@ -282,12 +282,12 @@ void WriteConfig(void)
 =====================
 */
 
-void NewGame(int difficulty, int episode)
+void NewGame(difficulty difficulty, int episode)
 {
     memset(&gamestate, 0, sizeof(gamestate));
     gamestate.difficulty = difficulty;
     gamestate.weapon = gamestate.bestweapon
-        = gamestate.chosenweapon = wp_pistol;
+        = gamestate.chosenweapon = weapontype::wp_pistol;
     gamestate.health = 100;
     gamestate.ammo = STARTAMMO;
     gamestate.lives = 3;
@@ -334,10 +334,10 @@ boolean SaveTheGame(FILE* file, int x, int y)
 {
     //    struct diskfree_t dfree;
     //    int32_t avail,size,checksum;
-    int       checksum;
-    objtype*  ob;
-    objtype   nullobj;
-    statobj_t nullstat;
+    int        checksum;
+    objstruct* ob;
+    objstruct  nullobj;
+    statstruct nullstat;
 
     /*    if (_dos_getdiskfree(0,&dfree))
         Quit("Error in _dos_getdiskfree call");
@@ -389,8 +389,8 @@ boolean SaveTheGame(FILE* file, int x, int y)
     int i;
     for (i = 0; i < MAPSIZE; i++) {
         for (int j = 0; j < MAPSIZE; j++) {
-            word     actnum;
-            objtype* objptr = actorat[i][j];
+            word       actnum;
+            objstruct* objptr = actorat[i][j];
             if (ISPOINTER(objptr))
                 actnum = 0x8000 | (word)(objptr - objlist);
             else
@@ -419,7 +419,7 @@ boolean SaveTheGame(FILE* file, int x, int y)
         nullobj.state = (statetype*)((uintptr_t)nullobj.state - (uintptr_t)&s_grdstand);
         fwrite(&nullobj, sizeof(nullobj), 1, file);
     }
-    nullobj.active = ac_badobject; // end of file marker
+    nullobj.active = activetype::ac_badobject; // end of file marker
     DiskFlopAnim(x, y);
     fwrite(&nullobj, sizeof(nullobj), 1, file);
 
@@ -479,9 +479,9 @@ boolean SaveTheGame(FILE* file, int x, int y)
 
 boolean LoadTheGame(FILE* file, int x, int y)
 {
-    int32_t   checksum, oldchecksum;
-    objtype   nullobj;
-    statobj_t nullstat;
+    int32_t    checksum, oldchecksum;
+    objstruct  nullobj;
+    statstruct nullstat;
 
     checksum = 0;
 
@@ -510,7 +510,7 @@ boolean LoadTheGame(FILE* file, int x, int y)
             if (actnum & 0x8000)
                 actorat[i][j] = objlist + (actnum & 0x7fff);
             else
-                actorat[i][j] = (objtype*)(uintptr_t)actnum;
+                actorat[i][j] = (objstruct*)(uintptr_t)actnum;
         }
     }
 
@@ -526,7 +526,7 @@ boolean LoadTheGame(FILE* file, int x, int y)
     while (1) {
         DiskFlopAnim(x, y);
         fread(&nullobj, sizeof(nullobj), 1, file);
-        if (nullobj.active == ac_badobject)
+        if (nullobj.active == activetype::ac_badobject)
             break;
         GetNewActor();
         nullobj.state = (statetype*)((uintptr_t)nullobj.state + (uintptr_t)&s_grdstand);
@@ -612,7 +612,7 @@ boolean LoadTheGame(FILE* file, int x, int y)
 
         gamestate.oldscore = gamestate.score = 0;
         gamestate.lives = 1;
-        gamestate.weapon = gamestate.chosenweapon = gamestate.bestweapon = wp_pistol;
+        gamestate.weapon = gamestate.chosenweapon = gamestate.bestweapon = weapontype::wp_pistol;
         gamestate.ammo = 8;
     }
 
@@ -1532,7 +1532,7 @@ static void DemoLoop()
             PlayDemo(0);
 #endif
 
-            if (playstate == ex_abort)
+            if (playstate == exit_t::ex_abort)
                 break;
             VW_FadeOut();
             if (screenHeight % 200 != 0)
@@ -1581,16 +1581,16 @@ void CheckParameters(int argc, char* argv[])
         param_debugmode = true;
         else IFARG("--baby")
             param_difficulty
-            = 0;
+            = difficulty::gd_baby;
         else IFARG("--easy")
             param_difficulty
-            = 1;
+            = difficulty::gd_easy;
         else IFARG("--normal")
             param_difficulty
-            = 2;
+            = difficulty::gd_medium;
         else IFARG("--hard")
             param_difficulty
-            = 3;
+            = difficulty::gd_hard;
         else IFARG("--nowait")
             param_nowait
             = true;

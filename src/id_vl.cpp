@@ -1,8 +1,7 @@
 // ID_VL.C
 
-#include <string.h>
+#include <cstring>
 #include "wl_def.h"
-#include "crt.h"
 #pragma hdrstop
 
 // Uncomment the following line, if you get destination out of bounds

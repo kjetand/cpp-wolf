@@ -305,42 +305,42 @@ static void ScanInfoPlane(void)
             case 181:
             case 182:
             case 183:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 144:
             case 145:
             case 146:
             case 147:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 108:
             case 109:
             case 110:
             case 111:
-                SpawnStand(en_guard, x, y, tile - 108);
+                SpawnStand(enemy_t::en_guard, x, y, tile - 108);
                 break;
 
             case 184:
             case 185:
             case 186:
             case 187:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 148:
             case 149:
             case 150:
             case 151:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 112:
             case 113:
             case 114:
             case 115:
-                SpawnPatrol(en_guard, x, y, tile - 112);
+                SpawnPatrol(enemy_t::en_guard, x, y, tile - 112);
                 break;
 
             case 124:
@@ -353,42 +353,42 @@ static void ScanInfoPlane(void)
             case 189:
             case 190:
             case 191:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 152:
             case 153:
             case 154:
             case 155:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 116:
             case 117:
             case 118:
             case 119:
-                SpawnStand(en_officer, x, y, tile - 116);
+                SpawnStand(enemy_t::en_officer, x, y, tile - 116);
                 break;
 
             case 192:
             case 193:
             case 194:
             case 195:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 156:
             case 157:
             case 158:
             case 159:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 120:
             case 121:
             case 122:
             case 123:
-                SpawnPatrol(en_officer, x, y, tile - 120);
+                SpawnPatrol(enemy_t::en_officer, x, y, tile - 120);
                 break;
 
                 //
@@ -398,42 +398,42 @@ static void ScanInfoPlane(void)
             case 199:
             case 200:
             case 201:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 162:
             case 163:
             case 164:
             case 165:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 126:
             case 127:
             case 128:
             case 129:
-                SpawnStand(en_ss, x, y, tile - 126);
+                SpawnStand(enemy_t::en_ss, x, y, tile - 126);
                 break;
 
             case 202:
             case 203:
             case 204:
             case 205:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 166:
             case 167:
             case 168:
             case 169:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 130:
             case 131:
             case 132:
             case 133:
-                SpawnPatrol(en_ss, x, y, tile - 130);
+                SpawnPatrol(enemy_t::en_ss, x, y, tile - 130);
                 break;
 
                 //
@@ -443,42 +443,42 @@ static void ScanInfoPlane(void)
             case 207:
             case 208:
             case 209:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 170:
             case 171:
             case 172:
             case 173:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 134:
             case 135:
             case 136:
             case 137:
-                SpawnStand(en_dog, x, y, tile - 134);
+                SpawnStand(enemy_t::en_dog, x, y, tile - 134);
                 break;
 
             case 210:
             case 211:
             case 212:
             case 213:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 36;
             case 174:
             case 175:
             case 176:
             case 177:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 36;
             case 138:
             case 139:
             case 140:
             case 141:
-                SpawnPatrol(en_dog, x, y, tile - 138);
+                SpawnPatrol(enemy_t::en_dog, x, y, tile - 138);
                 break;
 
 //
@@ -535,42 +535,42 @@ static void ScanInfoPlane(void)
             case 253:
             case 254:
             case 255:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 18;
             case 234:
             case 235:
             case 236:
             case 237:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 18;
             case 216:
             case 217:
             case 218:
             case 219:
-                SpawnStand(en_mutant, x, y, tile - 216);
+                SpawnStand(enemy_t::en_mutant, x, y, tile - 216);
                 break;
 
             case 256:
             case 257:
             case 258:
             case 259:
-                if (gamestate.difficulty < gd_hard)
+                if (gamestate.difficulty < difficulty::gd_hard)
                     break;
                 tile -= 18;
             case 238:
             case 239:
             case 240:
             case 241:
-                if (gamestate.difficulty < gd_medium)
+                if (gamestate.difficulty < difficulty::gd_medium)
                     break;
                 tile -= 18;
             case 220:
             case 221:
             case 222:
             case 223:
-                SpawnPatrol(en_mutant, x, y, tile - 220);
+                SpawnPatrol(enemy_t::en_mutant, x, y, tile - 220);
                 break;
 
 //
@@ -578,16 +578,16 @@ static void ScanInfoPlane(void)
 //
 #ifndef SPEAR
             case 224:
-                SpawnGhosts(en_blinky, x, y);
+                SpawnGhosts(enemy_t::en_blinky, x, y);
                 break;
             case 225:
-                SpawnGhosts(en_clyde, x, y);
+                SpawnGhosts(enemy_t::en_clyde, x, y);
                 break;
             case 226:
-                SpawnGhosts(en_pinky, x, y);
+                SpawnGhosts(enemy_t::en_pinky, x, y);
                 break;
             case 227:
-                SpawnGhosts(en_inky, x, y);
+                SpawnGhosts(enemy_t::en_inky, x, y);
                 break;
 #endif
             }
@@ -647,7 +647,7 @@ void SetupGameLevel(void)
             if (tile < AREATILE) {
                 // solid wall
                 tilemap[x][y] = (byte)tile;
-                actorat[x][y] = (objtype*)(uintptr_t)tile;
+                actorat[x][y] = (objstruct*)(uintptr_t)tile;
             } else {
                 // area floor
                 tilemap[x][y] = 0;
@@ -676,7 +676,7 @@ void SetupGameLevel(void)
                 case 96:
                 case 98:
                 case 100:
-                    SpawnDoor(x, y, 1, (tile - 90) / 2);
+                    SpawnDoor(x, y, 1, to_door((tile - 90) / 2));
                     break;
                 case 91:
                 case 93:
@@ -684,7 +684,7 @@ void SetupGameLevel(void)
                 case 97:
                 case 99:
                 case 101:
-                    SpawnDoor(x, y, 0, (tile - 91) / 2);
+                    SpawnDoor(x, y, 0, to_door((tile - 91) / 2));
                     break;
                 }
             }
@@ -1039,10 +1039,10 @@ void RecordDemo(void)
     VW_FadeOut();
 
 #ifndef SPEAR
-    NewGame(gd_hard, level / 10);
+    NewGame(difficulty::gd_hard, level / 10);
     gamestate.mapon = level % 10;
 #else
-    NewGame(gd_hard, 0);
+    NewGame(difficulty::gd_hard, 0);
     gamestate.mapon = level;
 #endif
 
@@ -1110,9 +1110,9 @@ void PlayDemo(int demonumber)
     demoptr = (int8_t*)demobuffer;
 #endif
 
-    NewGame(1, 0);
+    NewGame(to_difficulty(1), 0);
     gamestate.mapon = *demoptr++;
-    gamestate.difficulty = gd_hard;
+    gamestate.difficulty = difficulty::gd_hard;
     length = READWORD(*(uint8_t**)&demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...
@@ -1261,7 +1261,7 @@ void Died(void)
     if (gamestate.lives > -1) {
         gamestate.health = 100;
         gamestate.weapon = gamestate.bestweapon
-            = gamestate.chosenweapon = wp_pistol;
+            = gamestate.chosenweapon = weapontype::wp_pistol;
         gamestate.ammo = STARTAMMO;
         gamestate.keys = 0;
         pwallstate = pwallpos = 0;
@@ -1366,15 +1366,15 @@ restartgame:
         StopMusic();
         ingame = false;
 
-        if (demorecord && playstate != ex_warped)
+        if (demorecord && playstate != exit_t::ex_warped)
             FinishDemoRecord();
 
         if (startgame || loadedgame)
             goto restartgame;
 
         switch (playstate) {
-        case ex_completed:
-        case ex_secretlevel:
+        case exit_t::ex_completed:
+        case exit_t::ex_secretlevel:
             if (viewsize == 21)
                 DrawPlayScreen();
             gamestate.keys = 0;
@@ -1433,7 +1433,7 @@ restartgame:
                 //
                 // GOING TO SECRET LEVEL
                 //
-                if (playstate == ex_secretlevel)
+                if (playstate == exit_t::ex_secretlevel)
                 gamestate.mapon = 9;
 #else
 
@@ -1443,7 +1443,7 @@ restartgame:
             //
             // GOING TO SECRET LEVEL
             //
-            if (playstate == ex_secretlevel)
+            if (playstate == exit_t::ex_secretlevel)
                 switch (gamestate.mapon) {
                 case FROMSECRET1:
                     gamestate.mapon = 18;
@@ -1473,7 +1473,7 @@ restartgame:
                 gamestate.mapon++;
             break;
 
-        case ex_died:
+        case exit_t::ex_died:
             Died();
             died = true; // don't "get psyched!"
 
@@ -1493,7 +1493,7 @@ restartgame:
             MainMenu[viewscores].routine = CP_ViewScores;
             return;
 
-        case ex_victorious:
+        case exit_t::ex_victorious:
             if (viewsize == 21)
                 DrawPlayScreen();
 #ifndef SPEAR

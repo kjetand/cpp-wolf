@@ -62,8 +62,8 @@ void ViewMap(void);
 
 void CountObjects(void)
 {
-    int      i, total, count, active, inactive, doors;
-    objtype* obj;
+    int        i, total, count, active, inactive, doors;
+    objstruct* obj;
 
     CenterWindow(17, 7);
     active = inactive = count = doors = 0;
@@ -89,7 +89,7 @@ void CountObjects(void)
     US_PrintUnsigned(doornum);
 
     for (obj = player->next; obj; obj = obj->next) {
-        if (obj->active)
+        if (static_cast<byte>(obj->active))
             active++;
         else
             inactive++;
@@ -177,7 +177,7 @@ void BasicOverhead(void)
     for (x = 0; x < MAPSIZE; x++) {
         for (y = 0; y < MAPSIZE; y++) {
             tile = (uintptr_t)actorat[x][y];
-            if (ISPOINTER(tile) && ((objtype*)tile)->flags & FL_SHOOTABLE)
+            if (ISPOINTER(tile) && ((objstruct*)tile)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE))
                 color = 72; // enemy
             else if (!tile || ISPOINTER(tile)) {
                 if (spotvis[x][y])
@@ -455,7 +455,7 @@ int DebugKeys(void)
         return 1;
     }
     if (Keyboard[sc_E]) // E = quit level
-        playstate = ex_completed;
+        playstate = exit_t::ex_completed;
 
     if (Keyboard[sc_F]) // F = facing spot
     {
@@ -522,8 +522,8 @@ int DebugKeys(void)
         VW_UpdateScreen();
         GivePoints(100000);
         HealSelf(99);
-        if (gamestate.bestweapon < wp_chaingun)
-            GiveWeapon(gamestate.bestweapon + 1);
+        if (static_cast<byte>(gamestate.bestweapon) < static_cast<byte>(weapontype::wp_chaingun))
+            GiveWeapon(to_weapontype(static_cast<byte>(gamestate.bestweapon) + 1));
         gamestate.ammo += 50;
         if (gamestate.ammo > 99)
             gamestate.ammo = 99;
@@ -655,7 +655,7 @@ int DebugKeys(void)
 #endif
             {
                 gamestate.mapon = level - 1;
-                playstate = ex_warped;
+                playstate = exit_t::ex_warped;
             }
         }
         return 1;

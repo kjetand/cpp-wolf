@@ -51,10 +51,10 @@ fixed viewx, viewy; // the focal point
 short viewangle;
 fixed viewsin, viewcos;
 
-void TransformActor(objtype* ob);
+void TransformActor(objstruct* ob);
 void BuildTables(void);
 void ClearScreen(void);
-int  CalcRotate(objtype* ob);
+int  CalcRotate(objstruct* ob);
 void DrawScaleds(void);
 void CalcTics(void);
 void ThreeDRefresh(void);
@@ -117,7 +117,7 @@ word horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 //
 // transform actor
 //
-void TransformActor(objtype* ob)
+void TransformActor(objstruct* ob)
 {
     fixed gx, gy, gxt, gyt, nx, ny;
 
@@ -486,16 +486,16 @@ void HitHorizDoor(void)
     postx = pixx;
 
     switch (doorobjlist[doornum].lock) {
-    case dr_normal:
+    case door_t::dr_normal:
         doorpage = DOORWALL;
         break;
-    case dr_lock1:
-    case dr_lock2:
-    case dr_lock3:
-    case dr_lock4:
+    case door_t::dr_lock1:
+    case door_t::dr_lock2:
+    case door_t::dr_lock3:
+    case door_t::dr_lock4:
         doorpage = DOORWALL + 6;
         break;
-    case dr_elevator:
+    case door_t::dr_elevator:
         doorpage = DOORWALL + 4;
         break;
     }
@@ -547,16 +547,16 @@ void HitVertDoor(void)
     postx = pixx;
 
     switch (doorobjlist[doornum].lock) {
-    case dr_normal:
+    case door_t::dr_normal:
         doorpage = DOORWALL + 1;
         break;
-    case dr_lock1:
-    case dr_lock2:
-    case dr_lock3:
-    case dr_lock4:
+    case door_t::dr_lock1:
+    case door_t::dr_lock2:
+    case door_t::dr_lock3:
+    case door_t::dr_lock4:
         doorpage = DOORWALL + 7;
         break;
-    case dr_elevator:
+    case door_t::dr_elevator:
         doorpage = DOORWALL + 5;
         break;
     }
@@ -618,7 +618,7 @@ void VGAClearScreen(void)
 =====================
 */
 
-int CalcRotate(objtype* ob)
+int CalcRotate(objstruct* ob)
 {
     int angle, viewangle;
 
@@ -627,10 +627,10 @@ int CalcRotate(objtype* ob)
 
     viewangle = player->angle + (centerx - ob->viewx) / 8;
 
-    if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
+    if (ob->obclass == classtype::rocketobj || ob->obclass == classtype::hrocketobj)
         angle = (viewangle - 180) - ob->angle;
     else
-        angle = (viewangle - 180) - dirangle[ob->dir];
+        angle = (viewangle - 180) - dirangle[static_cast<byte>(ob->dir)];
 
     angle += ANGLES / 16;
     while (angle >= ANGLES)
@@ -837,8 +837,8 @@ void DrawScaleds(void)
     byte *   tilespot, *visspot;
     unsigned spotloc;
 
-    statobj_t* statptr;
-    objtype*   obj;
+    statstruct* statptr;
+    objstruct*  obj;
 
     visptr = &vislist[0];
 
@@ -854,7 +854,7 @@ void DrawScaleds(void)
 
         if (TransformTile(statptr->tilex, statptr->tiley,
                 &visptr->viewx, &visptr->viewheight)
-            && statptr->flags & FL_BONUS) {
+            && statptr->flags & static_cast<std::uint32_t>(objflag_t::FL_BONUS)) {
             GetBonus(statptr);
             if (statptr->shapenum == -1)
                 continue; // object has been taken
@@ -893,7 +893,7 @@ void DrawScaleds(void)
             || (*(visspot + 65) && !*(tilespot + 65))
             || (*(visspot + 64) && !*(tilespot + 64))
             || (*(visspot + 63) && !*(tilespot + 63))) {
-            obj->active = ac_yes;
+            obj->active = activetype::ac_yes;
             TransformActor(obj);
             if (!obj->viewheight)
                 continue; // too close or far away
@@ -912,9 +912,9 @@ void DrawScaleds(void)
 
                 visptr++;
             }
-            obj->flags |= FL_VISABLE;
+            obj->flags |= static_cast<std::uint32_t>(objflag_t::FL_VISABLE);
         } else
-            obj->flags &= ~FL_VISABLE;
+            obj->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_VISABLE);
     }
 
     //
@@ -956,8 +956,8 @@ void DrawScaleds(void)
 ==============
 */
 
-int weaponscale[NUMWEAPONS] = { SPR_KNIFEREADY, SPR_PISTOLREADY,
-    SPR_MACHINEGUNREADY, SPR_CHAINREADY };
+int weaponscale[NUMWEAPONS] = { static_cast<int>(sprite::SPR_KNIFEREADY), static_cast<int>(sprite::SPR_PISTOLREADY),
+    static_cast<int>(sprite::SPR_MACHINEGUNREADY), static_cast<int>(sprite::SPR_CHAINREADY) };
 
 void DrawPlayerWeapon(void)
 {
@@ -967,19 +967,19 @@ void DrawPlayerWeapon(void)
     if (gamestate.victoryflag) {
 #ifndef APOGEE_1_0
         if (player->state == &s_deathcam && (GetTimeCount() & 32))
-            SimpleScaleShape(viewwidth / 2, SPR_DEATHCAM, viewheight + 1);
+            SimpleScaleShape(viewwidth / 2, static_cast<int>(sprite::SPR_DEATHCAM), viewheight + 1);
 #endif
         return;
     }
 #endif
 
-    if (gamestate.weapon != -1) {
-        shapenum = weaponscale[gamestate.weapon] + gamestate.weaponframe;
+    if (static_cast<byte>(gamestate.weapon) != -1) {
+        shapenum = weaponscale[static_cast<byte>(gamestate.weapon)] + gamestate.weaponframe;
         SimpleScaleShape(viewwidth / 2, shapenum, viewheight + 1);
     }
 
     if (demorecord || demoplayback)
-        SimpleScaleShape(viewwidth / 2, SPR_DEMO, viewheight + 1);
+        SimpleScaleShape(viewwidth / 2, static_cast<int>(sprite::SPR_DEMO), viewheight + 1);
 }
 
 //==========================================================================
@@ -1067,12 +1067,12 @@ void AsmRefresh()
 
         // Special treatment when player is in back tile of pushwall
         if (playerInPushwallBackTile) {
-            if (pwalldir == di_east && xtilestep == 1
-                || pwalldir == di_west && xtilestep == -1) {
+            if (pwalldir == controldir_t::di_east && xtilestep == 1
+                || pwalldir == controldir_t::di_west && xtilestep == -1) {
                 int32_t yintbuf = yintercept - ((ystep * (64 - pwallpos)) >> 6);
                 if ((yintbuf >> 16) == focalty) // ray hits pushwall back?
                 {
-                    if (pwalldir == di_east)
+                    if (pwalldir == controldir_t::di_east)
                         xintercept = (focaltx << TILESHIFT) + (pwallpos << 10);
                     else
                         xintercept = (focaltx << TILESHIFT) - TILEGLOBAL + ((64 - pwallpos) << 10);
@@ -1082,13 +1082,13 @@ void AsmRefresh()
                     HitVertWall();
                     continue;
                 }
-            } else if (pwalldir == di_south && ytilestep == 1
-                || pwalldir == di_north && ytilestep == -1) {
+            } else if (pwalldir == controldir_t::di_south && ytilestep == 1
+                || pwalldir == controldir_t::di_north && ytilestep == -1) {
                 int32_t xintbuf = xintercept - ((xstep * (64 - pwallpos)) >> 6);
                 if ((xintbuf >> 16) == focaltx) // ray hits pushwall back?
                 {
                     xintercept = xintbuf;
-                    if (pwalldir == di_south)
+                    if (pwalldir == controldir_t::di_south)
                         yintercept = (focalty << TILESHIFT) + (pwallpos << 10);
                     else
                         yintercept = (focalty << TILESHIFT) - TILEGLOBAL + ((64 - pwallpos) << 10);
@@ -1138,19 +1138,19 @@ void AsmRefresh()
                     HitVertDoor();
                 } else {
                     if (tilehit == 64) {
-                        if (pwalldir == di_west || pwalldir == di_east) {
+                        if (pwalldir == controldir_t::di_west || pwalldir == controldir_t::di_east) {
                             int32_t yintbuf;
                             int     pwallposnorm;
                             int     pwallposinv;
-                            if (pwalldir == di_west) {
+                            if (pwalldir == controldir_t::di_west) {
                                 pwallposnorm = 64 - pwallpos;
                                 pwallposinv = pwallpos;
                             } else {
                                 pwallposnorm = pwallpos;
                                 pwallposinv = 64 - pwallpos;
                             }
-                            if (pwalldir == di_east && xtile == pwallx && ((uint32_t)yintercept >> 16) == pwally
-                                || pwalldir == di_west && !(xtile == pwallx && ((uint32_t)yintercept >> 16) == pwally)) {
+                            if (pwalldir == controldir_t::di_east && xtile == pwallx && ((uint32_t)yintercept >> 16) == pwally
+                                || pwalldir == controldir_t::di_west && !(xtile == pwallx && ((uint32_t)yintercept >> 16) == pwally)) {
                                 yintbuf = yintercept + ((ystep * pwallposnorm) >> 6);
                                 if ((yintbuf >> 16) != (yintercept >> 16))
                                     goto passvert;
@@ -1173,16 +1173,16 @@ void AsmRefresh()
                             }
                         } else {
                             int pwallposi = pwallpos;
-                            if (pwalldir == di_north)
+                            if (pwalldir == controldir_t::di_north)
                                 pwallposi = 64 - pwallpos;
-                            if (pwalldir == di_south && (word)yintercept < (pwallposi << 10)
-                                || pwalldir == di_north && (word)yintercept > (pwallposi << 10)) {
+                            if (pwalldir == controldir_t::di_south && (word)yintercept < (pwallposi << 10)
+                                || pwalldir == controldir_t::di_north && (word)yintercept > (pwallposi << 10)) {
                                 if (((uint32_t)yintercept >> 16) == pwally && xtile == pwallx) {
-                                    if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep < (pwallposi << 10)
-                                        || pwalldir == di_north && (int32_t)((word)yintercept) + ystep > (pwallposi << 10))
+                                    if (pwalldir == controldir_t::di_south && (int32_t)((word)yintercept) + ystep < (pwallposi << 10)
+                                        || pwalldir == controldir_t::di_north && (int32_t)((word)yintercept) + ystep > (pwallposi << 10))
                                         goto passvert;
 
-                                    if (pwalldir == di_south)
+                                    if (pwalldir == controldir_t::di_south)
                                         yintercept = (yintercept & 0xffff0000) + (pwallposi << 10);
                                     else
                                         yintercept = (yintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10);
@@ -1205,11 +1205,11 @@ void AsmRefresh()
                                     tilehit = pwalltile;
                                     HitVertWall();
                                 } else {
-                                    if (pwalldir == di_south && (int32_t)((word)yintercept) + ystep > (pwallposi << 10)
-                                        || pwalldir == di_north && (int32_t)((word)yintercept) + ystep < (pwallposi << 10))
+                                    if (pwalldir == controldir_t::di_south && (int32_t)((word)yintercept) + ystep > (pwallposi << 10)
+                                        || pwalldir == controldir_t::di_north && (int32_t)((word)yintercept) + ystep < (pwallposi << 10))
                                         goto passvert;
 
-                                    if (pwalldir == di_south)
+                                    if (pwalldir == controldir_t::di_south)
                                         yintercept = (yintercept & 0xffff0000) - ((64 - pwallpos) << 10);
                                     else
                                         yintercept = (yintercept & 0xffff0000) + ((64 - pwallpos) << 10);
@@ -1274,19 +1274,19 @@ void AsmRefresh()
                     HitHorizDoor();
                 } else {
                     if (tilehit == 64) {
-                        if (pwalldir == di_north || pwalldir == di_south) {
+                        if (pwalldir == controldir_t::di_north || pwalldir == controldir_t::di_south) {
                             int32_t xintbuf;
                             int     pwallposnorm;
                             int     pwallposinv;
-                            if (pwalldir == di_north) {
+                            if (pwalldir == controldir_t::di_north) {
                                 pwallposnorm = 64 - pwallpos;
                                 pwallposinv = pwallpos;
                             } else {
                                 pwallposnorm = pwallpos;
                                 pwallposinv = 64 - pwallpos;
                             }
-                            if (pwalldir == di_south && ytile == pwally && ((uint32_t)xintercept >> 16) == pwallx
-                                || pwalldir == di_north && !(ytile == pwally && ((uint32_t)xintercept >> 16) == pwallx)) {
+                            if (pwalldir == controldir_t::di_south && ytile == pwally && ((uint32_t)xintercept >> 16) == pwallx
+                                || pwalldir == controldir_t::di_north && !(ytile == pwally && ((uint32_t)xintercept >> 16) == pwallx)) {
                                 xintbuf = xintercept + ((xstep * pwallposnorm) >> 6);
                                 if ((xintbuf >> 16) != (xintercept >> 16))
                                     goto passhoriz;
@@ -1309,16 +1309,16 @@ void AsmRefresh()
                             }
                         } else {
                             int pwallposi = pwallpos;
-                            if (pwalldir == di_west)
+                            if (pwalldir == controldir_t::di_west)
                                 pwallposi = 64 - pwallpos;
-                            if (pwalldir == di_east && (word)xintercept < (pwallposi << 10)
-                                || pwalldir == di_west && (word)xintercept > (pwallposi << 10)) {
+                            if (pwalldir == controldir_t::di_east && (word)xintercept < (pwallposi << 10)
+                                || pwalldir == controldir_t::di_west && (word)xintercept > (pwallposi << 10)) {
                                 if (((uint32_t)xintercept >> 16) == pwallx && ytile == pwally) {
-                                    if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep < (pwallposi << 10)
-                                        || pwalldir == di_west && (int32_t)((word)xintercept) + xstep > (pwallposi << 10))
+                                    if (pwalldir == controldir_t::di_east && (int32_t)((word)xintercept) + xstep < (pwallposi << 10)
+                                        || pwalldir == controldir_t::di_west && (int32_t)((word)xintercept) + xstep > (pwallposi << 10))
                                         goto passhoriz;
 
-                                    if (pwalldir == di_east)
+                                    if (pwalldir == controldir_t::di_east)
                                         xintercept = (xintercept & 0xffff0000) + (pwallposi << 10);
                                     else
                                         xintercept = (xintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10);
@@ -1341,11 +1341,11 @@ void AsmRefresh()
                                     tilehit = pwalltile;
                                     HitHorizWall();
                                 } else {
-                                    if (pwalldir == di_east && (int32_t)((word)xintercept) + xstep > (pwallposi << 10)
-                                        || pwalldir == di_west && (int32_t)((word)xintercept) + xstep < (pwallposi << 10))
+                                    if (pwalldir == controldir_t::di_east && (int32_t)((word)xintercept) + xstep > (pwallposi << 10)
+                                        || pwalldir == controldir_t::di_west && (int32_t)((word)xintercept) + xstep < (pwallposi << 10))
                                         goto passhoriz;
 
-                                    if (pwalldir == di_east)
+                                    if (pwalldir == controldir_t::di_east)
                                         xintercept = (xintercept & 0xffff0000) - ((64 - pwallpos) << 10);
                                     else
                                         xintercept = (xintercept & 0xffff0000) + ((64 - pwallpos) << 10);
@@ -1451,7 +1451,7 @@ void ThreeDRefresh(void)
 
     DrawPlayerWeapon(); // draw player's hands
 
-    if (Keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
+    if (Keyboard[sc_Tab] && viewsize == 21 && static_cast<byte>(gamestate.weapon) != -1)
         ShowActStatus();
 
     VL_UnlockSurface(screenBuffer);

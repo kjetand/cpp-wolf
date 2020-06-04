@@ -29,15 +29,15 @@ static musicnames lastmusicchunk = (musicnames)0;
 
 static int DebugOk;
 
-objtype  objlist[MAXACTORS];
-objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
+objstruct  objlist[MAXACTORS];
+objstruct *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
 boolean noclip, ammocheat;
 int     godmode, singlestep, extravbls = 0;
 
-byte     tilemap[MAPSIZE][MAPSIZE]; // wall values only
-byte     spotvis[MAPSIZE][MAPSIZE];
-objtype* actorat[MAPSIZE][MAPSIZE];
+byte       tilemap[MAPSIZE][MAPSIZE]; // wall values only
+byte       spotvis[MAPSIZE][MAPSIZE];
+objstruct* actorat[MAPSIZE][MAPSIZE];
 
 //
 // replacing refresh manager
@@ -66,7 +66,7 @@ boolean buttonheld[NUMBUTTONS];
 
 boolean demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
-memptr  demobuffer;
+void*   demobuffer;
 
 //
 // current user input
@@ -80,7 +80,7 @@ int lastgamemusicoffset = 0;
 
 void CenterWindow(word w, word h);
 void InitObjList(void);
-void RemoveObj(objtype* gone);
+void RemoveObj(objstruct* gone);
 void PollControls(void);
 int  StopMusic(void);
 void StartMusic(void);
@@ -95,7 +95,7 @@ void PlayLoop(void);
 =============================================================================
 */
 
-objtype dummyobj;
+objstruct dummyobj;
 
 //
 // LIST OF SONGS FOR EACH VERSION
@@ -302,13 +302,13 @@ void PollKeyboardMove(void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
-    if (Keyboard[dirscan[di_north]])
+    if (Keyboard[dirscan[static_cast<byte>(controldir_t::di_north)]])
         controly -= delta;
-    if (Keyboard[dirscan[di_south]])
+    if (Keyboard[dirscan[static_cast<byte>(controldir_t::di_south)]])
         controly += delta;
-    if (Keyboard[dirscan[di_west]])
+    if (Keyboard[dirscan[static_cast<byte>(controldir_t::di_west)]])
         controlx -= delta;
-    if (Keyboard[dirscan[di_east]])
+    if (Keyboard[dirscan[static_cast<byte>(controldir_t::di_east)]])
         controlx += delta;
 }
 
@@ -421,7 +421,7 @@ void PollControls(void)
         controly = *demoptr++;
 
         if (demoptr == lastdemoptr)
-            playstate = ex_completed; // demo is done
+            playstate = exit_t::ex_completed; // demo is done
 
         controlx *= (int)tics;
         controly *= (int)tics;
@@ -487,7 +487,7 @@ void PollControls(void)
         *demoptr++ = controly;
 
         if (demoptr >= lastdemoptr - 8)
-            playstate = ex_completed;
+            playstate = exit_t::ex_completed;
         else {
             controlx *= (int)tics;
             controly *= (int)tics;
@@ -561,7 +561,7 @@ void CheckKeys(void)
         gamestate.keys = 3;
         gamestate.score = 0;
         gamestate.TimeCount += 42000L;
-        GiveWeapon(wp_chaingun);
+        GiveWeapon(weapontype::wp_chaingun);
         DrawWeapon();
         DrawHealth();
         DrawKeys();
@@ -675,7 +675,7 @@ void CheckKeys(void)
         if (!startgame && !loadedgame)
             ContinueMusic(lastoffs);
         if (loadedgame)
-            playstate = ex_abort;
+            playstate = exit_t::ex_abort;
         lasttimecount = GetTimeCount();
         if (MousePresent && IN_IsInputGrabbed())
             IN_CenterMouse(); // Clear accumulated mouse movement
@@ -793,7 +793,7 @@ void GetNewActor(void)
         lastobj->next = newobj;
     newobj->prev = lastobj; // new->next is allready NULL from memset
 
-    newobj->active = ac_no;
+    newobj->active = activetype::ac_no;
     lastobj = newobj;
 
     objcount++;
@@ -812,7 +812,7 @@ void GetNewActor(void)
 =========================
 */
 
-void RemoveObj(objtype* gone)
+void RemoveObj(objstruct* gone)
 {
     if (gone == player)
         Quit("RemoveObj: Tried to remove the player!");
@@ -823,7 +823,7 @@ void RemoveObj(objtype* gone)
     // fix the next object's back link
     //
     if (gone == lastobj)
-        lastobj = (objtype*)gone->prev;
+        lastobj = (objstruct*)gone->prev;
     else
         gone->next->prev = gone->prev;
 
@@ -1078,14 +1078,14 @@ void FinishPaletteShifts(void)
 =====================
 */
 
-void DoActor(objtype* ob)
+void DoActor(objstruct* ob)
 {
-    void (*think)(objtype*);
+    void (*think)(objstruct*);
 
-    if (!ob->active && !areabyplayer[ob->areanumber])
+    if (!static_cast<byte>(ob->active) && !areabyplayer[ob->areanumber])
         return;
 
-    if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
+    if (!(ob->flags & (static_cast<std::uint32_t>(objflag_t::FL_NONMARK) | static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK))))
         actorat[ob->tilex][ob->tiley] = NULL;
 
     //
@@ -1093,7 +1093,7 @@ void DoActor(objtype* ob)
     //
 
     if (!ob->ticcount) {
-        think = (void (*)(objtype*))ob->state->think;
+        think = (void (*)(objstruct*))ob->state->think;
         if (think) {
             think(ob);
             if (!ob->state) {
@@ -1102,10 +1102,10 @@ void DoActor(objtype* ob)
             }
         }
 
-        if (ob->flags & FL_NEVERMARK)
+        if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK))
             return;
 
-        if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
+        if ((ob->flags & static_cast<std::uint32_t>(objflag_t::FL_NONMARK)) && actorat[ob->tilex][ob->tiley])
             return;
 
         actorat[ob->tilex][ob->tiley] = ob;
@@ -1117,7 +1117,7 @@ void DoActor(objtype* ob)
     //
     ob->ticcount -= (short)tics;
     while (ob->ticcount <= 0) {
-        think = (void (*)(objtype*))ob->state->action; // end of state action
+        think = (void (*)(objstruct*))ob->state->action; // end of state action
         if (think) {
             think(ob);
             if (!ob->state) {
@@ -1145,7 +1145,7 @@ think:
     //
     // think
     //
-    think = (void (*)(objtype*))ob->state->think;
+    think = (void (*)(objstruct*))ob->state->think;
     if (think) {
         think(ob);
         if (!ob->state) {
@@ -1154,10 +1154,10 @@ think:
         }
     }
 
-    if (ob->flags & FL_NEVERMARK)
+    if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK))
         return;
 
-    if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
+    if ((ob->flags & static_cast<std::uint32_t>(objflag_t::FL_NONMARK)) && actorat[ob->tilex][ob->tiley])
         return;
 
     actorat[ob->tilex][ob->tiley] = ob;
@@ -1177,7 +1177,7 @@ int32_t funnyticount;
 void PlayLoop(void)
 {
 
-    playstate = ex_stillplaying;
+    playstate = exit_t::ex_stillplaying;
     lasttimecount = GetTimeCount();
     frameon = 0;
     anglefrac = 0;
@@ -1244,11 +1244,11 @@ void PlayLoop(void)
         if (demoplayback) {
             if (IN_CheckAck()) {
                 IN_ClearKeysDown();
-                playstate = ex_abort;
+                playstate = exit_t::ex_abort;
             }
         }
-    } while (!playstate && !startgame);
+    } while (!static_cast<byte>(playstate) && !startgame);
 
-    if (playstate != ex_died)
+    if (playstate != exit_t::ex_died)
         FinishPaletteShifts();
 }

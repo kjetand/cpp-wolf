@@ -34,8 +34,8 @@
 =============================================================================
 */
 
-dirtype dirtable[9] = { northwest, north, northeast, west, nodir, east,
-    southwest, south, southeast };
+dirtype dirtable[9] = { dirtype::northwest, dirtype::north, dirtype::northeast, dirtype::west, dirtype::nodir, dirtype::east,
+    dirtype::southwest, dirtype::south, dirtype::southeast };
 
 short starthitpoints[4][NUMENEMIES] =
     //
@@ -157,17 +157,17 @@ short starthitpoints[4][NUMENEMIES] =
         }
     };
 
-void A_StartDeathCam(objtype* ob);
+void A_StartDeathCam(objstruct* ob);
 
-void T_Path(objtype* ob);
-void T_Shoot(objtype* ob);
-void T_Bite(objtype* ob);
-void T_DogChase(objtype* ob);
-void T_Chase(objtype* ob);
-void T_Projectile(objtype* ob);
-void T_Stand(objtype* ob);
+void T_Path(objstruct* ob);
+void T_Shoot(objstruct* ob);
+void T_Bite(objstruct* ob);
+void T_DogChase(objstruct* ob);
+void T_Chase(objstruct* ob);
+void T_Projectile(objstruct* ob);
+void T_Stand(objstruct* ob);
 
-void A_DeathScream(objtype* ob);
+void A_DeathScream(objstruct* ob);
 
 extern statetype s_rocket;
 extern statetype s_smoke1;
@@ -177,17 +177,17 @@ extern statetype s_smoke4;
 extern statetype s_boom2;
 extern statetype s_boom3;
 
-void A_Smoke(objtype* ob);
+void A_Smoke(objstruct* ob);
 
-statetype s_rocket = { true, SPR_ROCKET_1, 3, (statefunc)T_Projectile, (statefunc)A_Smoke, &s_rocket };
-statetype s_smoke1 = { false, SPR_SMOKE_1, 3, NULL, NULL, &s_smoke2 };
-statetype s_smoke2 = { false, SPR_SMOKE_2, 3, NULL, NULL, &s_smoke3 };
-statetype s_smoke3 = { false, SPR_SMOKE_3, 3, NULL, NULL, &s_smoke4 };
-statetype s_smoke4 = { false, SPR_SMOKE_4, 3, NULL, NULL, NULL };
+statetype s_rocket = { true, static_cast<short>(sprite::SPR_ROCKET_1), 3, (statefunc)T_Projectile, (statefunc)A_Smoke, &s_rocket };
+statetype s_smoke1 = { false, static_cast<short>(sprite::SPR_SMOKE_1), 3, NULL, NULL, &s_smoke2 };
+statetype s_smoke2 = { false, static_cast<short>(sprite::SPR_SMOKE_2), 3, NULL, NULL, &s_smoke3 };
+statetype s_smoke3 = { false, static_cast<short>(sprite::SPR_SMOKE_3), 3, NULL, NULL, &s_smoke4 };
+statetype s_smoke4 = { false, static_cast<short>(sprite::SPR_SMOKE_4), 3, NULL, NULL, NULL };
 
-statetype s_boom1 = { false, SPR_BOOM_1, 6, NULL, NULL, &s_boom2 };
-statetype s_boom2 = { false, SPR_BOOM_2, 6, NULL, NULL, &s_boom3 };
-statetype s_boom3 = { false, SPR_BOOM_3, 6, NULL, NULL, NULL };
+statetype s_boom1 = { false, static_cast<short>(sprite::SPR_BOOM_1), 6, NULL, NULL, &s_boom2 };
+statetype s_boom2 = { false, static_cast<short>(sprite::SPR_BOOM_2), 6, NULL, NULL, &s_boom3 };
+statetype s_boom3 = { false, static_cast<short>(sprite::SPR_BOOM_3), 6, NULL, NULL, NULL };
 
 #ifdef SPEAR
 
@@ -199,29 +199,29 @@ extern statetype s_hsmoke4;
 extern statetype s_hboom2;
 extern statetype s_hboom3;
 
-void A_Smoke(objtype* ob);
+void A_Smoke(objstruct* ob);
 
-statetype s_hrocket = { true, SPR_HROCKET_1, 3, (statefunc)T_Projectile, (statefunc)A_Smoke, &s_hrocket };
-statetype s_hsmoke1 = { false, SPR_HSMOKE_1, 3, NULL, NULL, &s_hsmoke2 };
-statetype s_hsmoke2 = { false, SPR_HSMOKE_2, 3, NULL, NULL, &s_hsmoke3 };
-statetype s_hsmoke3 = { false, SPR_HSMOKE_3, 3, NULL, NULL, &s_hsmoke4 };
-statetype s_hsmoke4 = { false, SPR_HSMOKE_4, 3, NULL, NULL, NULL };
+statetype s_hrocket = { true, static_cast<short>(sprite::SPR_HROCKET_1), 3, (statefunc)T_Projectile, (statefunc)A_Smoke, &s_hrocket };
+statetype s_hsmoke1 = { false, static_cast<short>(sprite::SPR_HSMOKE_1), 3, NULL, NULL, &s_hsmoke2 };
+statetype s_hsmoke2 = { false, static_cast<short>(sprite::SPR_HSMOKE_2), 3, NULL, NULL, &s_hsmoke3 };
+statetype s_hsmoke3 = { false, static_cast<short>(sprite::SPR_HSMOKE_3), 3, NULL, NULL, &s_hsmoke4 };
+statetype s_hsmoke4 = { false, static_cast<short>(sprite::SPR_HSMOKE_4), 3, NULL, NULL, NULL };
 
-statetype s_hboom1 = { false, SPR_HBOOM_1, 6, NULL, NULL, &s_hboom2 };
-statetype s_hboom2 = { false, SPR_HBOOM_2, 6, NULL, NULL, &s_hboom3 };
-statetype s_hboom3 = { false, SPR_HBOOM_3, 6, NULL, NULL, NULL };
+statetype s_hboom1 = { false, static_cast<short>(sprite::SPR_HBOOM_1), 6, NULL, NULL, &s_hboom2 };
+statetype s_hboom2 = { false, static_cast<short>(sprite::SPR_HBOOM_2), 6, NULL, NULL, &s_hboom3 };
+statetype s_hboom3 = { false, static_cast<short>(sprite::SPR_HBOOM_3), 6, NULL, NULL, NULL };
 
 #endif
 
-void T_Schabb(objtype* ob);
-void T_SchabbThrow(objtype* ob);
-void T_Fake(objtype* ob);
-void T_FakeFire(objtype* ob);
-void T_Ghosts(objtype* ob);
+void T_Schabb(objstruct* ob);
+void T_SchabbThrow(objstruct* ob);
+void T_Fake(objstruct* ob);
+void T_FakeFire(objstruct* ob);
+void T_Ghosts(objstruct* ob);
 
-void A_Slurpie(objtype* ob);
-void A_HitlerMorph(objtype* ob);
-void A_MechaSound(objtype* ob);
+void A_Slurpie(objstruct* ob);
+void A_HitlerMorph(objstruct* ob);
+void A_MechaSound(objstruct* ob);
 
 /*
 =================
@@ -231,7 +231,7 @@ void A_MechaSound(objtype* ob);
 =================
 */
 
-void A_Smoke(objtype* ob)
+void A_Smoke(objstruct* ob)
 {
     GetNewActor();
 #ifdef SPEAR
@@ -246,10 +246,10 @@ void A_Smoke(objtype* ob)
     newobj->tiley = ob->tiley;
     newobj->x = ob->x;
     newobj->y = ob->y;
-    newobj->obclass = inertobj;
-    newobj->active = ac_yes;
+    newobj->obclass = classtype::inertobj;
+    newobj->active = activetype::ac_yes;
 
-    newobj->flags = FL_NEVERMARK;
+    newobj->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
 }
 
 /*
@@ -263,10 +263,10 @@ void A_Smoke(objtype* ob)
 
 #define PROJSIZE 0x2000
 
-boolean ProjectileTryMove(objtype* ob)
+boolean ProjectileTryMove(objstruct* ob)
 {
-    int      xl, yl, xh, yh, x, y;
-    objtype* check;
+    int        xl, yl, xh, yh, x, y;
+    objstruct* check;
 
     xl = (ob->x - PROJSIZE) >> TILESHIFT;
     yl = (ob->y - PROJSIZE) >> TILESHIFT;
@@ -295,7 +295,7 @@ boolean ProjectileTryMove(objtype* ob)
 =================
 */
 
-void T_Projectile(objtype* ob)
+void T_Projectile(objstruct* ob)
 {
     int32_t deltax, deltay;
     int     damage;
@@ -319,7 +319,7 @@ void T_Projectile(objtype* ob)
 
     if (!ProjectileTryMove(ob)) {
 #ifndef APOGEE_1_0 // actually the whole method is never reached in shareware 1.0
-        if (ob->obclass == rocketobj) {
+        if (ob->obclass == classtype::rocketobj) {
             PlaySoundLocActor(MISSILEHITSND, ob);
             ob->state = &s_boom1;
         }
@@ -338,15 +338,15 @@ void T_Projectile(objtype* ob)
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE) { // hit the player
         switch (ob->obclass) {
-        case needleobj:
+        case classtype::needleobj:
             damage = (US_RndT() >> 3) + 20;
             break;
-        case rocketobj:
-        case hrocketobj:
-        case sparkobj:
+        case classtype::rocketobj:
+        case classtype::hrocketobj:
+        case classtype::sparkobj:
             damage = (US_RndT() >> 3) + 30;
             break;
-        case fireobj:
+        case classtype::fireobj:
             damage = (US_RndT() >> 3);
             break;
         }
@@ -404,33 +404,33 @@ extern statetype s_grddie2;
 extern statetype s_grddie3;
 extern statetype s_grddie4;
 
-statetype s_grdstand = { true, SPR_GRD_S_1, 0, (statefunc)T_Stand, NULL, &s_grdstand };
+statetype s_grdstand = { true, static_cast<short>(sprite::SPR_GRD_S_1), 0, (statefunc)T_Stand, NULL, &s_grdstand };
 
-statetype s_grdpath1 = { true, SPR_GRD_W1_1, 20, (statefunc)T_Path, NULL, &s_grdpath1s };
-statetype s_grdpath1s = { true, SPR_GRD_W1_1, 5, NULL, NULL, &s_grdpath2 };
-statetype s_grdpath2 = { true, SPR_GRD_W2_1, 15, (statefunc)T_Path, NULL, &s_grdpath3 };
-statetype s_grdpath3 = { true, SPR_GRD_W3_1, 20, (statefunc)T_Path, NULL, &s_grdpath3s };
-statetype s_grdpath3s = { true, SPR_GRD_W3_1, 5, NULL, NULL, &s_grdpath4 };
-statetype s_grdpath4 = { true, SPR_GRD_W4_1, 15, (statefunc)T_Path, NULL, &s_grdpath1 };
+statetype s_grdpath1 = { true, static_cast<short>(sprite::SPR_GRD_W1_1), 20, (statefunc)T_Path, NULL, &s_grdpath1s };
+statetype s_grdpath1s = { true, static_cast<short>(sprite::SPR_GRD_W1_1), 5, NULL, NULL, &s_grdpath2 };
+statetype s_grdpath2 = { true, static_cast<short>(sprite::SPR_GRD_W2_1), 15, (statefunc)T_Path, NULL, &s_grdpath3 };
+statetype s_grdpath3 = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 20, (statefunc)T_Path, NULL, &s_grdpath3s };
+statetype s_grdpath3s = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 5, NULL, NULL, &s_grdpath4 };
+statetype s_grdpath4 = { true, static_cast<short>(sprite::SPR_GRD_W4_1), 15, (statefunc)T_Path, NULL, &s_grdpath1 };
 
-statetype s_grdpain = { 2, SPR_GRD_PAIN_1, 10, NULL, NULL, &s_grdchase1 };
-statetype s_grdpain1 = { 2, SPR_GRD_PAIN_2, 10, NULL, NULL, &s_grdchase1 };
+statetype s_grdpain = { 2, static_cast<short>(sprite::SPR_GRD_PAIN_1), 10, NULL, NULL, &s_grdchase1 };
+statetype s_grdpain1 = { 2, static_cast<short>(sprite::SPR_GRD_PAIN_2), 10, NULL, NULL, &s_grdchase1 };
 
-statetype s_grdshoot1 = { false, SPR_GRD_SHOOT1, 20, NULL, NULL, &s_grdshoot2 };
-statetype s_grdshoot2 = { false, SPR_GRD_SHOOT2, 20, NULL, (statefunc)T_Shoot, &s_grdshoot3 };
-statetype s_grdshoot3 = { false, SPR_GRD_SHOOT3, 20, NULL, NULL, &s_grdchase1 };
+statetype s_grdshoot1 = { false, static_cast<short>(sprite::SPR_GRD_SHOOT1), 20, NULL, NULL, &s_grdshoot2 };
+statetype s_grdshoot2 = { false, static_cast<short>(sprite::SPR_GRD_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_grdshoot3 };
+statetype s_grdshoot3 = { false, static_cast<short>(sprite::SPR_GRD_SHOOT3), 20, NULL, NULL, &s_grdchase1 };
 
-statetype s_grdchase1 = { true, SPR_GRD_W1_1, 10, (statefunc)T_Chase, NULL, &s_grdchase1s };
-statetype s_grdchase1s = { true, SPR_GRD_W1_1, 3, NULL, NULL, &s_grdchase2 };
-statetype s_grdchase2 = { true, SPR_GRD_W2_1, 8, (statefunc)T_Chase, NULL, &s_grdchase3 };
-statetype s_grdchase3 = { true, SPR_GRD_W3_1, 10, (statefunc)T_Chase, NULL, &s_grdchase3s };
-statetype s_grdchase3s = { true, SPR_GRD_W3_1, 3, NULL, NULL, &s_grdchase4 };
-statetype s_grdchase4 = { true, SPR_GRD_W4_1, 8, (statefunc)T_Chase, NULL, &s_grdchase1 };
+statetype s_grdchase1 = { true, static_cast<short>(sprite::SPR_GRD_W1_1), 10, (statefunc)T_Chase, NULL, &s_grdchase1s };
+statetype s_grdchase1s = { true, static_cast<short>(sprite::SPR_GRD_W1_1), 3, NULL, NULL, &s_grdchase2 };
+statetype s_grdchase2 = { true, static_cast<short>(sprite::SPR_GRD_W2_1), 8, (statefunc)T_Chase, NULL, &s_grdchase3 };
+statetype s_grdchase3 = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 10, (statefunc)T_Chase, NULL, &s_grdchase3s };
+statetype s_grdchase3s = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 3, NULL, NULL, &s_grdchase4 };
+statetype s_grdchase4 = { true, static_cast<short>(sprite::SPR_GRD_W4_1), 8, (statefunc)T_Chase, NULL, &s_grdchase1 };
 
-statetype s_grddie1 = { false, SPR_GRD_DIE_1, 15, NULL, (statefunc)A_DeathScream, &s_grddie2 };
-statetype s_grddie2 = { false, SPR_GRD_DIE_2, 15, NULL, NULL, &s_grddie3 };
-statetype s_grddie3 = { false, SPR_GRD_DIE_3, 15, NULL, NULL, &s_grddie4 };
-statetype s_grddie4 = { false, SPR_GRD_DEAD, 0, NULL, NULL, &s_grddie4 };
+statetype s_grddie1 = { false, static_cast<short>(sprite::SPR_GRD_DIE_1), 15, NULL, (statefunc)A_DeathScream, &s_grddie2 };
+statetype s_grddie2 = { false, static_cast<short>(sprite::SPR_GRD_DIE_2), 15, NULL, NULL, &s_grddie3 };
+statetype s_grddie3 = { false, static_cast<short>(sprite::SPR_GRD_DIE_3), 15, NULL, NULL, &s_grddie4 };
+statetype s_grddie4 = { false, static_cast<short>(sprite::SPR_GRD_DEAD), 0, NULL, NULL, &s_grddie4 };
 
 #ifndef SPEAR
 //
@@ -445,17 +445,17 @@ extern statetype s_pinkychase2;
 extern statetype s_clydechase1;
 extern statetype s_clydechase2;
 
-statetype s_blinkychase1 = { false, SPR_BLINKY_W1, 10, (statefunc)T_Ghosts, NULL, &s_blinkychase2 };
-statetype s_blinkychase2 = { false, SPR_BLINKY_W2, 10, (statefunc)T_Ghosts, NULL, &s_blinkychase1 };
+statetype s_blinkychase1 = { false, static_cast<short>(sprite::SPR_BLINKY_W1), 10, (statefunc)T_Ghosts, NULL, &s_blinkychase2 };
+statetype s_blinkychase2 = { false, static_cast<short>(sprite::SPR_BLINKY_W2), 10, (statefunc)T_Ghosts, NULL, &s_blinkychase1 };
 
-statetype s_inkychase1 = { false, SPR_INKY_W1, 10, (statefunc)T_Ghosts, NULL, &s_inkychase2 };
-statetype s_inkychase2 = { false, SPR_INKY_W2, 10, (statefunc)T_Ghosts, NULL, &s_inkychase1 };
+statetype s_inkychase1 = { false, static_cast<short>(sprite::SPR_INKY_W1), 10, (statefunc)T_Ghosts, NULL, &s_inkychase2 };
+statetype s_inkychase2 = { false, static_cast<short>(sprite::SPR_INKY_W2), 10, (statefunc)T_Ghosts, NULL, &s_inkychase1 };
 
-statetype s_pinkychase1 = { false, SPR_PINKY_W1, 10, (statefunc)T_Ghosts, NULL, &s_pinkychase2 };
-statetype s_pinkychase2 = { false, SPR_PINKY_W2, 10, (statefunc)T_Ghosts, NULL, &s_pinkychase1 };
+statetype s_pinkychase1 = { false, static_cast<short>(sprite::SPR_PINKY_W1), 10, (statefunc)T_Ghosts, NULL, &s_pinkychase2 };
+statetype s_pinkychase2 = { false, static_cast<short>(sprite::SPR_PINKY_W2), 10, (statefunc)T_Ghosts, NULL, &s_pinkychase1 };
 
-statetype s_clydechase1 = { false, SPR_CLYDE_W1, 10, (statefunc)T_Ghosts, NULL, &s_clydechase2 };
-statetype s_clydechase2 = { false, SPR_CLYDE_W2, 10, (statefunc)T_Ghosts, NULL, &s_clydechase1 };
+statetype s_clydechase1 = { false, static_cast<short>(sprite::SPR_CLYDE_W1), 10, (statefunc)T_Ghosts, NULL, &s_clydechase2 };
+statetype s_clydechase2 = { false, static_cast<short>(sprite::SPR_CLYDE_W2), 10, (statefunc)T_Ghosts, NULL, &s_clydechase1 };
 #endif
 
 //
@@ -488,30 +488,30 @@ extern statetype s_dogdie2;
 extern statetype s_dogdie3;
 extern statetype s_dogdead;
 
-statetype s_dogpath1 = { true, SPR_DOG_W1_1, 20, (statefunc)T_Path, NULL, &s_dogpath1s };
-statetype s_dogpath1s = { true, SPR_DOG_W1_1, 5, NULL, NULL, &s_dogpath2 };
-statetype s_dogpath2 = { true, SPR_DOG_W2_1, 15, (statefunc)T_Path, NULL, &s_dogpath3 };
-statetype s_dogpath3 = { true, SPR_DOG_W3_1, 20, (statefunc)T_Path, NULL, &s_dogpath3s };
-statetype s_dogpath3s = { true, SPR_DOG_W3_1, 5, NULL, NULL, &s_dogpath4 };
-statetype s_dogpath4 = { true, SPR_DOG_W4_1, 15, (statefunc)T_Path, NULL, &s_dogpath1 };
+statetype s_dogpath1 = { true, static_cast<short>(sprite::SPR_DOG_W1_1), 20, (statefunc)T_Path, NULL, &s_dogpath1s };
+statetype s_dogpath1s = { true, static_cast<short>(sprite::SPR_DOG_W1_1), 5, NULL, NULL, &s_dogpath2 };
+statetype s_dogpath2 = { true, static_cast<short>(sprite::SPR_DOG_W2_1), 15, (statefunc)T_Path, NULL, &s_dogpath3 };
+statetype s_dogpath3 = { true, static_cast<short>(sprite::SPR_DOG_W3_1), 20, (statefunc)T_Path, NULL, &s_dogpath3s };
+statetype s_dogpath3s = { true, static_cast<short>(sprite::SPR_DOG_W3_1), 5, NULL, NULL, &s_dogpath4 };
+statetype s_dogpath4 = { true, static_cast<short>(sprite::SPR_DOG_W4_1), 15, (statefunc)T_Path, NULL, &s_dogpath1 };
 
-statetype s_dogjump1 = { false, SPR_DOG_JUMP1, 10, NULL, NULL, &s_dogjump2 };
-statetype s_dogjump2 = { false, SPR_DOG_JUMP2, 10, NULL, (statefunc)T_Bite, &s_dogjump3 };
-statetype s_dogjump3 = { false, SPR_DOG_JUMP3, 10, NULL, NULL, &s_dogjump4 };
-statetype s_dogjump4 = { false, SPR_DOG_JUMP1, 10, NULL, NULL, &s_dogjump5 };
-statetype s_dogjump5 = { false, SPR_DOG_W1_1, 10, NULL, NULL, &s_dogchase1 };
+statetype s_dogjump1 = { false, static_cast<short>(sprite::SPR_DOG_JUMP1), 10, NULL, NULL, &s_dogjump2 };
+statetype s_dogjump2 = { false, static_cast<short>(sprite::SPR_DOG_JUMP2), 10, NULL, (statefunc)T_Bite, &s_dogjump3 };
+statetype s_dogjump3 = { false, static_cast<short>(sprite::SPR_DOG_JUMP3), 10, NULL, NULL, &s_dogjump4 };
+statetype s_dogjump4 = { false, static_cast<short>(sprite::SPR_DOG_JUMP1), 10, NULL, NULL, &s_dogjump5 };
+statetype s_dogjump5 = { false, static_cast<short>(sprite::SPR_DOG_W1_1), 10, NULL, NULL, &s_dogchase1 };
 
-statetype s_dogchase1 = { true, SPR_DOG_W1_1, 10, (statefunc)T_DogChase, NULL, &s_dogchase1s };
-statetype s_dogchase1s = { true, SPR_DOG_W1_1, 3, NULL, NULL, &s_dogchase2 };
-statetype s_dogchase2 = { true, SPR_DOG_W2_1, 8, (statefunc)T_DogChase, NULL, &s_dogchase3 };
-statetype s_dogchase3 = { true, SPR_DOG_W3_1, 10, (statefunc)T_DogChase, NULL, &s_dogchase3s };
-statetype s_dogchase3s = { true, SPR_DOG_W3_1, 3, NULL, NULL, &s_dogchase4 };
-statetype s_dogchase4 = { true, SPR_DOG_W4_1, 8, (statefunc)T_DogChase, NULL, &s_dogchase1 };
+statetype s_dogchase1 = { true, static_cast<short>(sprite::SPR_DOG_W1_1), 10, (statefunc)T_DogChase, NULL, &s_dogchase1s };
+statetype s_dogchase1s = { true, static_cast<short>(sprite::SPR_DOG_W1_1), 3, NULL, NULL, &s_dogchase2 };
+statetype s_dogchase2 = { true, static_cast<short>(sprite::SPR_DOG_W2_1), 8, (statefunc)T_DogChase, NULL, &s_dogchase3 };
+statetype s_dogchase3 = { true, static_cast<short>(sprite::SPR_DOG_W3_1), 10, (statefunc)T_DogChase, NULL, &s_dogchase3s };
+statetype s_dogchase3s = { true, static_cast<short>(sprite::SPR_DOG_W3_1), 3, NULL, NULL, &s_dogchase4 };
+statetype s_dogchase4 = { true, static_cast<short>(sprite::SPR_DOG_W4_1), 8, (statefunc)T_DogChase, NULL, &s_dogchase1 };
 
-statetype s_dogdie1 = { false, SPR_DOG_DIE_1, 15, NULL, (statefunc)A_DeathScream, &s_dogdie2 };
-statetype s_dogdie2 = { false, SPR_DOG_DIE_2, 15, NULL, NULL, &s_dogdie3 };
-statetype s_dogdie3 = { false, SPR_DOG_DIE_3, 15, NULL, NULL, &s_dogdead };
-statetype s_dogdead = { false, SPR_DOG_DEAD, 15, NULL, NULL, &s_dogdead };
+statetype s_dogdie1 = { false, static_cast<short>(sprite::SPR_DOG_DIE_1), 15, NULL, (statefunc)A_DeathScream, &s_dogdie2 };
+statetype s_dogdie2 = { false, static_cast<short>(sprite::SPR_DOG_DIE_2), 15, NULL, NULL, &s_dogdie3 };
+statetype s_dogdie3 = { false, static_cast<short>(sprite::SPR_DOG_DIE_3), 15, NULL, NULL, &s_dogdead };
+statetype s_dogdead = { false, static_cast<short>(sprite::SPR_DOG_DEAD), 15, NULL, NULL, &s_dogdead };
 
 //
 // officers
@@ -549,34 +549,34 @@ extern statetype s_ofcdie3;
 extern statetype s_ofcdie4;
 extern statetype s_ofcdie5;
 
-statetype s_ofcstand = { true, SPR_OFC_S_1, 0, (statefunc)T_Stand, NULL, &s_ofcstand };
+statetype s_ofcstand = { true, static_cast<short>(sprite::SPR_OFC_S_1), 0, (statefunc)T_Stand, NULL, &s_ofcstand };
 
-statetype s_ofcpath1 = { true, SPR_OFC_W1_1, 20, (statefunc)T_Path, NULL, &s_ofcpath1s };
-statetype s_ofcpath1s = { true, SPR_OFC_W1_1, 5, NULL, NULL, &s_ofcpath2 };
-statetype s_ofcpath2 = { true, SPR_OFC_W2_1, 15, (statefunc)T_Path, NULL, &s_ofcpath3 };
-statetype s_ofcpath3 = { true, SPR_OFC_W3_1, 20, (statefunc)T_Path, NULL, &s_ofcpath3s };
-statetype s_ofcpath3s = { true, SPR_OFC_W3_1, 5, NULL, NULL, &s_ofcpath4 };
-statetype s_ofcpath4 = { true, SPR_OFC_W4_1, 15, (statefunc)T_Path, NULL, &s_ofcpath1 };
+statetype s_ofcpath1 = { true, static_cast<short>(sprite::SPR_OFC_W1_1), 20, (statefunc)T_Path, NULL, &s_ofcpath1s };
+statetype s_ofcpath1s = { true, static_cast<short>(sprite::SPR_OFC_W1_1), 5, NULL, NULL, &s_ofcpath2 };
+statetype s_ofcpath2 = { true, static_cast<short>(sprite::SPR_OFC_W2_1), 15, (statefunc)T_Path, NULL, &s_ofcpath3 };
+statetype s_ofcpath3 = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 20, (statefunc)T_Path, NULL, &s_ofcpath3s };
+statetype s_ofcpath3s = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 5, NULL, NULL, &s_ofcpath4 };
+statetype s_ofcpath4 = { true, static_cast<short>(sprite::SPR_OFC_W4_1), 15, (statefunc)T_Path, NULL, &s_ofcpath1 };
 
-statetype s_ofcpain = { 2, SPR_OFC_PAIN_1, 10, NULL, NULL, &s_ofcchase1 };
-statetype s_ofcpain1 = { 2, SPR_OFC_PAIN_2, 10, NULL, NULL, &s_ofcchase1 };
+statetype s_ofcpain = { 2, static_cast<short>(sprite::SPR_OFC_PAIN_1), 10, NULL, NULL, &s_ofcchase1 };
+statetype s_ofcpain1 = { 2, static_cast<short>(sprite::SPR_OFC_PAIN_2), 10, NULL, NULL, &s_ofcchase1 };
 
-statetype s_ofcshoot1 = { false, SPR_OFC_SHOOT1, 6, NULL, NULL, &s_ofcshoot2 };
-statetype s_ofcshoot2 = { false, SPR_OFC_SHOOT2, 20, NULL, (statefunc)T_Shoot, &s_ofcshoot3 };
-statetype s_ofcshoot3 = { false, SPR_OFC_SHOOT3, 10, NULL, NULL, &s_ofcchase1 };
+statetype s_ofcshoot1 = { false, static_cast<short>(sprite::SPR_OFC_SHOOT1), 6, NULL, NULL, &s_ofcshoot2 };
+statetype s_ofcshoot2 = { false, static_cast<short>(sprite::SPR_OFC_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_ofcshoot3 };
+statetype s_ofcshoot3 = { false, static_cast<short>(sprite::SPR_OFC_SHOOT3), 10, NULL, NULL, &s_ofcchase1 };
 
-statetype s_ofcchase1 = { true, SPR_OFC_W1_1, 10, (statefunc)T_Chase, NULL, &s_ofcchase1s };
-statetype s_ofcchase1s = { true, SPR_OFC_W1_1, 3, NULL, NULL, &s_ofcchase2 };
-statetype s_ofcchase2 = { true, SPR_OFC_W2_1, 8, (statefunc)T_Chase, NULL, &s_ofcchase3 };
-statetype s_ofcchase3 = { true, SPR_OFC_W3_1, 10, (statefunc)T_Chase, NULL, &s_ofcchase3s };
-statetype s_ofcchase3s = { true, SPR_OFC_W3_1, 3, NULL, NULL, &s_ofcchase4 };
-statetype s_ofcchase4 = { true, SPR_OFC_W4_1, 8, (statefunc)T_Chase, NULL, &s_ofcchase1 };
+statetype s_ofcchase1 = { true, static_cast<short>(sprite::SPR_OFC_W1_1), 10, (statefunc)T_Chase, NULL, &s_ofcchase1s };
+statetype s_ofcchase1s = { true, static_cast<short>(sprite::SPR_OFC_W1_1), 3, NULL, NULL, &s_ofcchase2 };
+statetype s_ofcchase2 = { true, static_cast<short>(sprite::SPR_OFC_W2_1), 8, (statefunc)T_Chase, NULL, &s_ofcchase3 };
+statetype s_ofcchase3 = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 10, (statefunc)T_Chase, NULL, &s_ofcchase3s };
+statetype s_ofcchase3s = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 3, NULL, NULL, &s_ofcchase4 };
+statetype s_ofcchase4 = { true, static_cast<short>(sprite::SPR_OFC_W4_1), 8, (statefunc)T_Chase, NULL, &s_ofcchase1 };
 
-statetype s_ofcdie1 = { false, SPR_OFC_DIE_1, 11, NULL, (statefunc)A_DeathScream, &s_ofcdie2 };
-statetype s_ofcdie2 = { false, SPR_OFC_DIE_2, 11, NULL, NULL, &s_ofcdie3 };
-statetype s_ofcdie3 = { false, SPR_OFC_DIE_3, 11, NULL, NULL, &s_ofcdie4 };
-statetype s_ofcdie4 = { false, SPR_OFC_DIE_4, 11, NULL, NULL, &s_ofcdie5 };
-statetype s_ofcdie5 = { false, SPR_OFC_DEAD, 0, NULL, NULL, &s_ofcdie5 };
+statetype s_ofcdie1 = { false, static_cast<short>(sprite::SPR_OFC_DIE_1), 11, NULL, (statefunc)A_DeathScream, &s_ofcdie2 };
+statetype s_ofcdie2 = { false, static_cast<short>(sprite::SPR_OFC_DIE_2), 11, NULL, NULL, &s_ofcdie3 };
+statetype s_ofcdie3 = { false, static_cast<short>(sprite::SPR_OFC_DIE_3), 11, NULL, NULL, &s_ofcdie4 };
+statetype s_ofcdie4 = { false, static_cast<short>(sprite::SPR_OFC_DIE_4), 11, NULL, NULL, &s_ofcdie5 };
+statetype s_ofcdie5 = { false, static_cast<short>(sprite::SPR_OFC_DEAD), 0, NULL, NULL, &s_ofcdie5 };
 
 //
 // mutant
@@ -614,35 +614,35 @@ extern statetype s_mutdie3;
 extern statetype s_mutdie4;
 extern statetype s_mutdie5;
 
-statetype s_mutstand = { true, SPR_MUT_S_1, 0, (statefunc)T_Stand, NULL, &s_mutstand };
+statetype s_mutstand = { true, static_cast<short>(sprite::SPR_MUT_S_1), 0, (statefunc)T_Stand, NULL, &s_mutstand };
 
-statetype s_mutpath1 = { true, SPR_MUT_W1_1, 20, (statefunc)T_Path, NULL, &s_mutpath1s };
-statetype s_mutpath1s = { true, SPR_MUT_W1_1, 5, NULL, NULL, &s_mutpath2 };
-statetype s_mutpath2 = { true, SPR_MUT_W2_1, 15, (statefunc)T_Path, NULL, &s_mutpath3 };
-statetype s_mutpath3 = { true, SPR_MUT_W3_1, 20, (statefunc)T_Path, NULL, &s_mutpath3s };
-statetype s_mutpath3s = { true, SPR_MUT_W3_1, 5, NULL, NULL, &s_mutpath4 };
-statetype s_mutpath4 = { true, SPR_MUT_W4_1, 15, (statefunc)T_Path, NULL, &s_mutpath1 };
+statetype s_mutpath1 = { true, static_cast<short>(sprite::SPR_MUT_W1_1), 20, (statefunc)T_Path, NULL, &s_mutpath1s };
+statetype s_mutpath1s = { true, static_cast<short>(sprite::SPR_MUT_W1_1), 5, NULL, NULL, &s_mutpath2 };
+statetype s_mutpath2 = { true, static_cast<short>(sprite::SPR_MUT_W2_1), 15, (statefunc)T_Path, NULL, &s_mutpath3 };
+statetype s_mutpath3 = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 20, (statefunc)T_Path, NULL, &s_mutpath3s };
+statetype s_mutpath3s = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 5, NULL, NULL, &s_mutpath4 };
+statetype s_mutpath4 = { true, static_cast<short>(sprite::SPR_MUT_W4_1), 15, (statefunc)T_Path, NULL, &s_mutpath1 };
 
-statetype s_mutpain = { 2, SPR_MUT_PAIN_1, 10, NULL, NULL, &s_mutchase1 };
-statetype s_mutpain1 = { 2, SPR_MUT_PAIN_2, 10, NULL, NULL, &s_mutchase1 };
+statetype s_mutpain = { 2, static_cast<short>(sprite::SPR_MUT_PAIN_1), 10, NULL, NULL, &s_mutchase1 };
+statetype s_mutpain1 = { 2, static_cast<short>(sprite::SPR_MUT_PAIN_2), 10, NULL, NULL, &s_mutchase1 };
 
-statetype s_mutshoot1 = { false, SPR_MUT_SHOOT1, 6, NULL, (statefunc)T_Shoot, &s_mutshoot2 };
-statetype s_mutshoot2 = { false, SPR_MUT_SHOOT2, 20, NULL, NULL, &s_mutshoot3 };
-statetype s_mutshoot3 = { false, SPR_MUT_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_mutshoot4 };
-statetype s_mutshoot4 = { false, SPR_MUT_SHOOT4, 20, NULL, NULL, &s_mutchase1 };
+statetype s_mutshoot1 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT1), 6, NULL, (statefunc)T_Shoot, &s_mutshoot2 };
+statetype s_mutshoot2 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT2), 20, NULL, NULL, &s_mutshoot3 };
+statetype s_mutshoot3 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_mutshoot4 };
+statetype s_mutshoot4 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT4), 20, NULL, NULL, &s_mutchase1 };
 
-statetype s_mutchase1 = { true, SPR_MUT_W1_1, 10, (statefunc)T_Chase, NULL, &s_mutchase1s };
-statetype s_mutchase1s = { true, SPR_MUT_W1_1, 3, NULL, NULL, &s_mutchase2 };
-statetype s_mutchase2 = { true, SPR_MUT_W2_1, 8, (statefunc)T_Chase, NULL, &s_mutchase3 };
-statetype s_mutchase3 = { true, SPR_MUT_W3_1, 10, (statefunc)T_Chase, NULL, &s_mutchase3s };
-statetype s_mutchase3s = { true, SPR_MUT_W3_1, 3, NULL, NULL, &s_mutchase4 };
-statetype s_mutchase4 = { true, SPR_MUT_W4_1, 8, (statefunc)T_Chase, NULL, &s_mutchase1 };
+statetype s_mutchase1 = { true, static_cast<short>(sprite::SPR_MUT_W1_1), 10, (statefunc)T_Chase, NULL, &s_mutchase1s };
+statetype s_mutchase1s = { true, static_cast<short>(sprite::SPR_MUT_W1_1), 3, NULL, NULL, &s_mutchase2 };
+statetype s_mutchase2 = { true, static_cast<short>(sprite::SPR_MUT_W2_1), 8, (statefunc)T_Chase, NULL, &s_mutchase3 };
+statetype s_mutchase3 = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 10, (statefunc)T_Chase, NULL, &s_mutchase3s };
+statetype s_mutchase3s = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 3, NULL, NULL, &s_mutchase4 };
+statetype s_mutchase4 = { true, static_cast<short>(sprite::SPR_MUT_W4_1), 8, (statefunc)T_Chase, NULL, &s_mutchase1 };
 
-statetype s_mutdie1 = { false, SPR_MUT_DIE_1, 7, NULL, (statefunc)A_DeathScream, &s_mutdie2 };
-statetype s_mutdie2 = { false, SPR_MUT_DIE_2, 7, NULL, NULL, &s_mutdie3 };
-statetype s_mutdie3 = { false, SPR_MUT_DIE_3, 7, NULL, NULL, &s_mutdie4 };
-statetype s_mutdie4 = { false, SPR_MUT_DIE_4, 7, NULL, NULL, &s_mutdie5 };
-statetype s_mutdie5 = { false, SPR_MUT_DEAD, 0, NULL, NULL, &s_mutdie5 };
+statetype s_mutdie1 = { false, static_cast<short>(sprite::SPR_MUT_DIE_1), 7, NULL, (statefunc)A_DeathScream, &s_mutdie2 };
+statetype s_mutdie2 = { false, static_cast<short>(sprite::SPR_MUT_DIE_2), 7, NULL, NULL, &s_mutdie3 };
+statetype s_mutdie3 = { false, static_cast<short>(sprite::SPR_MUT_DIE_3), 7, NULL, NULL, &s_mutdie4 };
+statetype s_mutdie4 = { false, static_cast<short>(sprite::SPR_MUT_DIE_4), 7, NULL, NULL, &s_mutdie5 };
+statetype s_mutdie5 = { false, static_cast<short>(sprite::SPR_MUT_DEAD), 0, NULL, NULL, &s_mutdie5 };
 
 //
 // SS
@@ -682,39 +682,39 @@ extern statetype s_ssdie2;
 extern statetype s_ssdie3;
 extern statetype s_ssdie4;
 
-statetype s_ssstand = { true, SPR_SS_S_1, 0, (statefunc)T_Stand, NULL, &s_ssstand };
+statetype s_ssstand = { true, static_cast<short>(sprite::SPR_SS_S_1), 0, (statefunc)T_Stand, NULL, &s_ssstand };
 
-statetype s_sspath1 = { true, SPR_SS_W1_1, 20, (statefunc)T_Path, NULL, &s_sspath1s };
-statetype s_sspath1s = { true, SPR_SS_W1_1, 5, NULL, NULL, &s_sspath2 };
-statetype s_sspath2 = { true, SPR_SS_W2_1, 15, (statefunc)T_Path, NULL, &s_sspath3 };
-statetype s_sspath3 = { true, SPR_SS_W3_1, 20, (statefunc)T_Path, NULL, &s_sspath3s };
-statetype s_sspath3s = { true, SPR_SS_W3_1, 5, NULL, NULL, &s_sspath4 };
-statetype s_sspath4 = { true, SPR_SS_W4_1, 15, (statefunc)T_Path, NULL, &s_sspath1 };
+statetype s_sspath1 = { true, static_cast<short>(sprite::SPR_SS_W1_1), 20, (statefunc)T_Path, NULL, &s_sspath1s };
+statetype s_sspath1s = { true, static_cast<short>(sprite::SPR_SS_W1_1), 5, NULL, NULL, &s_sspath2 };
+statetype s_sspath2 = { true, static_cast<short>(sprite::SPR_SS_W2_1), 15, (statefunc)T_Path, NULL, &s_sspath3 };
+statetype s_sspath3 = { true, static_cast<short>(sprite::SPR_SS_W3_1), 20, (statefunc)T_Path, NULL, &s_sspath3s };
+statetype s_sspath3s = { true, static_cast<short>(sprite::SPR_SS_W3_1), 5, NULL, NULL, &s_sspath4 };
+statetype s_sspath4 = { true, static_cast<short>(sprite::SPR_SS_W4_1), 15, (statefunc)T_Path, NULL, &s_sspath1 };
 
-statetype s_sspain = { 2, SPR_SS_PAIN_1, 10, NULL, NULL, &s_sschase1 };
-statetype s_sspain1 = { 2, SPR_SS_PAIN_2, 10, NULL, NULL, &s_sschase1 };
+statetype s_sspain = { 2, static_cast<short>(sprite::SPR_SS_PAIN_1), 10, NULL, NULL, &s_sschase1 };
+statetype s_sspain1 = { 2, static_cast<short>(sprite::SPR_SS_PAIN_2), 10, NULL, NULL, &s_sschase1 };
 
-statetype s_ssshoot1 = { false, SPR_SS_SHOOT1, 20, NULL, NULL, &s_ssshoot2 };
-statetype s_ssshoot2 = { false, SPR_SS_SHOOT2, 20, NULL, (statefunc)T_Shoot, &s_ssshoot3 };
-statetype s_ssshoot3 = { false, SPR_SS_SHOOT3, 10, NULL, NULL, &s_ssshoot4 };
-statetype s_ssshoot4 = { false, SPR_SS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_ssshoot5 };
-statetype s_ssshoot5 = { false, SPR_SS_SHOOT3, 10, NULL, NULL, &s_ssshoot6 };
-statetype s_ssshoot6 = { false, SPR_SS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_ssshoot7 };
-statetype s_ssshoot7 = { false, SPR_SS_SHOOT3, 10, NULL, NULL, &s_ssshoot8 };
-statetype s_ssshoot8 = { false, SPR_SS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_ssshoot9 };
-statetype s_ssshoot9 = { false, SPR_SS_SHOOT3, 10, NULL, NULL, &s_sschase1 };
+statetype s_ssshoot1 = { false, static_cast<short>(sprite::SPR_SS_SHOOT1), 20, NULL, NULL, &s_ssshoot2 };
+statetype s_ssshoot2 = { false, static_cast<short>(sprite::SPR_SS_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_ssshoot3 };
+statetype s_ssshoot3 = { false, static_cast<short>(sprite::SPR_SS_SHOOT3), 10, NULL, NULL, &s_ssshoot4 };
+statetype s_ssshoot4 = { false, static_cast<short>(sprite::SPR_SS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_ssshoot5 };
+statetype s_ssshoot5 = { false, static_cast<short>(sprite::SPR_SS_SHOOT3), 10, NULL, NULL, &s_ssshoot6 };
+statetype s_ssshoot6 = { false, static_cast<short>(sprite::SPR_SS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_ssshoot7 };
+statetype s_ssshoot7 = { false, static_cast<short>(sprite::SPR_SS_SHOOT3), 10, NULL, NULL, &s_ssshoot8 };
+statetype s_ssshoot8 = { false, static_cast<short>(sprite::SPR_SS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_ssshoot9 };
+statetype s_ssshoot9 = { false, static_cast<short>(sprite::SPR_SS_SHOOT3), 10, NULL, NULL, &s_sschase1 };
 
-statetype s_sschase1 = { true, SPR_SS_W1_1, 10, (statefunc)T_Chase, NULL, &s_sschase1s };
-statetype s_sschase1s = { true, SPR_SS_W1_1, 3, NULL, NULL, &s_sschase2 };
-statetype s_sschase2 = { true, SPR_SS_W2_1, 8, (statefunc)T_Chase, NULL, &s_sschase3 };
-statetype s_sschase3 = { true, SPR_SS_W3_1, 10, (statefunc)T_Chase, NULL, &s_sschase3s };
-statetype s_sschase3s = { true, SPR_SS_W3_1, 3, NULL, NULL, &s_sschase4 };
-statetype s_sschase4 = { true, SPR_SS_W4_1, 8, (statefunc)T_Chase, NULL, &s_sschase1 };
+statetype s_sschase1 = { true, static_cast<short>(sprite::SPR_SS_W1_1), 10, (statefunc)T_Chase, NULL, &s_sschase1s };
+statetype s_sschase1s = { true, static_cast<short>(sprite::SPR_SS_W1_1), 3, NULL, NULL, &s_sschase2 };
+statetype s_sschase2 = { true, static_cast<short>(sprite::SPR_SS_W2_1), 8, (statefunc)T_Chase, NULL, &s_sschase3 };
+statetype s_sschase3 = { true, static_cast<short>(sprite::SPR_SS_W3_1), 10, (statefunc)T_Chase, NULL, &s_sschase3s };
+statetype s_sschase3s = { true, static_cast<short>(sprite::SPR_SS_W3_1), 3, NULL, NULL, &s_sschase4 };
+statetype s_sschase4 = { true, static_cast<short>(sprite::SPR_SS_W4_1), 8, (statefunc)T_Chase, NULL, &s_sschase1 };
 
-statetype s_ssdie1 = { false, SPR_SS_DIE_1, 15, NULL, (statefunc)A_DeathScream, &s_ssdie2 };
-statetype s_ssdie2 = { false, SPR_SS_DIE_2, 15, NULL, NULL, &s_ssdie3 };
-statetype s_ssdie3 = { false, SPR_SS_DIE_3, 15, NULL, NULL, &s_ssdie4 };
-statetype s_ssdie4 = { false, SPR_SS_DEAD, 0, NULL, NULL, &s_ssdie4 };
+statetype s_ssdie1 = { false, static_cast<short>(sprite::SPR_SS_DIE_1), 15, NULL, (statefunc)A_DeathScream, &s_ssdie2 };
+statetype s_ssdie2 = { false, static_cast<short>(sprite::SPR_SS_DIE_2), 15, NULL, NULL, &s_ssdie3 };
+statetype s_ssdie3 = { false, static_cast<short>(sprite::SPR_SS_DIE_3), 15, NULL, NULL, &s_ssdie4 };
+statetype s_ssdie4 = { false, static_cast<short>(sprite::SPR_SS_DEAD), 0, NULL, NULL, &s_ssdie4 };
 
 #ifndef SPEAR
 //
@@ -743,28 +743,28 @@ extern statetype s_bossshoot6;
 extern statetype s_bossshoot7;
 extern statetype s_bossshoot8;
 
-statetype s_bossstand = { false, SPR_BOSS_W1, 0, (statefunc)T_Stand, NULL, &s_bossstand };
+statetype s_bossstand = { false, static_cast<short>(sprite::SPR_BOSS_W1), 0, (statefunc)T_Stand, NULL, &s_bossstand };
 
-statetype s_bosschase1 = { false, SPR_BOSS_W1, 10, (statefunc)T_Chase, NULL, &s_bosschase1s };
-statetype s_bosschase1s = { false, SPR_BOSS_W1, 3, NULL, NULL, &s_bosschase2 };
-statetype s_bosschase2 = { false, SPR_BOSS_W2, 8, (statefunc)T_Chase, NULL, &s_bosschase3 };
-statetype s_bosschase3 = { false, SPR_BOSS_W3, 10, (statefunc)T_Chase, NULL, &s_bosschase3s };
-statetype s_bosschase3s = { false, SPR_BOSS_W3, 3, NULL, NULL, &s_bosschase4 };
-statetype s_bosschase4 = { false, SPR_BOSS_W4, 8, (statefunc)T_Chase, NULL, &s_bosschase1 };
+statetype s_bosschase1 = { false, static_cast<short>(sprite::SPR_BOSS_W1), 10, (statefunc)T_Chase, NULL, &s_bosschase1s };
+statetype s_bosschase1s = { false, static_cast<short>(sprite::SPR_BOSS_W1), 3, NULL, NULL, &s_bosschase2 };
+statetype s_bosschase2 = { false, static_cast<short>(sprite::SPR_BOSS_W2), 8, (statefunc)T_Chase, NULL, &s_bosschase3 };
+statetype s_bosschase3 = { false, static_cast<short>(sprite::SPR_BOSS_W3), 10, (statefunc)T_Chase, NULL, &s_bosschase3s };
+statetype s_bosschase3s = { false, static_cast<short>(sprite::SPR_BOSS_W3), 3, NULL, NULL, &s_bosschase4 };
+statetype s_bosschase4 = { false, static_cast<short>(sprite::SPR_BOSS_W4), 8, (statefunc)T_Chase, NULL, &s_bosschase1 };
 
-statetype s_bossdie1 = { false, SPR_BOSS_DIE1, 15, NULL, (statefunc)A_DeathScream, &s_bossdie2 };
-statetype s_bossdie2 = { false, SPR_BOSS_DIE2, 15, NULL, NULL, &s_bossdie3 };
-statetype s_bossdie3 = { false, SPR_BOSS_DIE3, 15, NULL, NULL, &s_bossdie4 };
-statetype s_bossdie4 = { false, SPR_BOSS_DEAD, 0, NULL, NULL, &s_bossdie4 };
+statetype s_bossdie1 = { false, static_cast<short>(sprite::SPR_BOSS_DIE1), 15, NULL, (statefunc)A_DeathScream, &s_bossdie2 };
+statetype s_bossdie2 = { false, static_cast<short>(sprite::SPR_BOSS_DIE2), 15, NULL, NULL, &s_bossdie3 };
+statetype s_bossdie3 = { false, static_cast<short>(sprite::SPR_BOSS_DIE3), 15, NULL, NULL, &s_bossdie4 };
+statetype s_bossdie4 = { false, static_cast<short>(sprite::SPR_BOSS_DEAD), 0, NULL, NULL, &s_bossdie4 };
 
-statetype s_bossshoot1 = { false, SPR_BOSS_SHOOT1, 30, NULL, NULL, &s_bossshoot2 };
-statetype s_bossshoot2 = { false, SPR_BOSS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_bossshoot3 };
-statetype s_bossshoot3 = { false, SPR_BOSS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_bossshoot4 };
-statetype s_bossshoot4 = { false, SPR_BOSS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_bossshoot5 };
-statetype s_bossshoot5 = { false, SPR_BOSS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_bossshoot6 };
-statetype s_bossshoot6 = { false, SPR_BOSS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_bossshoot7 };
-statetype s_bossshoot7 = { false, SPR_BOSS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_bossshoot8 };
-statetype s_bossshoot8 = { false, SPR_BOSS_SHOOT1, 10, NULL, NULL, &s_bosschase1 };
+statetype s_bossshoot1 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT1), 30, NULL, NULL, &s_bossshoot2 };
+statetype s_bossshoot2 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_bossshoot3 };
+statetype s_bossshoot3 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_bossshoot4 };
+statetype s_bossshoot4 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_bossshoot5 };
+statetype s_bossshoot5 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_bossshoot6 };
+statetype s_bossshoot6 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_bossshoot7 };
+statetype s_bossshoot7 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_bossshoot8 };
+statetype s_bossshoot8 = { false, static_cast<short>(sprite::SPR_BOSS_SHOOT1), 10, NULL, NULL, &s_bosschase1 };
 
 //
 // gretel
@@ -792,28 +792,28 @@ extern statetype s_gretelshoot6;
 extern statetype s_gretelshoot7;
 extern statetype s_gretelshoot8;
 
-statetype s_gretelstand = { false, SPR_GRETEL_W1, 0, (statefunc)T_Stand, NULL, &s_gretelstand };
+statetype s_gretelstand = { false, static_cast<short>(sprite::SPR_GRETEL_W1), 0, (statefunc)T_Stand, NULL, &s_gretelstand };
 
-statetype s_gretelchase1 = { false, SPR_GRETEL_W1, 10, (statefunc)T_Chase, NULL, &s_gretelchase1s };
-statetype s_gretelchase1s = { false, SPR_GRETEL_W1, 3, NULL, NULL, &s_gretelchase2 };
-statetype s_gretelchase2 = { false, SPR_GRETEL_W2, 8, (statefunc)T_Chase, NULL, &s_gretelchase3 };
-statetype s_gretelchase3 = { false, SPR_GRETEL_W3, 10, (statefunc)T_Chase, NULL, &s_gretelchase3s };
-statetype s_gretelchase3s = { false, SPR_GRETEL_W3, 3, NULL, NULL, &s_gretelchase4 };
-statetype s_gretelchase4 = { false, SPR_GRETEL_W4, 8, (statefunc)T_Chase, NULL, &s_gretelchase1 };
+statetype s_gretelchase1 = { false, static_cast<short>(sprite::SPR_GRETEL_W1), 10, (statefunc)T_Chase, NULL, &s_gretelchase1s };
+statetype s_gretelchase1s = { false, static_cast<short>(sprite::SPR_GRETEL_W1), 3, NULL, NULL, &s_gretelchase2 };
+statetype s_gretelchase2 = { false, static_cast<short>(sprite::SPR_GRETEL_W2), 8, (statefunc)T_Chase, NULL, &s_gretelchase3 };
+statetype s_gretelchase3 = { false, static_cast<short>(sprite::SPR_GRETEL_W3), 10, (statefunc)T_Chase, NULL, &s_gretelchase3s };
+statetype s_gretelchase3s = { false, static_cast<short>(sprite::SPR_GRETEL_W3), 3, NULL, NULL, &s_gretelchase4 };
+statetype s_gretelchase4 = { false, static_cast<short>(sprite::SPR_GRETEL_W4), 8, (statefunc)T_Chase, NULL, &s_gretelchase1 };
 
-statetype s_greteldie1 = { false, SPR_GRETEL_DIE1, 15, NULL, (statefunc)A_DeathScream, &s_greteldie2 };
-statetype s_greteldie2 = { false, SPR_GRETEL_DIE2, 15, NULL, NULL, &s_greteldie3 };
-statetype s_greteldie3 = { false, SPR_GRETEL_DIE3, 15, NULL, NULL, &s_greteldie4 };
-statetype s_greteldie4 = { false, SPR_GRETEL_DEAD, 0, NULL, NULL, &s_greteldie4 };
+statetype s_greteldie1 = { false, static_cast<short>(sprite::SPR_GRETEL_DIE1), 15, NULL, (statefunc)A_DeathScream, &s_greteldie2 };
+statetype s_greteldie2 = { false, static_cast<short>(sprite::SPR_GRETEL_DIE2), 15, NULL, NULL, &s_greteldie3 };
+statetype s_greteldie3 = { false, static_cast<short>(sprite::SPR_GRETEL_DIE3), 15, NULL, NULL, &s_greteldie4 };
+statetype s_greteldie4 = { false, static_cast<short>(sprite::SPR_GRETEL_DEAD), 0, NULL, NULL, &s_greteldie4 };
 
-statetype s_gretelshoot1 = { false, SPR_GRETEL_SHOOT1, 30, NULL, NULL, &s_gretelshoot2 };
-statetype s_gretelshoot2 = { false, SPR_GRETEL_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot3 };
-statetype s_gretelshoot3 = { false, SPR_GRETEL_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot4 };
-statetype s_gretelshoot4 = { false, SPR_GRETEL_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot5 };
-statetype s_gretelshoot5 = { false, SPR_GRETEL_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot6 };
-statetype s_gretelshoot6 = { false, SPR_GRETEL_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot7 };
-statetype s_gretelshoot7 = { false, SPR_GRETEL_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_gretelshoot8 };
-statetype s_gretelshoot8 = { false, SPR_GRETEL_SHOOT1, 10, NULL, NULL, &s_gretelchase1 };
+statetype s_gretelshoot1 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT1), 30, NULL, NULL, &s_gretelshoot2 };
+statetype s_gretelshoot2 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot3 };
+statetype s_gretelshoot3 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot4 };
+statetype s_gretelshoot4 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot5 };
+statetype s_gretelshoot5 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot6 };
+statetype s_gretelshoot6 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot7 };
+statetype s_gretelshoot7 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_gretelshoot8 };
+statetype s_gretelshoot8 = { false, static_cast<short>(sprite::SPR_GRETEL_SHOOT1), 10, NULL, NULL, &s_gretelchase1 };
 #endif
 
 /*
@@ -830,28 +830,28 @@ void SpawnStand(enemy_t which, int tilex, int tiley, int dir)
     word  tile;
 
     switch (which) {
-    case en_guard:
+    case enemy_t::en_guard:
         SpawnNewObj(tilex, tiley, &s_grdstand);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_officer:
+    case enemy_t::en_officer:
         SpawnNewObj(tilex, tiley, &s_ofcstand);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_mutant:
+    case enemy_t::en_mutant:
         SpawnNewObj(tilex, tiley, &s_mutstand);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_ss:
+    case enemy_t::en_ss:
         SpawnNewObj(tilex, tiley, &s_ssstand);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
@@ -876,13 +876,13 @@ void SpawnStand(enemy_t which, int tilex, int tiley, int dir)
         *map = tile;
         newobj->areanumber = tile - AREATILE;
 
-        newobj->flags |= FL_AMBUSH;
+        newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     }
 
-    newobj->obclass = (classtype)(guardobj + which);
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
+    newobj->obclass = (classtype)(static_cast<byte>(classtype::guardobj) + static_cast<byte>(which));
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(which)];
     newobj->dir = (dirtype)(dir * 2);
-    newobj->flags |= FL_SHOOTABLE;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE);
 }
 
 /*
@@ -898,9 +898,9 @@ void SpawnDeadGuard(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_grddie4);
     DEMOIF_SDL
     {
-        newobj->flags |= FL_NONMARK; // walk through moving enemy fix
+        newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_NONMARK); // walk through moving enemy fix
     }
-    newobj->obclass = inertobj;
+    newobj->obclass = classtype::inertobj;
 }
 
 #ifndef SPEAR
@@ -917,10 +917,10 @@ void SpawnBoss(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_bossstand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = bossobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_boss];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::bossobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_boss)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -938,10 +938,10 @@ void SpawnGretel(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_gretelstand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = gretelobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_gretel];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::gretelobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_gretel)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -958,35 +958,35 @@ void SpawnGretel(int tilex, int tiley)
 void SpawnPatrol(enemy_t which, int tilex, int tiley, int dir)
 {
     switch (which) {
-    case en_guard:
+    case enemy_t::en_guard:
         SpawnNewObj(tilex, tiley, &s_grdpath1);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_officer:
+    case enemy_t::en_officer:
         SpawnNewObj(tilex, tiley, &s_ofcpath1);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_ss:
+    case enemy_t::en_ss:
         SpawnNewObj(tilex, tiley, &s_sspath1);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_mutant:
+    case enemy_t::en_mutant:
         SpawnNewObj(tilex, tiley, &s_mutpath1);
         newobj->speed = SPDPATROL;
         if (!loadedgame)
             gamestate.killtotal++;
         break;
 
-    case en_dog:
+    case enemy_t::en_dog:
         SpawnNewObj(tilex, tiley, &s_dogpath1);
         newobj->speed = SPDDOG;
         if (!loadedgame)
@@ -994,12 +994,12 @@ void SpawnPatrol(enemy_t which, int tilex, int tiley, int dir)
         break;
     }
 
-    newobj->obclass = (classtype)(guardobj + which);
+    newobj->obclass = (classtype)(static_cast<byte>(classtype::guardobj) + static_cast<byte>(which));
     newobj->dir = (dirtype)(dir * 2);
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(which)];
     newobj->distance = TILEGLOBAL;
-    newobj->flags |= FL_SHOOTABLE;
-    newobj->active = ac_yes;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE);
+    newobj->active = activetype::ac_yes;
 
     actorat[newobj->tilex][newobj->tiley] = NULL; // don't use original spot
 
@@ -1029,7 +1029,7 @@ void SpawnPatrol(enemy_t which, int tilex, int tiley, int dir)
 ==================
 */
 
-void A_DeathScream(objtype* ob)
+void A_DeathScream(objstruct* ob)
 {
 #ifndef UPLOAD
 #ifndef SPEAR
@@ -1039,11 +1039,11 @@ void A_DeathScream(objtype* ob)
 #endif
     {
         switch (ob->obclass) {
-        case mutantobj:
-        case guardobj:
-        case officerobj:
-        case ssobj:
-        case dogobj:
+        case classtype::mutantobj:
+        case classtype::guardobj:
+        case classtype::officerobj:
+        case classtype::ssobj:
+        case classtype::dogobj:
             PlaySoundLocActor(DEATHSCREAM6SND, ob);
             return;
         }
@@ -1051,11 +1051,11 @@ void A_DeathScream(objtype* ob)
 #endif
 
     switch (ob->obclass) {
-    case mutantobj:
+    case classtype::mutantobj:
         PlaySoundLocActor(AHHHGSND, ob);
         break;
 
-    case guardobj: {
+    case classtype::guardobj: {
         int sounds[9] = { DEATHSCREAM1SND,
             DEATHSCREAM2SND,
             DEATHSCREAM3SND,
@@ -1075,39 +1075,39 @@ void A_DeathScream(objtype* ob)
 #endif
         break;
     }
-    case officerobj:
+    case classtype::officerobj:
         PlaySoundLocActor(NEINSOVASSND, ob);
         break;
-    case ssobj:
+    case classtype::ssobj:
         PlaySoundLocActor(LEBENSND, ob); // JAB
         break;
-    case dogobj:
+    case classtype::dogobj:
         PlaySoundLocActor(DOGDEATHSND, ob); // JAB
         break;
 #ifndef SPEAR
-    case bossobj:
+    case classtype::bossobj:
         SD_PlaySound(MUTTISND); // JAB
         break;
-    case schabbobj:
+    case classtype::schabbobj:
         SD_PlaySound(MEINGOTTSND);
         break;
-    case fakeobj:
+    case classtype::fakeobj:
         SD_PlaySound(HITLERHASND);
         break;
-    case mechahitlerobj:
+    case classtype::mechahitlerobj:
         SD_PlaySound(SCHEISTSND);
         break;
-    case realhitlerobj:
+    case classtype::realhitlerobj:
         SD_PlaySound(EVASND);
         break;
 #ifndef APOGEE_1_0
-    case gretelobj:
+    case classtype::gretelobj:
         SD_PlaySound(MEINSND);
         break;
-    case giftobj:
+    case classtype::giftobj:
         SD_PlaySound(DONNERSND);
         break;
-    case fatobj:
+    case classtype::fatobj:
         SD_PlaySound(ROSESND);
         break;
 #endif
@@ -1144,8 +1144,8 @@ void A_DeathScream(objtype* ob)
 
 #ifdef SPEAR
 
-void T_Launch(objtype* ob);
-void T_Will(objtype* ob);
+void T_Launch(objstruct* ob);
+void T_Will(objstruct* ob);
 
 extern statetype s_angelshoot1;
 extern statetype s_deathshoot1;
@@ -1179,30 +1179,30 @@ extern statetype s_transshoot6;
 extern statetype s_transshoot7;
 extern statetype s_transshoot8;
 
-statetype s_transstand = { false, SPR_TRANS_W1, 0, (statefunc)T_Stand, NULL, &s_transstand };
+statetype s_transstand = { false, static_cast<short>(sprite::SPR_TRANS_W1), 0, (statefunc)T_Stand, NULL, &s_transstand };
 
-statetype s_transchase1 = { false, SPR_TRANS_W1, 10, (statefunc)T_Chase, NULL, &s_transchase1s };
-statetype s_transchase1s = { false, SPR_TRANS_W1, 3, NULL, NULL, &s_transchase2 };
-statetype s_transchase2 = { false, SPR_TRANS_W2, 8, (statefunc)T_Chase, NULL, &s_transchase3 };
-statetype s_transchase3 = { false, SPR_TRANS_W3, 10, (statefunc)T_Chase, NULL, &s_transchase3s };
-statetype s_transchase3s = { false, SPR_TRANS_W3, 3, NULL, NULL, &s_transchase4 };
-statetype s_transchase4 = { false, SPR_TRANS_W4, 8, (statefunc)T_Chase, NULL, &s_transchase1 };
+statetype s_transchase1 = { false, static_cast<short>(sprite::SPR_TRANS_W1), 10, (statefunc)T_Chase, NULL, &s_transchase1s };
+statetype s_transchase1s = { false, static_cast<short>(sprite::SPR_TRANS_W1), 3, NULL, NULL, &s_transchase2 };
+statetype s_transchase2 = { false, static_cast<short>(sprite::SPR_TRANS_W2), 8, (statefunc)T_Chase, NULL, &s_transchase3 };
+statetype s_transchase3 = { false, static_cast<short>(sprite::SPR_TRANS_W3), 10, (statefunc)T_Chase, NULL, &s_transchase3s };
+statetype s_transchase3s = { false, static_cast<short>(sprite::SPR_TRANS_W3), 3, NULL, NULL, &s_transchase4 };
+statetype s_transchase4 = { false, static_cast<short>(sprite::SPR_TRANS_W4), 8, (statefunc)T_Chase, NULL, &s_transchase1 };
 
-statetype s_transdie0 = { false, SPR_TRANS_W1, 1, NULL, (statefunc)A_DeathScream, &s_transdie01 };
-statetype s_transdie01 = { false, SPR_TRANS_W1, 1, NULL, NULL, &s_transdie1 };
-statetype s_transdie1 = { false, SPR_TRANS_DIE1, 15, NULL, NULL, &s_transdie2 };
-statetype s_transdie2 = { false, SPR_TRANS_DIE2, 15, NULL, NULL, &s_transdie3 };
-statetype s_transdie3 = { false, SPR_TRANS_DIE3, 15, NULL, NULL, &s_transdie4 };
-statetype s_transdie4 = { false, SPR_TRANS_DEAD, 0, NULL, NULL, &s_transdie4 };
+statetype s_transdie0 = { false, static_cast<short>(sprite::SPR_TRANS_W1), 1, NULL, (statefunc)A_DeathScream, &s_transdie01 };
+statetype s_transdie01 = { false, static_cast<short>(sprite::SPR_TRANS_W1), 1, NULL, NULL, &s_transdie1 };
+statetype s_transdie1 = { false, static_cast<short>(sprite::SPR_TRANS_DIE1), 15, NULL, NULL, &s_transdie2 };
+statetype s_transdie2 = { false, static_cast<short>(sprite::SPR_TRANS_DIE2), 15, NULL, NULL, &s_transdie3 };
+statetype s_transdie3 = { false, static_cast<short>(sprite::SPR_TRANS_DIE3), 15, NULL, NULL, &s_transdie4 };
+statetype s_transdie4 = { false, static_cast<short>(sprite::SPR_TRANS_DEAD), 0, NULL, NULL, &s_transdie4 };
 
-statetype s_transshoot1 = { false, SPR_TRANS_SHOOT1, 30, NULL, NULL, &s_transshoot2 };
-statetype s_transshoot2 = { false, SPR_TRANS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_transshoot3 };
-statetype s_transshoot3 = { false, SPR_TRANS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_transshoot4 };
-statetype s_transshoot4 = { false, SPR_TRANS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_transshoot5 };
-statetype s_transshoot5 = { false, SPR_TRANS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_transshoot6 };
-statetype s_transshoot6 = { false, SPR_TRANS_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_transshoot7 };
-statetype s_transshoot7 = { false, SPR_TRANS_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_transshoot8 };
-statetype s_transshoot8 = { false, SPR_TRANS_SHOOT1, 10, NULL, NULL, &s_transchase1 };
+statetype s_transshoot1 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT1), 30, NULL, NULL, &s_transshoot2 };
+statetype s_transshoot2 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_transshoot3 };
+statetype s_transshoot3 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_transshoot4 };
+statetype s_transshoot4 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_transshoot5 };
+statetype s_transshoot5 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_transshoot6 };
+statetype s_transshoot6 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_transshoot7 };
+statetype s_transshoot7 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_transshoot8 };
+statetype s_transshoot8 = { false, static_cast<short>(sprite::SPR_TRANS_SHOOT1), 10, NULL, NULL, &s_transchase1 };
 
 /*
 ===============
@@ -1222,8 +1222,8 @@ void SpawnTrans(int tilex, int tiley)
 
     SpawnNewObj(tilex, tiley, &s_transstand);
     newobj->obclass = transobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_trans];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_trans];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1231,7 +1231,7 @@ void SpawnTrans(int tilex, int tiley)
 //
 // uber
 //
-void T_UShoot(objtype* ob);
+void T_UShoot(objstruct* ob);
 
 extern statetype s_uberstand;
 
@@ -1258,30 +1258,30 @@ extern statetype s_ubershoot5;
 extern statetype s_ubershoot6;
 extern statetype s_ubershoot7;
 
-statetype s_uberstand = { false, SPR_UBER_W1, 0, (statefunc)T_Stand, NULL, &s_uberstand };
+statetype s_uberstand = { false, static_cast<short>(sprite::SPR_UBER_W1), 0, (statefunc)T_Stand, NULL, &s_uberstand };
 
-statetype s_uberchase1 = { false, SPR_UBER_W1, 10, (statefunc)T_Chase, NULL, &s_uberchase1s };
-statetype s_uberchase1s = { false, SPR_UBER_W1, 3, NULL, NULL, &s_uberchase2 };
-statetype s_uberchase2 = { false, SPR_UBER_W2, 8, (statefunc)T_Chase, NULL, &s_uberchase3 };
-statetype s_uberchase3 = { false, SPR_UBER_W3, 10, (statefunc)T_Chase, NULL, &s_uberchase3s };
-statetype s_uberchase3s = { false, SPR_UBER_W3, 3, NULL, NULL, &s_uberchase4 };
-statetype s_uberchase4 = { false, SPR_UBER_W4, 8, (statefunc)T_Chase, NULL, &s_uberchase1 };
+statetype s_uberchase1 = { false, static_cast<short>(sprite::SPR_UBER_W1), 10, (statefunc)T_Chase, NULL, &s_uberchase1s };
+statetype s_uberchase1s = { false, static_cast<short>(sprite::SPR_UBER_W1), 3, NULL, NULL, &s_uberchase2 };
+statetype s_uberchase2 = { false, static_cast<short>(sprite::SPR_UBER_W2), 8, (statefunc)T_Chase, NULL, &s_uberchase3 };
+statetype s_uberchase3 = { false, static_cast<short>(sprite::SPR_UBER_W3), 10, (statefunc)T_Chase, NULL, &s_uberchase3s };
+statetype s_uberchase3s = { false, static_cast<short>(sprite::SPR_UBER_W3), 3, NULL, NULL, &s_uberchase4 };
+statetype s_uberchase4 = { false, static_cast<short>(sprite::SPR_UBER_W4), 8, (statefunc)T_Chase, NULL, &s_uberchase1 };
 
-statetype s_uberdie0 = { false, SPR_UBER_W1, 1, NULL, (statefunc)A_DeathScream, &s_uberdie01 };
-statetype s_uberdie01 = { false, SPR_UBER_W1, 1, NULL, NULL, &s_uberdie1 };
-statetype s_uberdie1 = { false, SPR_UBER_DIE1, 15, NULL, NULL, &s_uberdie2 };
-statetype s_uberdie2 = { false, SPR_UBER_DIE2, 15, NULL, NULL, &s_uberdie3 };
-statetype s_uberdie3 = { false, SPR_UBER_DIE3, 15, NULL, NULL, &s_uberdie4 };
-statetype s_uberdie4 = { false, SPR_UBER_DIE4, 15, NULL, NULL, &s_uberdie5 };
-statetype s_uberdie5 = { false, SPR_UBER_DEAD, 0, NULL, NULL, &s_uberdie5 };
+statetype s_uberdie0 = { false, static_cast<short>(sprite::SPR_UBER_W1), 1, NULL, (statefunc)A_DeathScream, &s_uberdie01 };
+statetype s_uberdie01 = { false, static_cast<short>(sprite::SPR_UBER_W1), 1, NULL, NULL, &s_uberdie1 };
+statetype s_uberdie1 = { false, static_cast<short>(sprite::SPR_UBER_DIE1), 15, NULL, NULL, &s_uberdie2 };
+statetype s_uberdie2 = { false, static_cast<short>(sprite::SPR_UBER_DIE2), 15, NULL, NULL, &s_uberdie3 };
+statetype s_uberdie3 = { false, static_cast<short>(sprite::SPR_UBER_DIE3), 15, NULL, NULL, &s_uberdie4 };
+statetype s_uberdie4 = { false, static_cast<short>(sprite::SPR_UBER_DIE4), 15, NULL, NULL, &s_uberdie5 };
+statetype s_uberdie5 = { false, static_cast<short>(sprite::SPR_UBER_DEAD), 0, NULL, NULL, &s_uberdie5 };
 
-statetype s_ubershoot1 = { false, SPR_UBER_SHOOT1, 30, NULL, NULL, &s_ubershoot2 };
-statetype s_ubershoot2 = { false, SPR_UBER_SHOOT2, 12, NULL, (statefunc)T_UShoot, &s_ubershoot3 };
-statetype s_ubershoot3 = { false, SPR_UBER_SHOOT3, 12, NULL, (statefunc)T_UShoot, &s_ubershoot4 };
-statetype s_ubershoot4 = { false, SPR_UBER_SHOOT4, 12, NULL, (statefunc)T_UShoot, &s_ubershoot5 };
-statetype s_ubershoot5 = { false, SPR_UBER_SHOOT3, 12, NULL, (statefunc)T_UShoot, &s_ubershoot6 };
-statetype s_ubershoot6 = { false, SPR_UBER_SHOOT2, 12, NULL, (statefunc)T_UShoot, &s_ubershoot7 };
-statetype s_ubershoot7 = { false, SPR_UBER_SHOOT1, 12, NULL, NULL, &s_uberchase1 };
+statetype s_ubershoot1 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT1), 30, NULL, NULL, &s_ubershoot2 };
+statetype s_ubershoot2 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT2), 12, NULL, (statefunc)T_UShoot, &s_ubershoot3 };
+statetype s_ubershoot3 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT3), 12, NULL, (statefunc)T_UShoot, &s_ubershoot4 };
+statetype s_ubershoot4 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT4), 12, NULL, (statefunc)T_UShoot, &s_ubershoot5 };
+statetype s_ubershoot5 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT3), 12, NULL, (statefunc)T_UShoot, &s_ubershoot6 };
+statetype s_ubershoot6 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT2), 12, NULL, (statefunc)T_UShoot, &s_ubershoot7 };
+statetype s_ubershoot7 = { false, static_cast<short>(sprite::SPR_UBER_SHOOT1), 12, NULL, NULL, &s_uberchase1 };
 
 /*
 ===============
@@ -1298,8 +1298,8 @@ void SpawnUber(int tilex, int tiley)
 
     SpawnNewObj(tilex, tiley, &s_uberstand);
     newobj->obclass = uberobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_uber];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_uber];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1312,7 +1312,7 @@ void SpawnUber(int tilex, int tiley)
 ===============
 */
 
-void T_UShoot(objtype* ob)
+void T_UShoot(objstruct* ob)
 {
     int dx, dy, dist;
 
@@ -1351,30 +1351,30 @@ extern statetype s_willshoot4;
 extern statetype s_willshoot5;
 extern statetype s_willshoot6;
 
-statetype s_willstand = { false, SPR_WILL_W1, 0, (statefunc)T_Stand, NULL, &s_willstand };
+statetype s_willstand = { false, static_cast<short>(sprite::SPR_WILL_W1), 0, (statefunc)T_Stand, NULL, &s_willstand };
 
-statetype s_willchase1 = { false, SPR_WILL_W1, 10, (statefunc)T_Will, NULL, &s_willchase1s };
-statetype s_willchase1s = { false, SPR_WILL_W1, 3, NULL, NULL, &s_willchase2 };
-statetype s_willchase2 = { false, SPR_WILL_W2, 8, (statefunc)T_Will, NULL, &s_willchase3 };
-statetype s_willchase3 = { false, SPR_WILL_W3, 10, (statefunc)T_Will, NULL, &s_willchase3s };
-statetype s_willchase3s = { false, SPR_WILL_W3, 3, NULL, NULL, &s_willchase4 };
-statetype s_willchase4 = { false, SPR_WILL_W4, 8, (statefunc)T_Will, NULL, &s_willchase1 };
+statetype s_willchase1 = { false, static_cast<short>(sprite::SPR_WILL_W1), 10, (statefunc)T_Will, NULL, &s_willchase1s };
+statetype s_willchase1s = { false, static_cast<short>(sprite::SPR_WILL_W1), 3, NULL, NULL, &s_willchase2 };
+statetype s_willchase2 = { false, static_cast<short>(sprite::SPR_WILL_W2), 8, (statefunc)T_Will, NULL, &s_willchase3 };
+statetype s_willchase3 = { false, static_cast<short>(sprite::SPR_WILL_W3), 10, (statefunc)T_Will, NULL, &s_willchase3s };
+statetype s_willchase3s = { false, static_cast<short>(sprite::SPR_WILL_W3), 3, NULL, NULL, &s_willchase4 };
+statetype s_willchase4 = { false, static_cast<short>(sprite::SPR_WILL_W4), 8, (statefunc)T_Will, NULL, &s_willchase1 };
 
-statetype s_willdeathcam = { false, SPR_WILL_W1, 1, NULL, NULL, &s_willdie1 };
+statetype s_willdeathcam = { false, static_cast<short>(sprite::SPR_WILL_W1), 1, NULL, NULL, &s_willdie1 };
 
-statetype s_willdie1 = { false, SPR_WILL_W1, 1, NULL, (statefunc)A_DeathScream, &s_willdie2 };
-statetype s_willdie2 = { false, SPR_WILL_W1, 10, NULL, NULL, &s_willdie3 };
-statetype s_willdie3 = { false, SPR_WILL_DIE1, 10, NULL, NULL, &s_willdie4 };
-statetype s_willdie4 = { false, SPR_WILL_DIE2, 10, NULL, NULL, &s_willdie5 };
-statetype s_willdie5 = { false, SPR_WILL_DIE3, 10, NULL, NULL, &s_willdie6 };
-statetype s_willdie6 = { false, SPR_WILL_DEAD, 20, NULL, NULL, &s_willdie6 };
+statetype s_willdie1 = { false, static_cast<short>(sprite::SPR_WILL_W1), 1, NULL, (statefunc)A_DeathScream, &s_willdie2 };
+statetype s_willdie2 = { false, static_cast<short>(sprite::SPR_WILL_W1), 10, NULL, NULL, &s_willdie3 };
+statetype s_willdie3 = { false, static_cast<short>(sprite::SPR_WILL_DIE1), 10, NULL, NULL, &s_willdie4 };
+statetype s_willdie4 = { false, static_cast<short>(sprite::SPR_WILL_DIE2), 10, NULL, NULL, &s_willdie5 };
+statetype s_willdie5 = { false, static_cast<short>(sprite::SPR_WILL_DIE3), 10, NULL, NULL, &s_willdie6 };
+statetype s_willdie6 = { false, static_cast<short>(sprite::SPR_WILL_DEAD), 20, NULL, NULL, &s_willdie6 };
 
-statetype s_willshoot1 = { false, SPR_WILL_SHOOT1, 30, NULL, NULL, &s_willshoot2 };
-statetype s_willshoot2 = { false, SPR_WILL_SHOOT2, 10, NULL, (statefunc)T_Launch, &s_willshoot3 };
-statetype s_willshoot3 = { false, SPR_WILL_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_willshoot4 };
-statetype s_willshoot4 = { false, SPR_WILL_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_willshoot5 };
-statetype s_willshoot5 = { false, SPR_WILL_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_willshoot6 };
-statetype s_willshoot6 = { false, SPR_WILL_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_willchase1 };
+statetype s_willshoot1 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT1), 30, NULL, NULL, &s_willshoot2 };
+statetype s_willshoot2 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT2), 10, NULL, (statefunc)T_Launch, &s_willshoot3 };
+statetype s_willshoot3 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_willshoot4 };
+statetype s_willshoot4 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_willshoot5 };
+statetype s_willshoot5 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_willshoot6 };
+statetype s_willshoot6 = { false, static_cast<short>(sprite::SPR_WILL_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_willchase1 };
 
 /*
 ===============
@@ -1391,8 +1391,8 @@ void SpawnWill(int tilex, int tiley)
 
     SpawnNewObj(tilex, tiley, &s_willstand);
     newobj->obclass = willobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_will];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_will];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1405,7 +1405,7 @@ void SpawnWill(int tilex, int tiley)
 ================
 */
 
-void T_Will(objtype* ob)
+void T_Will(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
@@ -1435,12 +1435,12 @@ void T_Will(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         if (dodge)
             SelectDodgeDir(ob);
         else
             SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -1452,7 +1452,7 @@ void T_Will(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             TryWalk(ob);
@@ -1482,7 +1482,7 @@ void T_Will(objtype* ob)
         else
             SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -1515,32 +1515,32 @@ extern statetype s_deathshoot3;
 extern statetype s_deathshoot4;
 extern statetype s_deathshoot5;
 
-statetype s_deathstand = { false, SPR_DEATH_W1, 0, (statefunc)T_Stand, NULL, &s_deathstand };
+statetype s_deathstand = { false, static_cast<short>(sprite::SPR_DEATH_W1), 0, (statefunc)T_Stand, NULL, &s_deathstand };
 
-statetype s_deathchase1 = { false, SPR_DEATH_W1, 10, (statefunc)T_Will, NULL, &s_deathchase1s };
-statetype s_deathchase1s = { false, SPR_DEATH_W1, 3, NULL, NULL, &s_deathchase2 };
-statetype s_deathchase2 = { false, SPR_DEATH_W2, 8, (statefunc)T_Will, NULL, &s_deathchase3 };
-statetype s_deathchase3 = { false, SPR_DEATH_W3, 10, (statefunc)T_Will, NULL, &s_deathchase3s };
-statetype s_deathchase3s = { false, SPR_DEATH_W3, 3, NULL, NULL, &s_deathchase4 };
-statetype s_deathchase4 = { false, SPR_DEATH_W4, 8, (statefunc)T_Will, NULL, &s_deathchase1 };
+statetype s_deathchase1 = { false, static_cast<short>(sprite::SPR_DEATH_W1), 10, (statefunc)T_Will, NULL, &s_deathchase1s };
+statetype s_deathchase1s = { false, static_cast<short>(sprite::SPR_DEATH_W1), 3, NULL, NULL, &s_deathchase2 };
+statetype s_deathchase2 = { false, static_cast<short>(sprite::SPR_DEATH_W2), 8, (statefunc)T_Will, NULL, &s_deathchase3 };
+statetype s_deathchase3 = { false, static_cast<short>(sprite::SPR_DEATH_W3), 10, (statefunc)T_Will, NULL, &s_deathchase3s };
+statetype s_deathchase3s = { false, static_cast<short>(sprite::SPR_DEATH_W3), 3, NULL, NULL, &s_deathchase4 };
+statetype s_deathchase4 = { false, static_cast<short>(sprite::SPR_DEATH_W4), 8, (statefunc)T_Will, NULL, &s_deathchase1 };
 
-statetype s_deathdeathcam = { false, SPR_DEATH_W1, 1, NULL, NULL, &s_deathdie1 };
+statetype s_deathdeathcam = { false, static_cast<short>(sprite::SPR_DEATH_W1), 1, NULL, NULL, &s_deathdie1 };
 
-statetype s_deathdie1 = { false, SPR_DEATH_W1, 1, NULL, (statefunc)A_DeathScream, &s_deathdie2 };
-statetype s_deathdie2 = { false, SPR_DEATH_W1, 10, NULL, NULL, &s_deathdie3 };
-statetype s_deathdie3 = { false, SPR_DEATH_DIE1, 10, NULL, NULL, &s_deathdie4 };
-statetype s_deathdie4 = { false, SPR_DEATH_DIE2, 10, NULL, NULL, &s_deathdie5 };
-statetype s_deathdie5 = { false, SPR_DEATH_DIE3, 10, NULL, NULL, &s_deathdie6 };
-statetype s_deathdie6 = { false, SPR_DEATH_DIE4, 10, NULL, NULL, &s_deathdie7 };
-statetype s_deathdie7 = { false, SPR_DEATH_DIE5, 10, NULL, NULL, &s_deathdie8 };
-statetype s_deathdie8 = { false, SPR_DEATH_DIE6, 10, NULL, NULL, &s_deathdie9 };
-statetype s_deathdie9 = { false, SPR_DEATH_DEAD, 0, NULL, NULL, &s_deathdie9 };
+statetype s_deathdie1 = { false, static_cast<short>(sprite::SPR_DEATH_W1), 1, NULL, (statefunc)A_DeathScream, &s_deathdie2 };
+statetype s_deathdie2 = { false, static_cast<short>(sprite::SPR_DEATH_W1), 10, NULL, NULL, &s_deathdie3 };
+statetype s_deathdie3 = { false, static_cast<short>(sprite::SPR_DEATH_DIE1), 10, NULL, NULL, &s_deathdie4 };
+statetype s_deathdie4 = { false, static_cast<short>(sprite::SPR_DEATH_DIE2), 10, NULL, NULL, &s_deathdie5 };
+statetype s_deathdie5 = { false, static_cast<short>(sprite::SPR_DEATH_DIE3), 10, NULL, NULL, &s_deathdie6 };
+statetype s_deathdie6 = { false, static_cast<short>(sprite::SPR_DEATH_DIE4), 10, NULL, NULL, &s_deathdie7 };
+statetype s_deathdie7 = { false, static_cast<short>(sprite::SPR_DEATH_DIE5), 10, NULL, NULL, &s_deathdie8 };
+statetype s_deathdie8 = { false, static_cast<short>(sprite::SPR_DEATH_DIE6), 10, NULL, NULL, &s_deathdie9 };
+statetype s_deathdie9 = { false, static_cast<short>(sprite::SPR_DEATH_DEAD), 0, NULL, NULL, &s_deathdie9 };
 
-statetype s_deathshoot1 = { false, SPR_DEATH_SHOOT1, 30, NULL, NULL, &s_deathshoot2 };
-statetype s_deathshoot2 = { false, SPR_DEATH_SHOOT2, 10, NULL, (statefunc)T_Launch, &s_deathshoot3 };
-statetype s_deathshoot3 = { false, SPR_DEATH_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_deathshoot4 };
-statetype s_deathshoot4 = { false, SPR_DEATH_SHOOT3, 10, NULL, (statefunc)T_Launch, &s_deathshoot5 };
-statetype s_deathshoot5 = { false, SPR_DEATH_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_deathchase1 };
+statetype s_deathshoot1 = { false, static_cast<short>(sprite::SPR_DEATH_SHOOT1), 30, NULL, NULL, &s_deathshoot2 };
+statetype s_deathshoot2 = { false, static_cast<short>(sprite::SPR_DEATH_SHOOT2), 10, NULL, (statefunc)T_Launch, &s_deathshoot3 };
+statetype s_deathshoot3 = { false, static_cast<short>(sprite::SPR_DEATH_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_deathshoot4 };
+statetype s_deathshoot4 = { false, static_cast<short>(sprite::SPR_DEATH_SHOOT3), 10, NULL, (statefunc)T_Launch, &s_deathshoot5 };
+statetype s_deathshoot5 = { false, static_cast<short>(sprite::SPR_DEATH_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_deathchase1 };
 
 /*
 ===============
@@ -1557,8 +1557,8 @@ void SpawnDeath(int tilex, int tiley)
 
     SpawnNewObj(tilex, tiley, &s_deathstand);
     newobj->obclass = deathobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_death];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_death];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1571,7 +1571,7 @@ void SpawnDeath(int tilex, int tiley)
 ===============
 */
 
-void T_Launch(objtype* ob)
+void T_Launch(objstruct* ob)
 {
     int32_t deltax, deltay;
     float   angle;
@@ -1620,20 +1620,20 @@ void T_Launch(objtype* ob)
         PlaySoundLocActor(MISSILEFIRESND, newobj);
     }
 
-    newobj->dir = nodir;
+    newobj->dir = dirtype::nodir;
     newobj->angle = iangle;
     newobj->speed = 0x2000l;
-    newobj->flags = FL_NEVERMARK;
+    newobj->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
     newobj->active = ac_yes;
 }
 
 //
 // angel
 //
-void A_Relaunch(objtype* ob);
-void A_Victory(objtype* ob);
-void A_StartAttack(objtype* ob);
-void A_Breathing(objtype* ob);
+void A_Relaunch(objstruct* ob);
+void A_Victory(objstruct* ob);
+void A_StartAttack(objstruct* ob);
+void A_Breathing(objstruct* ob);
 
 extern statetype s_angelstand;
 
@@ -1675,49 +1675,49 @@ extern statetype s_spark2;
 extern statetype s_spark3;
 extern statetype s_spark4;
 
-statetype s_angelstand = { false, SPR_ANGEL_W1, 0, (statefunc)T_Stand, NULL, &s_angelstand };
+statetype s_angelstand = { false, static_cast<short>(sprite::SPR_ANGEL_W1), 0, (statefunc)T_Stand, NULL, &s_angelstand };
 
-statetype s_angelchase1 = { false, SPR_ANGEL_W1, 10, (statefunc)T_Will, NULL, &s_angelchase1s };
-statetype s_angelchase1s = { false, SPR_ANGEL_W1, 3, NULL, NULL, &s_angelchase2 };
-statetype s_angelchase2 = { false, SPR_ANGEL_W2, 8, (statefunc)T_Will, NULL, &s_angelchase3 };
-statetype s_angelchase3 = { false, SPR_ANGEL_W3, 10, (statefunc)T_Will, NULL, &s_angelchase3s };
-statetype s_angelchase3s = { false, SPR_ANGEL_W3, 3, NULL, NULL, &s_angelchase4 };
-statetype s_angelchase4 = { false, SPR_ANGEL_W4, 8, (statefunc)T_Will, NULL, &s_angelchase1 };
+statetype s_angelchase1 = { false, static_cast<short>(sprite::SPR_ANGEL_W1), 10, (statefunc)T_Will, NULL, &s_angelchase1s };
+statetype s_angelchase1s = { false, static_cast<short>(sprite::SPR_ANGEL_W1), 3, NULL, NULL, &s_angelchase2 };
+statetype s_angelchase2 = { false, static_cast<short>(sprite::SPR_ANGEL_W2), 8, (statefunc)T_Will, NULL, &s_angelchase3 };
+statetype s_angelchase3 = { false, static_cast<short>(sprite::SPR_ANGEL_W3), 10, (statefunc)T_Will, NULL, &s_angelchase3s };
+statetype s_angelchase3s = { false, static_cast<short>(sprite::SPR_ANGEL_W3), 3, NULL, NULL, &s_angelchase4 };
+statetype s_angelchase4 = { false, static_cast<short>(sprite::SPR_ANGEL_W4), 8, (statefunc)T_Will, NULL, &s_angelchase1 };
 
-statetype s_angeldie1 = { false, SPR_ANGEL_W1, 1, NULL, (statefunc)A_DeathScream, &s_angeldie11 };
-statetype s_angeldie11 = { false, SPR_ANGEL_W1, 1, NULL, NULL, &s_angeldie2 };
-statetype s_angeldie2 = { false, SPR_ANGEL_DIE1, 10, NULL, (statefunc)A_Slurpie, &s_angeldie3 };
-statetype s_angeldie3 = { false, SPR_ANGEL_DIE2, 10, NULL, NULL, &s_angeldie4 };
-statetype s_angeldie4 = { false, SPR_ANGEL_DIE3, 10, NULL, NULL, &s_angeldie5 };
-statetype s_angeldie5 = { false, SPR_ANGEL_DIE4, 10, NULL, NULL, &s_angeldie6 };
-statetype s_angeldie6 = { false, SPR_ANGEL_DIE5, 10, NULL, NULL, &s_angeldie7 };
-statetype s_angeldie7 = { false, SPR_ANGEL_DIE6, 10, NULL, NULL, &s_angeldie8 };
-statetype s_angeldie8 = { false, SPR_ANGEL_DIE7, 10, NULL, NULL, &s_angeldie9 };
-statetype s_angeldie9 = { false, SPR_ANGEL_DEAD, 130, NULL, (statefunc)A_Victory, &s_angeldie9 };
+statetype s_angeldie1 = { false, static_cast<short>(sprite::SPR_ANGEL_W1), 1, NULL, (statefunc)A_DeathScream, &s_angeldie11 };
+statetype s_angeldie11 = { false, static_cast<short>(sprite::SPR_ANGEL_W1), 1, NULL, NULL, &s_angeldie2 };
+statetype s_angeldie2 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE1), 10, NULL, (statefunc)A_Slurpie, &s_angeldie3 };
+statetype s_angeldie3 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE2), 10, NULL, NULL, &s_angeldie4 };
+statetype s_angeldie4 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE3), 10, NULL, NULL, &s_angeldie5 };
+statetype s_angeldie5 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE4), 10, NULL, NULL, &s_angeldie6 };
+statetype s_angeldie6 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE5), 10, NULL, NULL, &s_angeldie7 };
+statetype s_angeldie7 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE6), 10, NULL, NULL, &s_angeldie8 };
+statetype s_angeldie8 = { false, static_cast<short>(sprite::SPR_ANGEL_DIE7), 10, NULL, NULL, &s_angeldie9 };
+statetype s_angeldie9 = { false, static_cast<short>(sprite::SPR_ANGEL_DEAD), 130, NULL, (statefunc)A_Victory, &s_angeldie9 };
 
-statetype s_angelshoot1 = { false, SPR_ANGEL_SHOOT1, 10, NULL, (statefunc)A_StartAttack, &s_angelshoot2 };
-statetype s_angelshoot2 = { false, SPR_ANGEL_SHOOT2, 20, NULL, (statefunc)T_Launch, &s_angelshoot3 };
-statetype s_angelshoot3 = { false, SPR_ANGEL_SHOOT1, 10, NULL, (statefunc)A_Relaunch, &s_angelshoot2 };
+statetype s_angelshoot1 = { false, static_cast<short>(sprite::SPR_ANGEL_SHOOT1), 10, NULL, (statefunc)A_StartAttack, &s_angelshoot2 };
+statetype s_angelshoot2 = { false, static_cast<short>(sprite::SPR_ANGEL_SHOOT2), 20, NULL, (statefunc)T_Launch, &s_angelshoot3 };
+statetype s_angelshoot3 = { false, static_cast<short>(sprite::SPR_ANGEL_SHOOT1), 10, NULL, (statefunc)A_Relaunch, &s_angelshoot2 };
 
-statetype s_angeltired = { false, SPR_ANGEL_TIRED1, 40, NULL, (statefunc)A_Breathing, &s_angeltired2 };
-statetype s_angeltired2 = { false, SPR_ANGEL_TIRED2, 40, NULL, NULL, &s_angeltired3 };
-statetype s_angeltired3 = { false, SPR_ANGEL_TIRED1, 40, NULL, (statefunc)A_Breathing, &s_angeltired4 };
-statetype s_angeltired4 = { false, SPR_ANGEL_TIRED2, 40, NULL, NULL, &s_angeltired5 };
-statetype s_angeltired5 = { false, SPR_ANGEL_TIRED1, 40, NULL, (statefunc)A_Breathing, &s_angeltired6 };
-statetype s_angeltired6 = { false, SPR_ANGEL_TIRED2, 40, NULL, NULL, &s_angeltired7 };
-statetype s_angeltired7 = { false, SPR_ANGEL_TIRED1, 40, NULL, (statefunc)A_Breathing, &s_angelchase1 };
+statetype s_angeltired = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED1), 40, NULL, (statefunc)A_Breathing, &s_angeltired2 };
+statetype s_angeltired2 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED2), 40, NULL, NULL, &s_angeltired3 };
+statetype s_angeltired3 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED1), 40, NULL, (statefunc)A_Breathing, &s_angeltired4 };
+statetype s_angeltired4 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED2), 40, NULL, NULL, &s_angeltired5 };
+statetype s_angeltired5 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED1), 40, NULL, (statefunc)A_Breathing, &s_angeltired6 };
+statetype s_angeltired6 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED2), 40, NULL, NULL, &s_angeltired7 };
+statetype s_angeltired7 = { false, static_cast<short>(sprite::SPR_ANGEL_TIRED1), 40, NULL, (statefunc)A_Breathing, &s_angelchase1 };
 
-statetype s_spark1 = { false, SPR_SPARK1, 6, (statefunc)T_Projectile, NULL, &s_spark2 };
-statetype s_spark2 = { false, SPR_SPARK2, 6, (statefunc)T_Projectile, NULL, &s_spark3 };
-statetype s_spark3 = { false, SPR_SPARK3, 6, (statefunc)T_Projectile, NULL, &s_spark4 };
-statetype s_spark4 = { false, SPR_SPARK4, 6, (statefunc)T_Projectile, NULL, &s_spark1 };
+statetype s_spark1 = { false, static_cast<short>(sprite::SPR_SPARK1), 6, (statefunc)T_Projectile, NULL, &s_spark2 };
+statetype s_spark2 = { false, static_cast<short>(sprite::SPR_SPARK2), 6, (statefunc)T_Projectile, NULL, &s_spark3 };
+statetype s_spark3 = { false, static_cast<short>(sprite::SPR_SPARK3), 6, (statefunc)T_Projectile, NULL, &s_spark4 };
+statetype s_spark4 = { false, static_cast<short>(sprite::SPR_SPARK4), 6, (statefunc)T_Projectile, NULL, &s_spark1 };
 
-void A_Slurpie(objtype*)
+void A_Slurpie(objstruct*)
 {
     SD_PlaySound(SLURPIESND);
 }
 
-void A_Breathing(objtype*)
+void A_Breathing(objstruct*)
 {
     SD_PlaySound(ANGELTIREDSND);
 }
@@ -1737,8 +1737,8 @@ void SpawnAngel(int tilex, int tiley)
 
     SpawnNewObj(tilex, tiley, &s_angelstand);
     newobj->obclass = angelobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_angel];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_angel];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1751,7 +1751,7 @@ void SpawnAngel(int tilex, int tiley)
 =================
 */
 
-void A_Victory(objtype*)
+void A_Victory(objstruct*)
 {
     playstate = ex_victorious;
 }
@@ -1764,7 +1764,7 @@ void A_Victory(objtype*)
 =================
 */
 
-void A_StartAttack(objtype* ob)
+void A_StartAttack(objstruct* ob)
 {
     ob->temp1 = 0;
 }
@@ -1777,7 +1777,7 @@ void A_StartAttack(objtype* ob)
 =================
 */
 
-void A_Relaunch(objtype* ob)
+void A_Relaunch(objstruct* ob)
 {
     if (++ob->temp1 == 3) {
         NewState(ob, &s_angeltired);
@@ -1793,8 +1793,8 @@ void A_Relaunch(objtype* ob)
 //
 // spectre
 //
-void T_SpectreWait(objtype* ob);
-void A_Dormant(objtype* ob);
+void T_SpectreWait(objstruct* ob);
+void A_Dormant(objstruct* ob);
 
 extern statetype s_spectrewait1;
 extern statetype s_spectrewait2;
@@ -1813,21 +1813,21 @@ extern statetype s_spectredie4;
 
 extern statetype s_spectrewake;
 
-statetype s_spectrewait1 = { false, SPR_SPECTRE_W1, 10, (statefunc)T_Stand, NULL, &s_spectrewait2 };
-statetype s_spectrewait2 = { false, SPR_SPECTRE_W2, 10, (statefunc)T_Stand, NULL, &s_spectrewait3 };
-statetype s_spectrewait3 = { false, SPR_SPECTRE_W3, 10, (statefunc)T_Stand, NULL, &s_spectrewait4 };
-statetype s_spectrewait4 = { false, SPR_SPECTRE_W4, 10, (statefunc)T_Stand, NULL, &s_spectrewait1 };
+statetype s_spectrewait1 = { false, static_cast<short>(sprite::SPR_SPECTRE_W1), 10, (statefunc)T_Stand, NULL, &s_spectrewait2 };
+statetype s_spectrewait2 = { false, static_cast<short>(sprite::SPR_SPECTRE_W2), 10, (statefunc)T_Stand, NULL, &s_spectrewait3 };
+statetype s_spectrewait3 = { false, static_cast<short>(sprite::SPR_SPECTRE_W3), 10, (statefunc)T_Stand, NULL, &s_spectrewait4 };
+statetype s_spectrewait4 = { false, static_cast<short>(sprite::SPR_SPECTRE_W4), 10, (statefunc)T_Stand, NULL, &s_spectrewait1 };
 
-statetype s_spectrechase1 = { false, SPR_SPECTRE_W1, 10, (statefunc)T_Ghosts, NULL, &s_spectrechase2 };
-statetype s_spectrechase2 = { false, SPR_SPECTRE_W2, 10, (statefunc)T_Ghosts, NULL, &s_spectrechase3 };
-statetype s_spectrechase3 = { false, SPR_SPECTRE_W3, 10, (statefunc)T_Ghosts, NULL, &s_spectrechase4 };
-statetype s_spectrechase4 = { false, SPR_SPECTRE_W4, 10, (statefunc)T_Ghosts, NULL, &s_spectrechase1 };
+statetype s_spectrechase1 = { false, static_cast<short>(sprite::SPR_SPECTRE_W1), 10, (statefunc)T_Ghosts, NULL, &s_spectrechase2 };
+statetype s_spectrechase2 = { false, static_cast<short>(sprite::SPR_SPECTRE_W2), 10, (statefunc)T_Ghosts, NULL, &s_spectrechase3 };
+statetype s_spectrechase3 = { false, static_cast<short>(sprite::SPR_SPECTRE_W3), 10, (statefunc)T_Ghosts, NULL, &s_spectrechase4 };
+statetype s_spectrechase4 = { false, static_cast<short>(sprite::SPR_SPECTRE_W4), 10, (statefunc)T_Ghosts, NULL, &s_spectrechase1 };
 
-statetype s_spectredie1 = { false, SPR_SPECTRE_F1, 10, NULL, NULL, &s_spectredie2 };
-statetype s_spectredie2 = { false, SPR_SPECTRE_F2, 10, NULL, NULL, &s_spectredie3 };
-statetype s_spectredie3 = { false, SPR_SPECTRE_F3, 10, NULL, NULL, &s_spectredie4 };
-statetype s_spectredie4 = { false, SPR_SPECTRE_F4, 300, NULL, NULL, &s_spectrewake };
-statetype s_spectrewake = { false, SPR_SPECTRE_F4, 10, NULL, (statefunc)A_Dormant, &s_spectrewake };
+statetype s_spectredie1 = { false, static_cast<short>(sprite::SPR_SPECTRE_F1), 10, NULL, NULL, &s_spectredie2 };
+statetype s_spectredie2 = { false, static_cast<short>(sprite::SPR_SPECTRE_F2), 10, NULL, NULL, &s_spectredie3 };
+statetype s_spectredie3 = { false, static_cast<short>(sprite::SPR_SPECTRE_F3), 10, NULL, NULL, &s_spectredie4 };
+statetype s_spectredie4 = { false, static_cast<short>(sprite::SPR_SPECTRE_F4), 300, NULL, NULL, &s_spectrewake };
+statetype s_spectrewake = { false, static_cast<short>(sprite::SPR_SPECTRE_F4), 10, NULL, (statefunc)A_Dormant, &s_spectrewake };
 
 /*
 ===============
@@ -1841,8 +1841,8 @@ void SpawnSpectre(int tilex, int tiley)
 {
     SpawnNewObj(tilex, tiley, &s_spectrewait1);
     newobj->obclass = spectreobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_spectre];
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH | FL_BONUS; // |FL_NEVERMARK|FL_NONMARK;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][en_spectre];
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH) | static_cast<std::uint32_t>(objflag_t::FL_BONUS); // |static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK)|static_cast<std::uint32_t>(objflag_t::FL_NONMARK);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -1855,7 +1855,7 @@ void SpawnSpectre(int tilex, int tiley)
 ===============
 */
 
-void A_Dormant(objtype* ob)
+void A_Dormant(objstruct* ob)
 {
     int32_t   deltax, deltay;
     int       xl, xh, yl, yh;
@@ -1884,14 +1884,14 @@ moveok:
                 continue;
             if (!ISPOINTER(tile))
                 return;
-            if (((objtype*)tile)->flags & FL_SHOOTABLE)
+            if (((objstruct*)tile)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE))
                 return;
         }
 
-    ob->flags |= FL_AMBUSH | FL_SHOOTABLE;
-    ob->flags &= ~FL_ATTACKMODE;
-    ob->flags &= ~FL_NONMARK; // stuck bugfix 1
-    ob->dir = nodir;
+    ob->flags |= static_cast<std::uint32_t>(objflag_t::FL_AMBUSH) | static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE);
+    ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE);
+    ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_NONMARK); // stuck bugfix 1
+    ob->dir = dirtype::nodir;
     NewState(ob, &s_spectrewait1);
 }
 
@@ -1914,39 +1914,39 @@ moveok:
 ===============
 */
 
-void SpawnGhosts(int which, int tilex, int tiley)
+void SpawnGhosts(enemy_t which, int tilex, int tiley)
 {
     switch (which) {
-    case en_blinky:
+    case enemy_t::en_blinky:
         SpawnNewObj(tilex, tiley, &s_blinkychase1);
         break;
-    case en_clyde:
+    case enemy_t::en_clyde:
         SpawnNewObj(tilex, tiley, &s_clydechase1);
         break;
-    case en_pinky:
+    case enemy_t::en_pinky:
         SpawnNewObj(tilex, tiley, &s_pinkychase1);
         break;
-    case en_inky:
+    case enemy_t::en_inky:
         SpawnNewObj(tilex, tiley, &s_inkychase1);
         break;
     }
 
-    newobj->obclass = ghostobj;
+    newobj->obclass = classtype::ghostobj;
     newobj->speed = SPDDOG;
 
-    newobj->dir = east;
-    newobj->flags |= FL_AMBUSH;
+    newobj->dir = dirtype::east;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame) {
         gamestate.killtotal++;
         gamestate.killcount++;
     }
 }
 
-void T_Gift(objtype* ob);
-void T_GiftThrow(objtype* ob);
+void T_Gift(objstruct* ob);
+void T_GiftThrow(objstruct* ob);
 
-void T_Fat(objtype* ob);
-void T_FatThrow(objtype* ob);
+void T_Fat(objstruct* ob);
+void T_FatThrow(objstruct* ob);
 
 //
 // schabb
@@ -1977,31 +1977,31 @@ extern statetype s_needle4;
 
 extern statetype s_schabbdeathcam;
 
-statetype s_schabbstand = { false, SPR_SCHABB_W1, 0, (statefunc)T_Stand, NULL, &s_schabbstand };
+statetype s_schabbstand = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 0, (statefunc)T_Stand, NULL, &s_schabbstand };
 
-statetype s_schabbchase1 = { false, SPR_SCHABB_W1, 10, (statefunc)T_Schabb, NULL, &s_schabbchase1s };
-statetype s_schabbchase1s = { false, SPR_SCHABB_W1, 3, NULL, NULL, &s_schabbchase2 };
-statetype s_schabbchase2 = { false, SPR_SCHABB_W2, 8, (statefunc)T_Schabb, NULL, &s_schabbchase3 };
-statetype s_schabbchase3 = { false, SPR_SCHABB_W3, 10, (statefunc)T_Schabb, NULL, &s_schabbchase3s };
-statetype s_schabbchase3s = { false, SPR_SCHABB_W3, 3, NULL, NULL, &s_schabbchase4 };
-statetype s_schabbchase4 = { false, SPR_SCHABB_W4, 8, (statefunc)T_Schabb, NULL, &s_schabbchase1 };
+statetype s_schabbchase1 = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 10, (statefunc)T_Schabb, NULL, &s_schabbchase1s };
+statetype s_schabbchase1s = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 3, NULL, NULL, &s_schabbchase2 };
+statetype s_schabbchase2 = { false, static_cast<short>(sprite::SPR_SCHABB_W2), 8, (statefunc)T_Schabb, NULL, &s_schabbchase3 };
+statetype s_schabbchase3 = { false, static_cast<short>(sprite::SPR_SCHABB_W3), 10, (statefunc)T_Schabb, NULL, &s_schabbchase3s };
+statetype s_schabbchase3s = { false, static_cast<short>(sprite::SPR_SCHABB_W3), 3, NULL, NULL, &s_schabbchase4 };
+statetype s_schabbchase4 = { false, static_cast<short>(sprite::SPR_SCHABB_W4), 8, (statefunc)T_Schabb, NULL, &s_schabbchase1 };
 
-statetype s_schabbdeathcam = { false, SPR_SCHABB_W1, 1, NULL, NULL, &s_schabbdie1 };
+statetype s_schabbdeathcam = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 1, NULL, NULL, &s_schabbdie1 };
 
-statetype s_schabbdie1 = { false, SPR_SCHABB_W1, 10, NULL, (statefunc)A_DeathScream, &s_schabbdie2 };
-statetype s_schabbdie2 = { false, SPR_SCHABB_W1, 10, NULL, NULL, &s_schabbdie3 };
-statetype s_schabbdie3 = { false, SPR_SCHABB_DIE1, 10, NULL, NULL, &s_schabbdie4 };
-statetype s_schabbdie4 = { false, SPR_SCHABB_DIE2, 10, NULL, NULL, &s_schabbdie5 };
-statetype s_schabbdie5 = { false, SPR_SCHABB_DIE3, 10, NULL, NULL, &s_schabbdie6 };
-statetype s_schabbdie6 = { false, SPR_SCHABB_DEAD, 20, NULL, (statefunc)A_StartDeathCam, &s_schabbdie6 };
+statetype s_schabbdie1 = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 10, NULL, (statefunc)A_DeathScream, &s_schabbdie2 };
+statetype s_schabbdie2 = { false, static_cast<short>(sprite::SPR_SCHABB_W1), 10, NULL, NULL, &s_schabbdie3 };
+statetype s_schabbdie3 = { false, static_cast<short>(sprite::SPR_SCHABB_DIE1), 10, NULL, NULL, &s_schabbdie4 };
+statetype s_schabbdie4 = { false, static_cast<short>(sprite::SPR_SCHABB_DIE2), 10, NULL, NULL, &s_schabbdie5 };
+statetype s_schabbdie5 = { false, static_cast<short>(sprite::SPR_SCHABB_DIE3), 10, NULL, NULL, &s_schabbdie6 };
+statetype s_schabbdie6 = { false, static_cast<short>(sprite::SPR_SCHABB_DEAD), 20, NULL, (statefunc)A_StartDeathCam, &s_schabbdie6 };
 
-statetype s_schabbshoot1 = { false, SPR_SCHABB_SHOOT1, 30, NULL, NULL, &s_schabbshoot2 };
-statetype s_schabbshoot2 = { false, SPR_SCHABB_SHOOT2, 10, NULL, (statefunc)T_SchabbThrow, &s_schabbchase1 };
+statetype s_schabbshoot1 = { false, static_cast<short>(sprite::SPR_SCHABB_SHOOT1), 30, NULL, NULL, &s_schabbshoot2 };
+statetype s_schabbshoot2 = { false, static_cast<short>(sprite::SPR_SCHABB_SHOOT2), 10, NULL, (statefunc)T_SchabbThrow, &s_schabbchase1 };
 
-statetype s_needle1 = { false, SPR_HYPO1, 6, (statefunc)T_Projectile, NULL, &s_needle2 };
-statetype s_needle2 = { false, SPR_HYPO2, 6, (statefunc)T_Projectile, NULL, &s_needle3 };
-statetype s_needle3 = { false, SPR_HYPO3, 6, (statefunc)T_Projectile, NULL, &s_needle4 };
-statetype s_needle4 = { false, SPR_HYPO4, 6, (statefunc)T_Projectile, NULL, &s_needle1 };
+statetype s_needle1 = { false, static_cast<short>(sprite::SPR_HYPO1), 6, (statefunc)T_Projectile, NULL, &s_needle2 };
+statetype s_needle2 = { false, static_cast<short>(sprite::SPR_HYPO2), 6, (statefunc)T_Projectile, NULL, &s_needle3 };
+statetype s_needle3 = { false, static_cast<short>(sprite::SPR_HYPO3), 6, (statefunc)T_Projectile, NULL, &s_needle4 };
+statetype s_needle4 = { false, static_cast<short>(sprite::SPR_HYPO4), 6, (statefunc)T_Projectile, NULL, &s_needle1 };
 
 //
 // gift
@@ -2036,26 +2036,26 @@ extern statetype s_boom1;
 extern statetype s_boom2;
 extern statetype s_boom3;
 
-statetype s_giftstand = { false, SPR_GIFT_W1, 0, (statefunc)T_Stand, NULL, &s_giftstand };
+statetype s_giftstand = { false, static_cast<short>(sprite::SPR_GIFT_W1), 0, (statefunc)T_Stand, NULL, &s_giftstand };
 
-statetype s_giftchase1 = { false, SPR_GIFT_W1, 10, (statefunc)T_Gift, NULL, &s_giftchase1s };
-statetype s_giftchase1s = { false, SPR_GIFT_W1, 3, NULL, NULL, &s_giftchase2 };
-statetype s_giftchase2 = { false, SPR_GIFT_W2, 8, (statefunc)T_Gift, NULL, &s_giftchase3 };
-statetype s_giftchase3 = { false, SPR_GIFT_W3, 10, (statefunc)T_Gift, NULL, &s_giftchase3s };
-statetype s_giftchase3s = { false, SPR_GIFT_W3, 3, NULL, NULL, &s_giftchase4 };
-statetype s_giftchase4 = { false, SPR_GIFT_W4, 8, (statefunc)T_Gift, NULL, &s_giftchase1 };
+statetype s_giftchase1 = { false, static_cast<short>(sprite::SPR_GIFT_W1), 10, (statefunc)T_Gift, NULL, &s_giftchase1s };
+statetype s_giftchase1s = { false, static_cast<short>(sprite::SPR_GIFT_W1), 3, NULL, NULL, &s_giftchase2 };
+statetype s_giftchase2 = { false, static_cast<short>(sprite::SPR_GIFT_W2), 8, (statefunc)T_Gift, NULL, &s_giftchase3 };
+statetype s_giftchase3 = { false, static_cast<short>(sprite::SPR_GIFT_W3), 10, (statefunc)T_Gift, NULL, &s_giftchase3s };
+statetype s_giftchase3s = { false, static_cast<short>(sprite::SPR_GIFT_W3), 3, NULL, NULL, &s_giftchase4 };
+statetype s_giftchase4 = { false, static_cast<short>(sprite::SPR_GIFT_W4), 8, (statefunc)T_Gift, NULL, &s_giftchase1 };
 
-statetype s_giftdeathcam = { false, SPR_GIFT_W1, 1, NULL, NULL, &s_giftdie1 };
+statetype s_giftdeathcam = { false, static_cast<short>(sprite::SPR_GIFT_W1), 1, NULL, NULL, &s_giftdie1 };
 
-statetype s_giftdie1 = { false, SPR_GIFT_W1, 1, NULL, (statefunc)A_DeathScream, &s_giftdie2 };
-statetype s_giftdie2 = { false, SPR_GIFT_W1, 10, NULL, NULL, &s_giftdie3 };
-statetype s_giftdie3 = { false, SPR_GIFT_DIE1, 10, NULL, NULL, &s_giftdie4 };
-statetype s_giftdie4 = { false, SPR_GIFT_DIE2, 10, NULL, NULL, &s_giftdie5 };
-statetype s_giftdie5 = { false, SPR_GIFT_DIE3, 10, NULL, NULL, &s_giftdie6 };
-statetype s_giftdie6 = { false, SPR_GIFT_DEAD, 20, NULL, (statefunc)A_StartDeathCam, &s_giftdie6 };
+statetype s_giftdie1 = { false, static_cast<short>(sprite::SPR_GIFT_W1), 1, NULL, (statefunc)A_DeathScream, &s_giftdie2 };
+statetype s_giftdie2 = { false, static_cast<short>(sprite::SPR_GIFT_W1), 10, NULL, NULL, &s_giftdie3 };
+statetype s_giftdie3 = { false, static_cast<short>(sprite::SPR_GIFT_DIE1), 10, NULL, NULL, &s_giftdie4 };
+statetype s_giftdie4 = { false, static_cast<short>(sprite::SPR_GIFT_DIE2), 10, NULL, NULL, &s_giftdie5 };
+statetype s_giftdie5 = { false, static_cast<short>(sprite::SPR_GIFT_DIE3), 10, NULL, NULL, &s_giftdie6 };
+statetype s_giftdie6 = { false, static_cast<short>(sprite::SPR_GIFT_DEAD), 20, NULL, (statefunc)A_StartDeathCam, &s_giftdie6 };
 
-statetype s_giftshoot1 = { false, SPR_GIFT_SHOOT1, 30, NULL, NULL, &s_giftshoot2 };
-statetype s_giftshoot2 = { false, SPR_GIFT_SHOOT2, 10, NULL, (statefunc)T_GiftThrow, &s_giftchase1 };
+statetype s_giftshoot1 = { false, static_cast<short>(sprite::SPR_GIFT_SHOOT1), 30, NULL, NULL, &s_giftshoot2 };
+statetype s_giftshoot2 = { false, static_cast<short>(sprite::SPR_GIFT_SHOOT2), 10, NULL, (statefunc)T_GiftThrow, &s_giftchase1 };
 
 //
 // fat
@@ -2090,30 +2090,30 @@ extern statetype s_needle4;
 
 extern statetype s_fatdeathcam;
 
-statetype s_fatstand = { false, SPR_FAT_W1, 0, (statefunc)T_Stand, NULL, &s_fatstand };
+statetype s_fatstand = { false, static_cast<short>(sprite::SPR_FAT_W1), 0, (statefunc)T_Stand, NULL, &s_fatstand };
 
-statetype s_fatchase1 = { false, SPR_FAT_W1, 10, (statefunc)T_Fat, NULL, &s_fatchase1s };
-statetype s_fatchase1s = { false, SPR_FAT_W1, 3, NULL, NULL, &s_fatchase2 };
-statetype s_fatchase2 = { false, SPR_FAT_W2, 8, (statefunc)T_Fat, NULL, &s_fatchase3 };
-statetype s_fatchase3 = { false, SPR_FAT_W3, 10, (statefunc)T_Fat, NULL, &s_fatchase3s };
-statetype s_fatchase3s = { false, SPR_FAT_W3, 3, NULL, NULL, &s_fatchase4 };
-statetype s_fatchase4 = { false, SPR_FAT_W4, 8, (statefunc)T_Fat, NULL, &s_fatchase1 };
+statetype s_fatchase1 = { false, static_cast<short>(sprite::SPR_FAT_W1), 10, (statefunc)T_Fat, NULL, &s_fatchase1s };
+statetype s_fatchase1s = { false, static_cast<short>(sprite::SPR_FAT_W1), 3, NULL, NULL, &s_fatchase2 };
+statetype s_fatchase2 = { false, static_cast<short>(sprite::SPR_FAT_W2), 8, (statefunc)T_Fat, NULL, &s_fatchase3 };
+statetype s_fatchase3 = { false, static_cast<short>(sprite::SPR_FAT_W3), 10, (statefunc)T_Fat, NULL, &s_fatchase3s };
+statetype s_fatchase3s = { false, static_cast<short>(sprite::SPR_FAT_W3), 3, NULL, NULL, &s_fatchase4 };
+statetype s_fatchase4 = { false, static_cast<short>(sprite::SPR_FAT_W4), 8, (statefunc)T_Fat, NULL, &s_fatchase1 };
 
-statetype s_fatdeathcam = { false, SPR_FAT_W1, 1, NULL, NULL, &s_fatdie1 };
+statetype s_fatdeathcam = { false, static_cast<short>(sprite::SPR_FAT_W1), 1, NULL, NULL, &s_fatdie1 };
 
-statetype s_fatdie1 = { false, SPR_FAT_W1, 1, NULL, (statefunc)A_DeathScream, &s_fatdie2 };
-statetype s_fatdie2 = { false, SPR_FAT_W1, 10, NULL, NULL, &s_fatdie3 };
-statetype s_fatdie3 = { false, SPR_FAT_DIE1, 10, NULL, NULL, &s_fatdie4 };
-statetype s_fatdie4 = { false, SPR_FAT_DIE2, 10, NULL, NULL, &s_fatdie5 };
-statetype s_fatdie5 = { false, SPR_FAT_DIE3, 10, NULL, NULL, &s_fatdie6 };
-statetype s_fatdie6 = { false, SPR_FAT_DEAD, 20, NULL, (statefunc)A_StartDeathCam, &s_fatdie6 };
+statetype s_fatdie1 = { false, static_cast<short>(sprite::SPR_FAT_W1), 1, NULL, (statefunc)A_DeathScream, &s_fatdie2 };
+statetype s_fatdie2 = { false, static_cast<short>(sprite::SPR_FAT_W1), 10, NULL, NULL, &s_fatdie3 };
+statetype s_fatdie3 = { false, static_cast<short>(sprite::SPR_FAT_DIE1), 10, NULL, NULL, &s_fatdie4 };
+statetype s_fatdie4 = { false, static_cast<short>(sprite::SPR_FAT_DIE2), 10, NULL, NULL, &s_fatdie5 };
+statetype s_fatdie5 = { false, static_cast<short>(sprite::SPR_FAT_DIE3), 10, NULL, NULL, &s_fatdie6 };
+statetype s_fatdie6 = { false, static_cast<short>(sprite::SPR_FAT_DEAD), 20, NULL, (statefunc)A_StartDeathCam, &s_fatdie6 };
 
-statetype s_fatshoot1 = { false, SPR_FAT_SHOOT1, 30, NULL, NULL, &s_fatshoot2 };
-statetype s_fatshoot2 = { false, SPR_FAT_SHOOT2, 10, NULL, (statefunc)T_GiftThrow, &s_fatshoot3 };
-statetype s_fatshoot3 = { false, SPR_FAT_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_fatshoot4 };
-statetype s_fatshoot4 = { false, SPR_FAT_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_fatshoot5 };
-statetype s_fatshoot5 = { false, SPR_FAT_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_fatshoot6 };
-statetype s_fatshoot6 = { false, SPR_FAT_SHOOT4, 10, NULL, (statefunc)T_Shoot, &s_fatchase1 };
+statetype s_fatshoot1 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT1), 30, NULL, NULL, &s_fatshoot2 };
+statetype s_fatshoot2 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT2), 10, NULL, (statefunc)T_GiftThrow, &s_fatshoot3 };
+statetype s_fatshoot3 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_fatshoot4 };
+statetype s_fatshoot4 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_fatshoot5 };
+statetype s_fatshoot5 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_fatshoot6 };
+statetype s_fatshoot6 = { false, static_cast<short>(sprite::SPR_FAT_SHOOT4), 10, NULL, (statefunc)T_Shoot, &s_fatchase1 };
 
 /*
 ===============
@@ -2133,10 +2133,10 @@ void SpawnSchabbs(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_schabbstand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = schabbobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_schabbs];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::schabbobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_schabbs)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -2159,10 +2159,10 @@ void SpawnGift(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_giftstand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = giftobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_gift];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::giftobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_gift)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -2185,10 +2185,10 @@ void SpawnFat(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_fatstand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = fatobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_fat];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::fatobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_fat)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -2201,7 +2201,7 @@ void SpawnFat(int tilex, int tiley)
 =================
 */
 
-void T_SchabbThrow(objtype* ob)
+void T_SchabbThrow(objstruct* ob)
 {
     int32_t deltax, deltay;
     float   angle;
@@ -2222,13 +2222,13 @@ void T_SchabbThrow(objtype* ob)
     newobj->tiley = ob->tiley;
     newobj->x = ob->x;
     newobj->y = ob->y;
-    newobj->obclass = needleobj;
-    newobj->dir = nodir;
+    newobj->obclass = classtype::needleobj;
+    newobj->dir = dirtype::nodir;
     newobj->angle = iangle;
     newobj->speed = 0x2000l;
 
-    newobj->flags = FL_NEVERMARK;
-    newobj->active = ac_yes;
+    newobj->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
+    newobj->active = activetype::ac_yes;
 
     PlaySoundLocActor(SCHABBSTHROWSND, newobj);
 }
@@ -2241,7 +2241,7 @@ void T_SchabbThrow(objtype* ob)
 =================
 */
 
-void T_GiftThrow(objtype* ob)
+void T_GiftThrow(objstruct* ob)
 {
     int32_t deltax, deltay;
     float   angle;
@@ -2262,12 +2262,12 @@ void T_GiftThrow(objtype* ob)
     newobj->tiley = ob->tiley;
     newobj->x = ob->x;
     newobj->y = ob->y;
-    newobj->obclass = rocketobj;
-    newobj->dir = nodir;
+    newobj->obclass = classtype::rocketobj;
+    newobj->dir = dirtype::nodir;
     newobj->angle = iangle;
     newobj->speed = 0x2000l;
-    newobj->flags = FL_NEVERMARK;
-    newobj->active = ac_yes;
+    newobj->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
+    newobj->active = activetype::ac_yes;
 
 #ifndef APOGEE_1_0 // T_GiftThrow will never be called in shareware v1.0
     PlaySoundLocActor(MISSILEFIRESND, newobj);
@@ -2282,7 +2282,7 @@ void T_GiftThrow(objtype* ob)
 =================
 */
 
-void T_Schabb(objtype* ob)
+void T_Schabb(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
@@ -2307,12 +2307,12 @@ void T_Schabb(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         if (dodge)
             SelectDodgeDir(ob);
         else
             SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -2324,7 +2324,7 @@ void T_Schabb(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             TryWalk(ob);
@@ -2354,7 +2354,7 @@ void T_Schabb(objtype* ob)
         else
             SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -2367,7 +2367,7 @@ void T_Schabb(objtype* ob)
 =================
 */
 
-void T_Gift(objtype* ob)
+void T_Gift(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
@@ -2392,12 +2392,12 @@ void T_Gift(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         if (dodge)
             SelectDodgeDir(ob);
         else
             SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -2409,7 +2409,7 @@ void T_Gift(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             TryWalk(ob);
@@ -2439,7 +2439,7 @@ void T_Gift(objtype* ob)
         else
             SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -2452,7 +2452,7 @@ void T_Gift(objtype* ob)
 =================
 */
 
-void T_Fat(objtype* ob)
+void T_Fat(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
@@ -2477,12 +2477,12 @@ void T_Fat(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         if (dodge)
             SelectDodgeDir(ob);
         else
             SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -2494,7 +2494,7 @@ void T_Fat(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             TryWalk(ob);
@@ -2524,7 +2524,7 @@ void T_Fat(objtype* ob)
         else
             SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -2569,34 +2569,34 @@ extern statetype s_fakeshoot9;
 extern statetype s_fire1;
 extern statetype s_fire2;
 
-statetype s_fakestand = { false, SPR_FAKE_W1, 0, (statefunc)T_Stand, NULL, &s_fakestand };
+statetype s_fakestand = { false, static_cast<short>(sprite::SPR_FAKE_W1), 0, (statefunc)T_Stand, NULL, &s_fakestand };
 
-statetype s_fakechase1 = { false, SPR_FAKE_W1, 10, (statefunc)T_Fake, NULL, &s_fakechase1s };
-statetype s_fakechase1s = { false, SPR_FAKE_W1, 3, NULL, NULL, &s_fakechase2 };
-statetype s_fakechase2 = { false, SPR_FAKE_W2, 8, (statefunc)T_Fake, NULL, &s_fakechase3 };
-statetype s_fakechase3 = { false, SPR_FAKE_W3, 10, (statefunc)T_Fake, NULL, &s_fakechase3s };
-statetype s_fakechase3s = { false, SPR_FAKE_W3, 3, NULL, NULL, &s_fakechase4 };
-statetype s_fakechase4 = { false, SPR_FAKE_W4, 8, (statefunc)T_Fake, NULL, &s_fakechase1 };
+statetype s_fakechase1 = { false, static_cast<short>(sprite::SPR_FAKE_W1), 10, (statefunc)T_Fake, NULL, &s_fakechase1s };
+statetype s_fakechase1s = { false, static_cast<short>(sprite::SPR_FAKE_W1), 3, NULL, NULL, &s_fakechase2 };
+statetype s_fakechase2 = { false, static_cast<short>(sprite::SPR_FAKE_W2), 8, (statefunc)T_Fake, NULL, &s_fakechase3 };
+statetype s_fakechase3 = { false, static_cast<short>(sprite::SPR_FAKE_W3), 10, (statefunc)T_Fake, NULL, &s_fakechase3s };
+statetype s_fakechase3s = { false, static_cast<short>(sprite::SPR_FAKE_W3), 3, NULL, NULL, &s_fakechase4 };
+statetype s_fakechase4 = { false, static_cast<short>(sprite::SPR_FAKE_W4), 8, (statefunc)T_Fake, NULL, &s_fakechase1 };
 
-statetype s_fakedie1 = { false, SPR_FAKE_DIE1, 10, NULL, (statefunc)A_DeathScream, &s_fakedie2 };
-statetype s_fakedie2 = { false, SPR_FAKE_DIE2, 10, NULL, NULL, &s_fakedie3 };
-statetype s_fakedie3 = { false, SPR_FAKE_DIE3, 10, NULL, NULL, &s_fakedie4 };
-statetype s_fakedie4 = { false, SPR_FAKE_DIE4, 10, NULL, NULL, &s_fakedie5 };
-statetype s_fakedie5 = { false, SPR_FAKE_DIE5, 10, NULL, NULL, &s_fakedie6 };
-statetype s_fakedie6 = { false, SPR_FAKE_DEAD, 0, NULL, NULL, &s_fakedie6 };
+statetype s_fakedie1 = { false, static_cast<short>(sprite::SPR_FAKE_DIE1), 10, NULL, (statefunc)A_DeathScream, &s_fakedie2 };
+statetype s_fakedie2 = { false, static_cast<short>(sprite::SPR_FAKE_DIE2), 10, NULL, NULL, &s_fakedie3 };
+statetype s_fakedie3 = { false, static_cast<short>(sprite::SPR_FAKE_DIE3), 10, NULL, NULL, &s_fakedie4 };
+statetype s_fakedie4 = { false, static_cast<short>(sprite::SPR_FAKE_DIE4), 10, NULL, NULL, &s_fakedie5 };
+statetype s_fakedie5 = { false, static_cast<short>(sprite::SPR_FAKE_DIE5), 10, NULL, NULL, &s_fakedie6 };
+statetype s_fakedie6 = { false, static_cast<short>(sprite::SPR_FAKE_DEAD), 0, NULL, NULL, &s_fakedie6 };
 
-statetype s_fakeshoot1 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot2 };
-statetype s_fakeshoot2 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot3 };
-statetype s_fakeshoot3 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot4 };
-statetype s_fakeshoot4 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot5 };
-statetype s_fakeshoot5 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot6 };
-statetype s_fakeshoot6 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot7 };
-statetype s_fakeshoot7 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot8 };
-statetype s_fakeshoot8 = { false, SPR_FAKE_SHOOT, 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot9 };
-statetype s_fakeshoot9 = { false, SPR_FAKE_SHOOT, 8, NULL, NULL, &s_fakechase1 };
+statetype s_fakeshoot1 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot2 };
+statetype s_fakeshoot2 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot3 };
+statetype s_fakeshoot3 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot4 };
+statetype s_fakeshoot4 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot5 };
+statetype s_fakeshoot5 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot6 };
+statetype s_fakeshoot6 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot7 };
+statetype s_fakeshoot7 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot8 };
+statetype s_fakeshoot8 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, (statefunc)T_FakeFire, &s_fakeshoot9 };
+statetype s_fakeshoot9 = { false, static_cast<short>(sprite::SPR_FAKE_SHOOT), 8, NULL, NULL, &s_fakechase1 };
 
-statetype s_fire1 = { false, SPR_FIRE1, 6, NULL, (statefunc)T_Projectile, &s_fire2 };
-statetype s_fire2 = { false, SPR_FIRE2, 6, NULL, (statefunc)T_Projectile, &s_fire1 };
+statetype s_fire1 = { false, static_cast<short>(sprite::SPR_FIRE1), 6, NULL, (statefunc)T_Projectile, &s_fire2 };
+statetype s_fire2 = { false, static_cast<short>(sprite::SPR_FIRE2), 6, NULL, (statefunc)T_Projectile, &s_fire1 };
 
 //
 // hitler
@@ -2647,53 +2647,53 @@ extern statetype s_hitlershoot6;
 
 extern statetype s_hitlerdeathcam;
 
-statetype s_mechastand = { false, SPR_MECHA_W1, 0, (statefunc)T_Stand, NULL, &s_mechastand };
+statetype s_mechastand = { false, static_cast<short>(sprite::SPR_MECHA_W1), 0, (statefunc)T_Stand, NULL, &s_mechastand };
 
-statetype s_mechachase1 = { false, SPR_MECHA_W1, 10, (statefunc)T_Chase, (statefunc)A_MechaSound, &s_mechachase1s };
-statetype s_mechachase1s = { false, SPR_MECHA_W1, 6, NULL, NULL, &s_mechachase2 };
-statetype s_mechachase2 = { false, SPR_MECHA_W2, 8, (statefunc)T_Chase, NULL, &s_mechachase3 };
-statetype s_mechachase3 = { false, SPR_MECHA_W3, 10, (statefunc)T_Chase, (statefunc)A_MechaSound, &s_mechachase3s };
-statetype s_mechachase3s = { false, SPR_MECHA_W3, 6, NULL, NULL, &s_mechachase4 };
-statetype s_mechachase4 = { false, SPR_MECHA_W4, 8, (statefunc)T_Chase, NULL, &s_mechachase1 };
+statetype s_mechachase1 = { false, static_cast<short>(sprite::SPR_MECHA_W1), 10, (statefunc)T_Chase, (statefunc)A_MechaSound, &s_mechachase1s };
+statetype s_mechachase1s = { false, static_cast<short>(sprite::SPR_MECHA_W1), 6, NULL, NULL, &s_mechachase2 };
+statetype s_mechachase2 = { false, static_cast<short>(sprite::SPR_MECHA_W2), 8, (statefunc)T_Chase, NULL, &s_mechachase3 };
+statetype s_mechachase3 = { false, static_cast<short>(sprite::SPR_MECHA_W3), 10, (statefunc)T_Chase, (statefunc)A_MechaSound, &s_mechachase3s };
+statetype s_mechachase3s = { false, static_cast<short>(sprite::SPR_MECHA_W3), 6, NULL, NULL, &s_mechachase4 };
+statetype s_mechachase4 = { false, static_cast<short>(sprite::SPR_MECHA_W4), 8, (statefunc)T_Chase, NULL, &s_mechachase1 };
 
-statetype s_mechadie1 = { false, SPR_MECHA_DIE1, 10, NULL, (statefunc)A_DeathScream, &s_mechadie2 };
-statetype s_mechadie2 = { false, SPR_MECHA_DIE2, 10, NULL, NULL, &s_mechadie3 };
-statetype s_mechadie3 = { false, SPR_MECHA_DIE3, 10, NULL, (statefunc)A_HitlerMorph, &s_mechadie4 };
-statetype s_mechadie4 = { false, SPR_MECHA_DEAD, 0, NULL, NULL, &s_mechadie4 };
+statetype s_mechadie1 = { false, static_cast<short>(sprite::SPR_MECHA_DIE1), 10, NULL, (statefunc)A_DeathScream, &s_mechadie2 };
+statetype s_mechadie2 = { false, static_cast<short>(sprite::SPR_MECHA_DIE2), 10, NULL, NULL, &s_mechadie3 };
+statetype s_mechadie3 = { false, static_cast<short>(sprite::SPR_MECHA_DIE3), 10, NULL, (statefunc)A_HitlerMorph, &s_mechadie4 };
+statetype s_mechadie4 = { false, static_cast<short>(sprite::SPR_MECHA_DEAD), 0, NULL, NULL, &s_mechadie4 };
 
-statetype s_mechashoot1 = { false, SPR_MECHA_SHOOT1, 30, NULL, NULL, &s_mechashoot2 };
-statetype s_mechashoot2 = { false, SPR_MECHA_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_mechashoot3 };
-statetype s_mechashoot3 = { false, SPR_MECHA_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_mechashoot4 };
-statetype s_mechashoot4 = { false, SPR_MECHA_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_mechashoot5 };
-statetype s_mechashoot5 = { false, SPR_MECHA_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_mechashoot6 };
-statetype s_mechashoot6 = { false, SPR_MECHA_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_mechachase1 };
+statetype s_mechashoot1 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT1), 30, NULL, NULL, &s_mechashoot2 };
+statetype s_mechashoot2 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_mechashoot3 };
+statetype s_mechashoot3 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_mechashoot4 };
+statetype s_mechashoot4 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_mechashoot5 };
+statetype s_mechashoot5 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_mechashoot6 };
+statetype s_mechashoot6 = { false, static_cast<short>(sprite::SPR_MECHA_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_mechachase1 };
 
-statetype s_hitlerchase1 = { false, SPR_HITLER_W1, 6, (statefunc)T_Chase, NULL, &s_hitlerchase1s };
-statetype s_hitlerchase1s = { false, SPR_HITLER_W1, 4, NULL, NULL, &s_hitlerchase2 };
-statetype s_hitlerchase2 = { false, SPR_HITLER_W2, 2, (statefunc)T_Chase, NULL, &s_hitlerchase3 };
-statetype s_hitlerchase3 = { false, SPR_HITLER_W3, 6, (statefunc)T_Chase, NULL, &s_hitlerchase3s };
-statetype s_hitlerchase3s = { false, SPR_HITLER_W3, 4, NULL, NULL, &s_hitlerchase4 };
-statetype s_hitlerchase4 = { false, SPR_HITLER_W4, 2, (statefunc)T_Chase, NULL, &s_hitlerchase1 };
+statetype s_hitlerchase1 = { false, static_cast<short>(sprite::SPR_HITLER_W1), 6, (statefunc)T_Chase, NULL, &s_hitlerchase1s };
+statetype s_hitlerchase1s = { false, static_cast<short>(sprite::SPR_HITLER_W1), 4, NULL, NULL, &s_hitlerchase2 };
+statetype s_hitlerchase2 = { false, static_cast<short>(sprite::SPR_HITLER_W2), 2, (statefunc)T_Chase, NULL, &s_hitlerchase3 };
+statetype s_hitlerchase3 = { false, static_cast<short>(sprite::SPR_HITLER_W3), 6, (statefunc)T_Chase, NULL, &s_hitlerchase3s };
+statetype s_hitlerchase3s = { false, static_cast<short>(sprite::SPR_HITLER_W3), 4, NULL, NULL, &s_hitlerchase4 };
+statetype s_hitlerchase4 = { false, static_cast<short>(sprite::SPR_HITLER_W4), 2, (statefunc)T_Chase, NULL, &s_hitlerchase1 };
 
-statetype s_hitlerdeathcam = { false, SPR_HITLER_W1, 10, NULL, NULL, &s_hitlerdie1 };
+statetype s_hitlerdeathcam = { false, static_cast<short>(sprite::SPR_HITLER_W1), 10, NULL, NULL, &s_hitlerdie1 };
 
-statetype s_hitlerdie1 = { false, SPR_HITLER_W1, 1, NULL, (statefunc)A_DeathScream, &s_hitlerdie2 };
-statetype s_hitlerdie2 = { false, SPR_HITLER_W1, 10, NULL, NULL, &s_hitlerdie3 };
-statetype s_hitlerdie3 = { false, SPR_HITLER_DIE1, 10, NULL, (statefunc)A_Slurpie, &s_hitlerdie4 };
-statetype s_hitlerdie4 = { false, SPR_HITLER_DIE2, 10, NULL, NULL, &s_hitlerdie5 };
-statetype s_hitlerdie5 = { false, SPR_HITLER_DIE3, 10, NULL, NULL, &s_hitlerdie6 };
-statetype s_hitlerdie6 = { false, SPR_HITLER_DIE4, 10, NULL, NULL, &s_hitlerdie7 };
-statetype s_hitlerdie7 = { false, SPR_HITLER_DIE5, 10, NULL, NULL, &s_hitlerdie8 };
-statetype s_hitlerdie8 = { false, SPR_HITLER_DIE6, 10, NULL, NULL, &s_hitlerdie9 };
-statetype s_hitlerdie9 = { false, SPR_HITLER_DIE7, 10, NULL, NULL, &s_hitlerdie10 };
-statetype s_hitlerdie10 = { false, SPR_HITLER_DEAD, 20, NULL, (statefunc)A_StartDeathCam, &s_hitlerdie10 };
+statetype s_hitlerdie1 = { false, static_cast<short>(sprite::SPR_HITLER_W1), 1, NULL, (statefunc)A_DeathScream, &s_hitlerdie2 };
+statetype s_hitlerdie2 = { false, static_cast<short>(sprite::SPR_HITLER_W1), 10, NULL, NULL, &s_hitlerdie3 };
+statetype s_hitlerdie3 = { false, static_cast<short>(sprite::SPR_HITLER_DIE1), 10, NULL, (statefunc)A_Slurpie, &s_hitlerdie4 };
+statetype s_hitlerdie4 = { false, static_cast<short>(sprite::SPR_HITLER_DIE2), 10, NULL, NULL, &s_hitlerdie5 };
+statetype s_hitlerdie5 = { false, static_cast<short>(sprite::SPR_HITLER_DIE3), 10, NULL, NULL, &s_hitlerdie6 };
+statetype s_hitlerdie6 = { false, static_cast<short>(sprite::SPR_HITLER_DIE4), 10, NULL, NULL, &s_hitlerdie7 };
+statetype s_hitlerdie7 = { false, static_cast<short>(sprite::SPR_HITLER_DIE5), 10, NULL, NULL, &s_hitlerdie8 };
+statetype s_hitlerdie8 = { false, static_cast<short>(sprite::SPR_HITLER_DIE6), 10, NULL, NULL, &s_hitlerdie9 };
+statetype s_hitlerdie9 = { false, static_cast<short>(sprite::SPR_HITLER_DIE7), 10, NULL, NULL, &s_hitlerdie10 };
+statetype s_hitlerdie10 = { false, static_cast<short>(sprite::SPR_HITLER_DEAD), 20, NULL, (statefunc)A_StartDeathCam, &s_hitlerdie10 };
 
-statetype s_hitlershoot1 = { false, SPR_HITLER_SHOOT1, 30, NULL, NULL, &s_hitlershoot2 };
-statetype s_hitlershoot2 = { false, SPR_HITLER_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_hitlershoot3 };
-statetype s_hitlershoot3 = { false, SPR_HITLER_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_hitlershoot4 };
-statetype s_hitlershoot4 = { false, SPR_HITLER_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_hitlershoot5 };
-statetype s_hitlershoot5 = { false, SPR_HITLER_SHOOT3, 10, NULL, (statefunc)T_Shoot, &s_hitlershoot6 };
-statetype s_hitlershoot6 = { false, SPR_HITLER_SHOOT2, 10, NULL, (statefunc)T_Shoot, &s_hitlerchase1 };
+statetype s_hitlershoot1 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT1), 30, NULL, NULL, &s_hitlershoot2 };
+statetype s_hitlershoot2 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_hitlershoot3 };
+statetype s_hitlershoot3 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_hitlershoot4 };
+statetype s_hitlershoot4 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_hitlershoot5 };
+statetype s_hitlershoot5 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT3), 10, NULL, (statefunc)T_Shoot, &s_hitlershoot6 };
+statetype s_hitlershoot6 = { false, static_cast<short>(sprite::SPR_HITLER_SHOOT2), 10, NULL, (statefunc)T_Shoot, &s_hitlerchase1 };
 
 /*
 ===============
@@ -2713,10 +2713,10 @@ void SpawnFakeHitler(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_fakestand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = fakeobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_fake];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::fakeobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_fake)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -2739,10 +2739,10 @@ void SpawnHitler(int tilex, int tiley)
     SpawnNewObj(tilex, tiley, &s_mechastand);
     newobj->speed = SPDPATROL;
 
-    newobj->obclass = mechahitlerobj;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][en_hitler];
-    newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE | FL_AMBUSH;
+    newobj->obclass = classtype::mechahitlerobj;
+    newobj->hitpoints = starthitpoints[static_cast<byte>(gamestate.difficulty)][static_cast<byte>(enemy_t::en_hitler)];
+    newobj->dir = dirtype::nodir;
+    newobj->flags |= static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE) | static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
     if (!loadedgame)
         gamestate.killtotal++;
 }
@@ -2755,7 +2755,7 @@ void SpawnHitler(int tilex, int tiley)
 ===============
 */
 
-void A_HitlerMorph(objtype* ob)
+void A_HitlerMorph(objstruct* ob)
 {
     short hitpoints[4] = { 500, 700, 800, 900 };
 
@@ -2767,11 +2767,11 @@ void A_HitlerMorph(objtype* ob)
 
     newobj->distance = ob->distance;
     newobj->dir = ob->dir;
-    newobj->flags = ob->flags | FL_SHOOTABLE;
-    newobj->flags &= ~FL_NONMARK; // hitler stuck with nodir fix
+    newobj->flags = ob->flags | static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE);
+    newobj->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_NONMARK); // hitler stuck with dirtype::nodir fix
 
-    newobj->obclass = realhitlerobj;
-    newobj->hitpoints = hitpoints[gamestate.difficulty];
+    newobj->obclass = classtype::realhitlerobj;
+    newobj->hitpoints = hitpoints[static_cast<byte>(gamestate.difficulty)];
 }
 
 ////////////////////////////////////////////////////////
@@ -2780,13 +2780,13 @@ void A_HitlerMorph(objtype* ob)
 // A_Slurpie
 //
 ////////////////////////////////////////////////////////
-void A_MechaSound(objtype* ob)
+void A_MechaSound(objstruct* ob)
 {
     if (areabyplayer[ob->areanumber])
         PlaySoundLocActor(MECHSTEPSND, ob);
 }
 
-void A_Slurpie(objtype*)
+void A_Slurpie(objstruct*)
 {
     SD_PlaySound(SLURPIESND);
 }
@@ -2799,7 +2799,7 @@ void A_Slurpie(objtype*)
 =================
 */
 
-void T_FakeFire(objtype* ob)
+void T_FakeFire(objstruct* ob)
 {
     int32_t deltax, deltay;
     float   angle;
@@ -2826,12 +2826,12 @@ void T_FakeFire(objtype* ob)
     newobj->tiley = ob->tiley;
     newobj->x = ob->x;
     newobj->y = ob->y;
-    newobj->dir = nodir;
+    newobj->dir = dirtype::nodir;
     newobj->angle = iangle;
-    newobj->obclass = fireobj;
+    newobj->obclass = classtype::fireobj;
     newobj->speed = 0x1200l;
-    newobj->flags = FL_NEVERMARK;
-    newobj->active = ac_yes;
+    newobj->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
+    newobj->active = activetype::ac_yes;
 
     PlaySoundLocActor(FLAMETHROWERSND, newobj);
 }
@@ -2844,7 +2844,7 @@ void T_FakeFire(objtype* ob)
 =================
 */
 
-void T_Fake(objtype* ob)
+void T_Fake(objstruct* ob)
 {
     int32_t move;
 
@@ -2861,9 +2861,9 @@ void T_Fake(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         SelectDodgeDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -2889,7 +2889,7 @@ void T_Fake(objtype* ob)
 
         SelectDodgeDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -2911,7 +2911,7 @@ STAND
 ===============
 */
 
-void T_Stand(objtype* ob)
+void T_Stand(objstruct* ob)
 {
     SightPlayer(ob);
 }
@@ -2932,7 +2932,7 @@ CHASE
 =================
 */
 
-void T_Chase(objtype* ob)
+void T_Chase(objstruct* ob)
 {
     int32_t move, target;
     int     dx, dy, dist, chance;
@@ -2978,29 +2978,29 @@ void T_Chase(objtype* ob)
             // go into attack frame
             //
             switch (ob->obclass) {
-            case guardobj:
+            case classtype::guardobj:
                 NewState(ob, &s_grdshoot1);
                 break;
-            case officerobj:
+            case classtype::officerobj:
                 NewState(ob, &s_ofcshoot1);
                 break;
-            case mutantobj:
+            case classtype::mutantobj:
                 NewState(ob, &s_mutshoot1);
                 break;
-            case ssobj:
+            case classtype::ssobj:
                 NewState(ob, &s_ssshoot1);
                 break;
 #ifndef SPEAR
-            case bossobj:
+            case classtype::bossobj:
                 NewState(ob, &s_bossshoot1);
                 break;
-            case gretelobj:
+            case classtype::gretelobj:
                 NewState(ob, &s_gretelshoot1);
                 break;
-            case mechahitlerobj:
+            case classtype::mechahitlerobj:
                 NewState(ob, &s_mechashoot1);
                 break;
-            case realhitlerobj:
+            case classtype::realhitlerobj:
                 NewState(ob, &s_hitlershoot1);
                 break;
 #else
@@ -3027,12 +3027,12 @@ void T_Chase(objtype* ob)
     } else
         ob->hidden = true;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         if (dodge)
             SelectDodgeDir(ob);
         else
             SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -3044,7 +3044,7 @@ void T_Chase(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             DEMOIF_SDL
@@ -3075,7 +3075,7 @@ void T_Chase(objtype* ob)
         else
             SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -3088,13 +3088,13 @@ void T_Chase(objtype* ob)
 =================
 */
 
-void T_Ghosts(objtype* ob)
+void T_Ghosts(objstruct* ob)
 {
     int32_t move;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         SelectChaseDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -3120,7 +3120,7 @@ void T_Ghosts(objtype* ob)
 
         SelectChaseDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -3133,14 +3133,14 @@ void T_Ghosts(objtype* ob)
 =================
 */
 
-void T_DogChase(objtype* ob)
+void T_DogChase(objstruct* ob)
 {
     int32_t move;
     int32_t dx, dy;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         SelectDodgeDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 
@@ -3184,7 +3184,7 @@ void T_DogChase(objtype* ob)
 
         SelectDodgeDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // object is blocked in
     }
 }
@@ -3205,7 +3205,7 @@ void T_DogChase(objtype* ob)
 ===============
 */
 
-void SelectPathDir(objtype* ob)
+void SelectPathDir(objstruct* ob)
 {
     unsigned spot;
 
@@ -3219,7 +3219,7 @@ void SelectPathDir(objtype* ob)
     ob->distance = TILEGLOBAL;
 
     if (!TryWalk(ob))
-        ob->dir = nodir;
+        ob->dir = dirtype::nodir;
 }
 
 /*
@@ -3230,16 +3230,16 @@ void SelectPathDir(objtype* ob)
 ===============
 */
 
-void T_Path(objtype* ob)
+void T_Path(objstruct* ob)
 {
     int32_t move;
 
     if (SightPlayer(ob))
         return;
 
-    if (ob->dir == nodir) {
+    if (ob->dir == dirtype::nodir) {
         SelectPathDir(ob);
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // all movement is blocked
     }
 
@@ -3251,7 +3251,7 @@ void T_Path(objtype* ob)
             // waiting for a door to open
             //
             OpenDoor(-ob->distance - 1);
-            if (doorobjlist[-ob->distance - 1].action != dr_open)
+            if (doorobjlist[-ob->distance - 1].action != doortype::dr_open)
                 return;
             ob->distance = TILEGLOBAL; // go ahead, the door is now open
             DEMOIF_SDL
@@ -3277,7 +3277,7 @@ void T_Path(objtype* ob)
 
         SelectPathDir(ob);
 
-        if (ob->dir == nodir)
+        if (ob->dir == dirtype::nodir)
             return; // all movement is blocked
     }
 }
@@ -3300,7 +3300,7 @@ void T_Path(objtype* ob)
 ===============
 */
 
-void T_Shoot(objtype* ob)
+void T_Shoot(objstruct* ob)
 {
     int dx, dy, dist;
     int hitchance, damage;
@@ -3316,16 +3316,16 @@ void T_Shoot(objtype* ob)
         dy = abs(ob->tiley - player->tiley);
         dist = dx > dy ? dx : dy;
 
-        if (ob->obclass == ssobj || ob->obclass == bossobj)
+        if (ob->obclass == classtype::ssobj || ob->obclass == classtype::bossobj)
             dist = dist * 2 / 3; // ss are better shots
 
         if (thrustspeed >= RUNSPEED) {
-            if (ob->flags & FL_VISABLE)
+            if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_VISABLE))
                 hitchance = 160 - dist * 16; // player can see to dodge
             else
                 hitchance = 160 - dist * 8;
         } else {
-            if (ob->flags & FL_VISABLE)
+            if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_VISABLE))
                 hitchance = 256 - dist * 16; // player can see to dodge
             else
                 hitchance = 256 - dist * 8;
@@ -3346,25 +3346,25 @@ void T_Shoot(objtype* ob)
     }
 
     switch (ob->obclass) {
-    case ssobj:
+    case classtype::ssobj:
         PlaySoundLocActor(SSFIRESND, ob);
         break;
 #ifndef SPEAR
 #ifndef APOGEE_1_0
-    case giftobj:
-    case fatobj:
+    case classtype::giftobj:
+    case classtype::fatobj:
         PlaySoundLocActor(MISSILEFIRESND, ob);
         break;
 #endif
-    case mechahitlerobj:
-    case realhitlerobj:
-    case bossobj:
+    case classtype::mechahitlerobj:
+    case classtype::realhitlerobj:
+    case classtype::bossobj:
         PlaySoundLocActor(BOSSFIRESND, ob);
         break;
-    case schabbobj:
+    case classtype::schabbobj:
         PlaySoundLocActor(SCHABBSTHROWSND, ob);
         break;
-    case fakeobj:
+    case classtype::fakeobj:
         PlaySoundLocActor(FLAMETHROWERSND, ob);
         break;
 #endif
@@ -3381,7 +3381,7 @@ void T_Shoot(objtype* ob)
 ===============
 */
 
-void T_Bite(objtype* ob)
+void T_Bite(objstruct* ob)
 {
     int32_t dx, dy;
 
@@ -3418,12 +3418,12 @@ void T_Bite(objtype* ob)
 // BJ victory
 //
 
-void T_BJRun(objtype* ob);
-void T_BJJump(objtype* ob);
-void T_BJDone(objtype* ob);
-void T_BJYell(objtype* ob);
+void T_BJRun(objstruct* ob);
+void T_BJJump(objstruct* ob);
+void T_BJDone(objstruct* ob);
+void T_BJYell(objstruct* ob);
 
-void T_DeathCam(objtype* ob);
+void T_DeathCam(objstruct* ob);
 
 extern statetype s_bjrun1;
 extern statetype s_bjrun1s;
@@ -3437,17 +3437,17 @@ extern statetype s_bjjump2;
 extern statetype s_bjjump3;
 extern statetype s_bjjump4;
 
-statetype s_bjrun1 = { false, SPR_BJ_W1, 12, (statefunc)T_BJRun, NULL, &s_bjrun1s };
-statetype s_bjrun1s = { false, SPR_BJ_W1, 3, NULL, NULL, &s_bjrun2 };
-statetype s_bjrun2 = { false, SPR_BJ_W2, 8, (statefunc)T_BJRun, NULL, &s_bjrun3 };
-statetype s_bjrun3 = { false, SPR_BJ_W3, 12, (statefunc)T_BJRun, NULL, &s_bjrun3s };
-statetype s_bjrun3s = { false, SPR_BJ_W3, 3, NULL, NULL, &s_bjrun4 };
-statetype s_bjrun4 = { false, SPR_BJ_W4, 8, (statefunc)T_BJRun, NULL, &s_bjrun1 };
+statetype s_bjrun1 = { false, static_cast<short>(sprite::SPR_BJ_W1), 12, (statefunc)T_BJRun, NULL, &s_bjrun1s };
+statetype s_bjrun1s = { false, static_cast<short>(sprite::SPR_BJ_W1), 3, NULL, NULL, &s_bjrun2 };
+statetype s_bjrun2 = { false, static_cast<short>(sprite::SPR_BJ_W2), 8, (statefunc)T_BJRun, NULL, &s_bjrun3 };
+statetype s_bjrun3 = { false, static_cast<short>(sprite::SPR_BJ_W3), 12, (statefunc)T_BJRun, NULL, &s_bjrun3s };
+statetype s_bjrun3s = { false, static_cast<short>(sprite::SPR_BJ_W3), 3, NULL, NULL, &s_bjrun4 };
+statetype s_bjrun4 = { false, static_cast<short>(sprite::SPR_BJ_W4), 8, (statefunc)T_BJRun, NULL, &s_bjrun1 };
 
-statetype s_bjjump1 = { false, SPR_BJ_JUMP1, 14, (statefunc)T_BJJump, NULL, &s_bjjump2 };
-statetype s_bjjump2 = { false, SPR_BJ_JUMP2, 14, (statefunc)T_BJJump, (statefunc)T_BJYell, &s_bjjump3 };
-statetype s_bjjump3 = { false, SPR_BJ_JUMP3, 14, (statefunc)T_BJJump, NULL, &s_bjjump4 };
-statetype s_bjjump4 = { false, SPR_BJ_JUMP4, 300, NULL, (statefunc)T_BJDone, &s_bjjump4 };
+statetype s_bjjump1 = { false, static_cast<short>(sprite::SPR_BJ_JUMP1), 14, (statefunc)T_BJJump, NULL, &s_bjjump2 };
+statetype s_bjjump2 = { false, static_cast<short>(sprite::SPR_BJ_JUMP2), 14, (statefunc)T_BJJump, (statefunc)T_BJYell, &s_bjjump3 };
+statetype s_bjjump3 = { false, static_cast<short>(sprite::SPR_BJ_JUMP3), 14, (statefunc)T_BJJump, NULL, &s_bjjump4 };
+statetype s_bjjump4 = { false, static_cast<short>(sprite::SPR_BJ_JUMP4), 300, NULL, (statefunc)T_BJDone, &s_bjjump4 };
 
 statetype s_deathcam = { false, 0, 0, NULL, NULL, NULL };
 
@@ -3464,8 +3464,8 @@ void SpawnBJVictory(void)
     SpawnNewObj(player->tilex, player->tiley + 1, &s_bjrun1);
     newobj->x = player->x;
     newobj->y = player->y;
-    newobj->obclass = bjobj;
-    newobj->dir = north;
+    newobj->obclass = classtype::bjobj;
+    newobj->dir = dirtype::north;
     newobj->temp1 = 6; // tiles to run forward
 }
 
@@ -3477,7 +3477,7 @@ void SpawnBJVictory(void)
 ===============
 */
 
-void T_BJRun(objtype* ob)
+void T_BJRun(objstruct* ob)
 {
     int32_t move;
 
@@ -3510,7 +3510,7 @@ void T_BJRun(objtype* ob)
 ===============
 */
 
-void T_BJJump(objtype* ob)
+void T_BJJump(objstruct* ob)
 {
     int32_t move;
 
@@ -3526,7 +3526,7 @@ void T_BJJump(objtype* ob)
 ===============
 */
 
-void T_BJYell(objtype* ob)
+void T_BJYell(objstruct* ob)
 {
     PlaySoundLocActor(YEAHSND, ob); // JAB
 }
@@ -3539,9 +3539,9 @@ void T_BJYell(objtype* ob)
 ===============
 */
 
-void T_BJDone(objtype*)
+void T_BJDone(objstruct*)
 {
-    playstate = ex_victorious; // exit castle tile
+    playstate = exit_t::ex_victorious; // exit castle tile
 }
 
 //===========================================================================
@@ -3554,10 +3554,10 @@ void T_BJDone(objtype*)
 ===============
 */
 
-boolean CheckPosition(objtype* ob)
+boolean CheckPosition(objstruct* ob)
 {
-    int      x, y, xl, yl, xh, yh;
-    objtype* check;
+    int        x, y, xl, yl, xh, yh;
+    objstruct* check;
 
     xl = (ob->x - PLAYERSIZE) >> TILESHIFT;
     yl = (ob->y - PLAYERSIZE) >> TILESHIFT;
@@ -3587,7 +3587,7 @@ boolean CheckPosition(objtype* ob)
 ===============
 */
 
-void A_StartDeathCam(objtype* ob)
+void A_StartDeathCam(objstruct* ob)
 {
     int32_t dx, dy;
     float   fangle;
@@ -3599,7 +3599,7 @@ void A_StartDeathCam(objtype* ob)
     VW_WaitVBL(100);
 
     if (gamestate.victoryflag) {
-        playstate = ex_victorious; // exit castle tile
+        playstate = exit_t::ex_victorious; // exit castle tile
         return;
     }
 
@@ -3681,16 +3681,16 @@ void A_StartDeathCam(objtype* ob)
 
     switch (ob->obclass) {
 #ifndef SPEAR
-    case schabbobj:
+    case classtype::schabbobj:
         NewState(ob, &s_schabbdeathcam);
         break;
-    case realhitlerobj:
+    case classtype::realhitlerobj:
         NewState(ob, &s_hitlerdeathcam);
         break;
-    case giftobj:
+    case classtype::giftobj:
         NewState(ob, &s_giftdeathcam);
         break;
-    case fatobj:
+    case classtype::fatobj:
         NewState(ob, &s_fatdeathcam);
         break;
 #endif

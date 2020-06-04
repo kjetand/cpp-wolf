@@ -34,7 +34,7 @@ word plux, pluy; // player coordinates scaled to unsigned
 
 short anglefrac;
 
-objtype* LastAttacker;
+objstruct* LastAttacker;
 
 /*
 =============================================================================
@@ -44,8 +44,8 @@ objtype* LastAttacker;
 =============================================================================
 */
 
-void T_Player(objtype* ob);
-void T_Attack(objtype* ob);
+void T_Player(objstruct* ob);
+void T_Attack(objstruct* ob);
 
 statetype s_player = { false, 0, 0, (statefunc)T_Player, NULL, NULL };
 statetype s_attack = { false, 0, 0, (statefunc)T_Attack, NULL, NULL };
@@ -65,16 +65,16 @@ struct atkinf {
 
 void Attack(void);
 void Use(void);
-void Search(objtype* ob);
+void Search(objstruct* ob);
 void SelectWeapon(void);
 void SelectItem(void);
 
 //----------
 
-boolean TryMove(objtype* ob);
-void    T_Player(objtype* ob);
+boolean TryMove(objstruct* ob);
+void    T_Player(objstruct* ob);
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove);
+void ClipMove(objstruct* ob, int32_t xmove, int32_t ymove);
 
 /*
 =============================================================================
@@ -102,16 +102,16 @@ void CheckWeaponChange(void)
         return;
 
     if (buttonstate[bt_nextweapon] && !buttonheld[bt_nextweapon]) {
-        newWeapon = gamestate.weapon + 1;
-        if (newWeapon > gamestate.bestweapon)
+        newWeapon = static_cast<byte>(gamestate.weapon) + 1;
+        if (newWeapon > static_cast<byte>(gamestate.bestweapon))
             newWeapon = 0;
     } else if (buttonstate[bt_prevweapon] && !buttonheld[bt_prevweapon]) {
-        newWeapon = gamestate.weapon - 1;
+        newWeapon = static_cast<byte>(gamestate.weapon) - 1;
         if (newWeapon < 0)
-            newWeapon = gamestate.bestweapon;
+            newWeapon = static_cast<byte>(gamestate.bestweapon);
     } else {
-        for (int i = wp_knife; i <= gamestate.bestweapon; i++) {
-            if (buttonstate[bt_readyknife + i - wp_knife]) {
+        for (int i = static_cast<byte>(weapontype::wp_knife); i <= static_cast<byte>(gamestate.bestweapon); i++) {
+            if (buttonstate[bt_readyknife + i - static_cast<byte>(weapontype::wp_knife)]) {
                 newWeapon = i;
                 break;
             }
@@ -139,7 +139,7 @@ void CheckWeaponChange(void)
 =======================
 */
 
-void ControlMovement(objtype* ob)
+void ControlMovement(objstruct* ob)
 {
     int32_t oldx, oldy;
     int     angle;
@@ -270,7 +270,7 @@ void DrawFace(void)
             StatusDrawFace(FACE1APIC + 3 * ((100 - gamestate.health) / 16) + gamestate.faceframe);
     } else {
 #ifndef SPEAR
-        if (LastAttacker && LastAttacker->obclass == needleobj)
+        if (LastAttacker && LastAttacker->obclass == classtype::needleobj)
             StatusDrawFace(MUTANTBJPIC);
         else
 #endif
@@ -370,13 +370,13 @@ void DrawHealth(void)
 ===============
 */
 
-void TakeDamage(int points, objtype* attacker)
+void TakeDamage(int points, objstruct* attacker)
 {
     LastAttacker = attacker;
 
     if (gamestate.victoryflag)
         return;
-    if (gamestate.difficulty == gd_baby)
+    if (gamestate.difficulty == difficulty::gd_baby)
         points >>= 2;
 
     if (!godmode)
@@ -384,7 +384,7 @@ void TakeDamage(int points, objtype* attacker)
 
     if (gamestate.health <= 0) {
         gamestate.health = 0;
-        playstate = ex_died;
+        playstate = exit_t::ex_died;
         killerobj = attacker;
     }
 
@@ -527,7 +527,7 @@ void DrawWeapon(void)
 {
     if (viewsize == 21 && ingame)
         return;
-    StatusDrawPic(32, 8, KNIFEPIC + gamestate.weapon);
+    StatusDrawPic(32, 8, KNIFEPIC + static_cast<byte>(gamestate.weapon));
 }
 
 /*
@@ -561,13 +561,13 @@ void DrawKeys(void)
 ==================
 */
 
-void GiveWeapon(int weapon)
+void GiveWeapon(weapontype weapon)
 {
     GiveAmmo(6);
 
     if (gamestate.bestweapon < weapon)
         gamestate.bestweapon = gamestate.weapon
-            = gamestate.chosenweapon = (weapontype)weapon;
+            = gamestate.chosenweapon = weapon;
 
     DrawWeapon();
 }
@@ -643,10 +643,10 @@ void GiveKey(int key)
 =
 ===================
 */
-void GetBonus(statobj_t* check)
+void GetBonus(statstruct* check)
 {
     switch (check->itemnumber) {
-    case bo_firstaid:
+    case wl_stat_t::bo_firstaid:
         if (gamestate.health == 100)
             return;
 
@@ -654,43 +654,43 @@ void GetBonus(statobj_t* check)
         HealSelf(25);
         break;
 
-    case bo_key1:
-    case bo_key2:
-    case bo_key3:
-    case bo_key4:
-        GiveKey(check->itemnumber - bo_key1);
+    case wl_stat_t::bo_key1:
+    case wl_stat_t::bo_key2:
+    case wl_stat_t::bo_key3:
+    case wl_stat_t::bo_key4:
+        GiveKey(static_cast<byte>(check->itemnumber) - static_cast<byte>(wl_stat_t::bo_key1));
         SD_PlaySound(GETKEYSND);
         break;
 
-    case bo_cross:
+    case wl_stat_t::bo_cross:
         SD_PlaySound(BONUS1SND);
         GivePoints(100);
         gamestate.treasurecount++;
         break;
-    case bo_chalice:
+    case wl_stat_t::bo_chalice:
         SD_PlaySound(BONUS2SND);
         GivePoints(500);
         gamestate.treasurecount++;
         break;
-    case bo_bible:
+    case wl_stat_t::bo_bible:
         SD_PlaySound(BONUS3SND);
         GivePoints(1000);
         gamestate.treasurecount++;
         break;
-    case bo_crown:
+    case wl_stat_t::bo_crown:
         SD_PlaySound(BONUS4SND);
         GivePoints(5000);
         gamestate.treasurecount++;
         break;
 
-    case bo_clip:
+    case wl_stat_t::bo_clip:
         if (gamestate.ammo == 99)
             return;
 
         SD_PlaySound(GETAMMOSND);
         GiveAmmo(8);
         break;
-    case bo_clip2:
+    case wl_stat_t::bo_clip2:
         if (gamestate.ammo == 99)
             return;
 
@@ -699,7 +699,7 @@ void GetBonus(statobj_t* check)
         break;
 
 #ifdef SPEAR
-    case bo_25clip:
+    case wl_stat_t::bo_25clip:
         if (gamestate.ammo == 99)
             return;
 
@@ -708,21 +708,21 @@ void GetBonus(statobj_t* check)
         break;
 #endif
 
-    case bo_machinegun:
+    case wl_stat_t::bo_machinegun:
         SD_PlaySound(GETMACHINESND);
-        GiveWeapon(wp_machinegun);
+        GiveWeapon(weapontype::wp_machinegun);
         break;
-    case bo_chaingun:
+    case wl_stat_t::bo_chaingun:
         SD_PlaySound(GETGATLINGSND);
         facetimes = 38;
-        GiveWeapon(wp_chaingun);
+        GiveWeapon(weapontype::wp_chaingun);
 
         if (viewsize != 21)
             StatusDrawFace(GOTGATLINGPIC);
         facecount = 0;
         break;
 
-    case bo_fullheal:
+    case wl_stat_t::bo_fullheal:
         SD_PlaySound(BONUS1UPSND);
         HealSelf(99);
         GiveAmmo(25);
@@ -730,7 +730,7 @@ void GetBonus(statobj_t* check)
         gamestate.treasurecount++;
         break;
 
-    case bo_food:
+    case wl_stat_t::bo_food:
         if (gamestate.health == 100)
             return;
 
@@ -738,7 +738,7 @@ void GetBonus(statobj_t* check)
         HealSelf(10);
         break;
 
-    case bo_alpo:
+    case wl_stat_t::bo_alpo:
         if (gamestate.health == 100)
             return;
 
@@ -746,7 +746,7 @@ void GetBonus(statobj_t* check)
         HealSelf(4);
         break;
 
-    case bo_gibs:
+    case wl_stat_t::bo_gibs:
         if (gamestate.health > 10)
             return;
 
@@ -755,7 +755,7 @@ void GetBonus(statobj_t* check)
         break;
 
 #ifdef SPEAR
-    case bo_spear:
+    case wl_stat_t::bo_spear:
         spearflag = true;
         spearx = player->x;
         speary = player->y;
@@ -778,11 +778,11 @@ void GetBonus(statobj_t* check)
 ===================
 */
 
-boolean TryMove(objtype* ob)
+boolean TryMove(objstruct* ob)
 {
-    int      xl, yl, xh, yh, x, y;
-    objtype* check;
-    int32_t  deltax, deltay;
+    int        xl, yl, xh, yh, x, y;
+    objstruct* check;
+    int32_t    deltax, deltay;
 
     xl = (ob->x - PLAYERSIZE) >> TILESHIFT;
     yl = (ob->y - PLAYERSIZE) >> TILESHIFT;
@@ -802,19 +802,19 @@ boolean TryMove(objtype* ob)
                 if (tilemap[x][y] == 64 && x == pwallx && y == pwally) // back of moving pushwall?
                 {
                     switch (pwalldir) {
-                    case di_north:
+                    case controldir_t::di_north:
                         if (ob->y - PUSHWALLMINDIST <= (pwally << TILESHIFT) + ((63 - pwallpos) << 10))
                             return false;
                         break;
-                    case di_west:
+                    case controldir_t::di_west:
                         if (ob->x - PUSHWALLMINDIST <= (pwallx << TILESHIFT) + ((63 - pwallpos) << 10))
                             return false;
                         break;
-                    case di_east:
+                    case controldir_t::di_east:
                         if (ob->x + PUSHWALLMINDIST >= (pwallx << TILESHIFT) + (pwallpos << 10))
                             return false;
                         break;
-                    case di_south:
+                    case controldir_t::di_south:
                         if (ob->y + PUSHWALLMINDIST >= (pwally << TILESHIFT) + (pwallpos << 10))
                             return false;
                         break;
@@ -840,7 +840,7 @@ boolean TryMove(objtype* ob)
     for (y = yl; y <= yh; y++) {
         for (x = xl; x <= xh; x++) {
             check = actorat[x][y];
-            if (ISPOINTER(check) && check != player && (check->flags & FL_SHOOTABLE)) {
+            if (ISPOINTER(check) && check != player && (check->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE))) {
                 deltax = ob->x - check->x;
                 if (deltax < -MINACTORDIST || deltax > MINACTORDIST)
                     continue;
@@ -864,7 +864,7 @@ boolean TryMove(objtype* ob)
 ===================
 */
 
-void ClipMove(objtype* ob, int32_t xmove, int32_t ymove)
+void ClipMove(objstruct* ob, int32_t xmove, int32_t ymove)
 {
     int32_t basex, basey;
 
@@ -1013,8 +1013,8 @@ void Cmd_Fire(void)
     player->state = &s_attack;
 
     gamestate.attackframe = 0;
-    gamestate.attackcount = attackinfo[gamestate.weapon][gamestate.attackframe].tics;
-    gamestate.weaponframe = attackinfo[gamestate.weapon][gamestate.attackframe].frame;
+    gamestate.attackcount = attackinfo[static_cast<byte>(gamestate.weapon)][gamestate.attackframe].tics;
+    gamestate.weaponframe = attackinfo[static_cast<byte>(gamestate.weapon)][gamestate.attackframe].frame;
 }
 
 //===========================================================================
@@ -1029,8 +1029,9 @@ void Cmd_Fire(void)
 
 void Cmd_Use(void)
 {
-    int     checkx, checky, doornum, dir;
-    boolean elevatorok;
+    int          checkx, checky, doornum;
+    controldir_t dir;
+    boolean      elevatorok;
 
     //
     // find which cardinal direction the player is facing
@@ -1038,22 +1039,22 @@ void Cmd_Use(void)
     if (player->angle < ANGLES / 8 || player->angle > 7 * ANGLES / 8) {
         checkx = player->tilex + 1;
         checky = player->tiley;
-        dir = di_east;
+        dir = controldir_t::di_east;
         elevatorok = true;
     } else if (player->angle < 3 * ANGLES / 8) {
         checkx = player->tilex;
         checky = player->tiley - 1;
-        dir = di_north;
+        dir = controldir_t::di_north;
         elevatorok = false;
     } else if (player->angle < 5 * ANGLES / 8) {
         checkx = player->tilex - 1;
         checky = player->tiley;
-        dir = di_west;
+        dir = controldir_t::di_west;
         elevatorok = true;
     } else {
         checkx = player->tilex;
         checky = player->tiley + 1;
-        dir = di_south;
+        dir = controldir_t::di_south;
         elevatorok = false;
     }
 
@@ -1074,9 +1075,9 @@ void Cmd_Use(void)
 
         tilemap[checkx][checky]++; // flip switch
         if (*(mapsegs[0] + (player->tiley << mapshift) + player->tilex) == ALTELEVATORTILE)
-            playstate = ex_secretlevel;
+            playstate = exit_t::ex_secretlevel;
         else
-            playstate = ex_completed;
+            playstate = exit_t::ex_completed;
         SD_PlaySound(LEVELDONESND);
         SD_WaitSoundDone();
     } else if (!buttonheld[bt_use] && doornum & 0x80) {
@@ -1104,8 +1105,8 @@ void Cmd_Use(void)
 
 void SpawnPlayer(int tilex, int tiley, int dir)
 {
-    player->obclass = playerobj;
-    player->active = ac_yes;
+    player->obclass = classtype::playerobj;
+    player->active = activetype::ac_yes;
     player->tilex = tilex;
     player->tiley = tiley;
     player->areanumber = (byte) * (mapsegs[0] + (player->tiley << mapshift) + player->tilex);
@@ -1115,7 +1116,7 @@ void SpawnPlayer(int tilex, int tiley, int dir)
     player->angle = (1 - dir) * 90;
     if (player->angle < 0)
         player->angle += ANGLES;
-    player->flags = FL_NEVERMARK;
+    player->flags = static_cast<std::uint32_t>(objflag_t::FL_NEVERMARK);
     Thrust(0, 0); // set some variables
 
     InitAreas();
@@ -1133,17 +1134,17 @@ void SpawnPlayer(int tilex, int tiley, int dir)
 ===============
 */
 
-void KnifeAttack(objtype* ob)
+void KnifeAttack(objstruct* ob)
 {
-    objtype *check, *closest;
-    int32_t  dist;
+    objstruct *check, *closest;
+    int32_t    dist;
 
     SD_PlaySound(ATKKNIFESND);
     // actually fire
     dist = 0x7fffffff;
     closest = NULL;
     for (check = ob->next; check; check = check->next) {
-        if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
+        if ((check->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) && (check->flags & static_cast<std::uint32_t>(objflag_t::FL_VISABLE))
             && abs(check->viewx - centerx) < shootdelta) {
             if (check->transx < dist) {
                 dist = check->transx;
@@ -1161,21 +1162,21 @@ void KnifeAttack(objtype* ob)
     DamageActor(closest, US_RndT() >> 4);
 }
 
-void GunAttack(objtype* ob)
+void GunAttack(objstruct* ob)
 {
-    objtype *check, *closest, *oldclosest;
-    int      damage;
-    int      dx, dy, dist;
-    int32_t  viewdist;
+    objstruct *check, *closest, *oldclosest;
+    int        damage;
+    int        dx, dy, dist;
+    int32_t    viewdist;
 
     switch (gamestate.weapon) {
-    case wp_pistol:
+    case weapontype::wp_pistol:
         SD_PlaySound(ATKPISTOLSND);
         break;
-    case wp_machinegun:
+    case weapontype::wp_machinegun:
         SD_PlaySound(ATKMACHINEGUNSND);
         break;
-    case wp_chaingun:
+    case weapontype::wp_chaingun:
         SD_PlaySound(ATKGATLINGSND);
         break;
     }
@@ -1192,7 +1193,7 @@ void GunAttack(objtype* ob)
         oldclosest = closest;
 
         for (check = ob->next; check; check = check->next) {
-            if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
+            if ((check->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) && (check->flags & static_cast<std::uint32_t>(objflag_t::FL_VISABLE))
                 && abs(check->viewx - centerx) < shootdelta) {
                 if (check->transx < viewdist) {
                     viewdist = check->transx;
@@ -1272,7 +1273,7 @@ void VictorySpin(void)
 ===============
 */
 
-void T_Attack(objtype* ob)
+void T_Attack(objstruct* ob)
 {
     struct atkinf* cur;
 
@@ -1304,12 +1305,12 @@ void T_Attack(objtype* ob)
     //
     gamestate.attackcount -= (short)tics;
     while (gamestate.attackcount <= 0) {
-        cur = &attackinfo[gamestate.weapon][gamestate.attackframe];
+        cur = &attackinfo[static_cast<byte>(gamestate.weapon)][gamestate.attackframe];
         switch (cur->attack) {
         case -1:
             ob->state = &s_player;
             if (!gamestate.ammo) {
-                gamestate.weapon = wp_knife;
+                gamestate.weapon = weapontype::wp_knife;
                 DrawWeapon();
             } else {
                 if (gamestate.weapon != gamestate.chosenweapon) {
@@ -1348,7 +1349,7 @@ void T_Attack(objtype* ob)
 
         gamestate.attackcount += cur->tics;
         gamestate.attackframe++;
-        gamestate.weaponframe = attackinfo[gamestate.weapon][gamestate.attackframe].frame;
+        gamestate.weaponframe = attackinfo[static_cast<byte>(gamestate.weapon)][gamestate.attackframe].frame;
     }
 }
 
@@ -1362,7 +1363,7 @@ void T_Attack(objtype* ob)
 ===============
 */
 
-void T_Player(objtype* ob)
+void T_Player(objstruct* ob)
 {
     if (gamestate.victoryflag) // watching the BJ actor
     {

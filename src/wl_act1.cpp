@@ -11,104 +11,104 @@
 =============================================================================
 */
 
-statobj_t  statobjlist[MAXSTATS];
-statobj_t* laststatobj;
+statstruct  statobjlist[MAXSTATS];
+statstruct* laststatobj;
 
 struct
 {
     short     picnum;
     wl_stat_t type;
-    uint32_t  specialFlags; // they are ORed to the statobj_t flags
+    uint32_t  specialFlags; // they are ORed to the statstruct flags
 } statinfo[] = {
-    { SPR_STAT_0 },                       // puddle          spr1v
-    { SPR_STAT_1, block },                // Green Barrel    "
-    { SPR_STAT_2, block },                // Table/chairs    "
-    { SPR_STAT_3, block, FL_FULLBRIGHT }, // Floor lamp      "
-    { SPR_STAT_4, none, FL_FULLBRIGHT },  // Chandelier      "
-    { SPR_STAT_5, block },                // Hanged man      "
-    { SPR_STAT_6, bo_alpo },              // Bad food        "
-    { SPR_STAT_7, block },                // Red pillar      "
+    { static_cast<short>(sprite::SPR_STAT_0) },                                                                         // puddle          spr1v
+    { static_cast<short>(sprite::SPR_STAT_1), wl_stat_t::block },                                                       // Green Barrel    "
+    { static_cast<short>(sprite::SPR_STAT_2), wl_stat_t::block },                                                       // Table/chairs    "
+    { static_cast<short>(sprite::SPR_STAT_3), wl_stat_t::block, static_cast<std::uint32_t>(objflag_t::FL_FULLBRIGHT) }, // Floor lamp      "
+    { static_cast<short>(sprite::SPR_STAT_4), wl_stat_t::none, static_cast<std::uint32_t>(objflag_t::FL_FULLBRIGHT) },  // Chandelier      "
+    { static_cast<short>(sprite::SPR_STAT_5), wl_stat_t::block },                                                       // Hanged man      "
+    { static_cast<short>(sprite::SPR_STAT_6), wl_stat_t::bo_alpo },                                                     // Bad food        "
+    { static_cast<short>(sprite::SPR_STAT_7), wl_stat_t::block },                                                       // Red pillar      "
     //
     // NEW PAGE
     //
-    { SPR_STAT_8, block },                // Tree            spr2v
-    { SPR_STAT_9 },                       // Skeleton flat   "
-    { SPR_STAT_10, block },               // Sink            " (SOD:gibs)
-    { SPR_STAT_11, block },               // Potted plant    "
-    { SPR_STAT_12, block },               // Urn             "
-    { SPR_STAT_13, block },               // Bare table      "
-    { SPR_STAT_14, none, FL_FULLBRIGHT }, // Ceiling light   "
+    { static_cast<short>(sprite::SPR_STAT_8), wl_stat_t::block },                                                       // Tree            spr2v
+    { static_cast<short>(sprite::SPR_STAT_9) },                                                                         // Skeleton flat   "
+    { static_cast<short>(sprite::SPR_STAT_10), wl_stat_t::block },                                                      // Sink            " (SOD:gibs)
+    { static_cast<short>(sprite::SPR_STAT_11), wl_stat_t::block },                                                      // Potted plant    "
+    { static_cast<short>(sprite::SPR_STAT_12), wl_stat_t::block },                                                      // Urn             "
+    { static_cast<short>(sprite::SPR_STAT_13), wl_stat_t::block },                                                      // Bare table      "
+    { static_cast<short>(sprite::SPR_STAT_14), wl_stat_t::none, static_cast<std::uint32_t>(objflag_t::FL_FULLBRIGHT) }, // Ceiling light   "
 #ifndef SPEAR
-    { SPR_STAT_15 }, // Kitchen stuff   "
+    { static_cast<short>(sprite::SPR_STAT_15) }, // Kitchen stuff   "
 #else
-    { SPR_STAT_15, block }, // Gibs!
+    { static_cast<short>(sprite::SPR_STAT_15), block }, // Gibs!
 #endif
     //
     // NEW PAGE
     //
-    { SPR_STAT_16, block },   // suit of armor   spr3v
-    { SPR_STAT_17, block },   // Hanging cage    "
-    { SPR_STAT_18, block },   // SkeletoninCage  "
-    { SPR_STAT_19 },          // Skeleton relax  "
-    { SPR_STAT_20, bo_key1 }, // Key 1           "
-    { SPR_STAT_21, bo_key2 }, // Key 2           "
-    { SPR_STAT_22, block },   // stuff             (SOD:gibs)
-    { SPR_STAT_23 },          // stuff
+    { static_cast<short>(sprite::SPR_STAT_16), wl_stat_t::block },   // suit of armor   spr3v
+    { static_cast<short>(sprite::SPR_STAT_17), wl_stat_t::block },   // Hanging cage    "
+    { static_cast<short>(sprite::SPR_STAT_18), wl_stat_t::block },   // SkeletoninCage  "
+    { static_cast<short>(sprite::SPR_STAT_19) },                     // Skeleton relax  "
+    { static_cast<short>(sprite::SPR_STAT_20), wl_stat_t::bo_key1 }, // Key 1           "
+    { static_cast<short>(sprite::SPR_STAT_21), wl_stat_t::bo_key2 }, // Key 2           "
+    { static_cast<short>(sprite::SPR_STAT_22), wl_stat_t::block },   // stuff             (SOD:gibs)
+    { static_cast<short>(sprite::SPR_STAT_23) },                     // stuff
     //
     // NEW PAGE
     //
-    { SPR_STAT_24, bo_food },       // Good food       spr4v
-    { SPR_STAT_25, bo_firstaid },   // First aid       "
-    { SPR_STAT_26, bo_clip },       // Clip            "
-    { SPR_STAT_27, bo_machinegun }, // Machine gun     "
-    { SPR_STAT_28, bo_chaingun },   // Gatling gun     "
-    { SPR_STAT_29, bo_cross },      // Cross           "
-    { SPR_STAT_30, bo_chalice },    // Chalice         "
-    { SPR_STAT_31, bo_bible },      // Bible           "
+    { static_cast<short>(sprite::SPR_STAT_24), wl_stat_t::bo_food },       // Good food       spr4v
+    { static_cast<short>(sprite::SPR_STAT_25), wl_stat_t::bo_firstaid },   // First aid       "
+    { static_cast<short>(sprite::SPR_STAT_26), wl_stat_t::bo_clip },       // Clip            "
+    { static_cast<short>(sprite::SPR_STAT_27), wl_stat_t::bo_machinegun }, // Machine gun     "
+    { static_cast<short>(sprite::SPR_STAT_28), wl_stat_t::bo_chaingun },   // Gatling gun     "
+    { static_cast<short>(sprite::SPR_STAT_29), wl_stat_t::bo_cross },      // Cross           "
+    { static_cast<short>(sprite::SPR_STAT_30), wl_stat_t::bo_chalice },    // Chalice         "
+    { static_cast<short>(sprite::SPR_STAT_31), wl_stat_t::bo_bible },      // Bible           "
     //
     // NEW PAGE
     //
-    { SPR_STAT_32, bo_crown },                   // crown           spr5v
-    { SPR_STAT_33, bo_fullheal, FL_FULLBRIGHT }, // one up          "
-    { SPR_STAT_34, bo_gibs },                    // gibs            "
-    { SPR_STAT_35, block },                      // barrel          "
-    { SPR_STAT_36, block },                      // well            "
-    { SPR_STAT_37, block },                      // Empty well      "
-    { SPR_STAT_38, bo_gibs },                    // Gibs 2          "
-    { SPR_STAT_39, block },                      // flag            "
+    { static_cast<short>(sprite::SPR_STAT_32), wl_stat_t::bo_crown },                                                          // crown           spr5v
+    { static_cast<short>(sprite::SPR_STAT_33), wl_stat_t::bo_fullheal, static_cast<std::uint32_t>(objflag_t::FL_FULLBRIGHT) }, // one up          "
+    { static_cast<short>(sprite::SPR_STAT_34), wl_stat_t::bo_gibs },                                                           // gibs            "
+    { static_cast<short>(sprite::SPR_STAT_35), wl_stat_t::block },                                                             // barrel          "
+    { static_cast<short>(sprite::SPR_STAT_36), wl_stat_t::block },                                                             // well            "
+    { static_cast<short>(sprite::SPR_STAT_37), wl_stat_t::block },                                                             // Empty well      "
+    { static_cast<short>(sprite::SPR_STAT_38), wl_stat_t::bo_gibs },                                                           // Gibs 2          "
+    { static_cast<short>(sprite::SPR_STAT_39), wl_stat_t::block },                                                             // flag            "
 //
 // NEW PAGE
 //
 #ifndef SPEAR
-    { SPR_STAT_40, block }, // Call Apogee          spr7v
+    { static_cast<short>(sprite::SPR_STAT_40), wl_stat_t::block }, // Call Apogee          spr7v
 #else
-    { SPR_STAT_40 },        // Red light
+    { static_cast<short>(sprite::SPR_STAT_40) },        // Red light
 #endif
     //
     // NEW PAGE
     //
-    { SPR_STAT_41 }, // junk            "
-    { SPR_STAT_42 }, // junk            "
-    { SPR_STAT_43 }, // junk            "
+    { static_cast<short>(sprite::SPR_STAT_41) }, // junk            "
+    { static_cast<short>(sprite::SPR_STAT_42) }, // junk            "
+    { static_cast<short>(sprite::SPR_STAT_43) }, // junk            "
 #ifndef SPEAR
-    { SPR_STAT_44 }, // pots            "
+    { static_cast<short>(sprite::SPR_STAT_44) }, // pots            "
 #else
-    { SPR_STAT_44, block }, // Gibs!
+    { static_cast<short>(sprite::SPR_STAT_44), block }, // Gibs!
 #endif
-    { SPR_STAT_45, block }, // stove           " (SOD:gibs)
-    { SPR_STAT_46, block }, // spears          " (SOD:gibs)
-    { SPR_STAT_47 },        // vines           "
+    { static_cast<short>(sprite::SPR_STAT_45), wl_stat_t::block }, // stove           " (SOD:gibs)
+    { static_cast<short>(sprite::SPR_STAT_46), wl_stat_t::block }, // spears          " (SOD:gibs)
+    { static_cast<short>(sprite::SPR_STAT_47) },                   // vines           "
 //
 // NEW PAGE
 //
 #ifdef SPEAR
-    { SPR_STAT_48, block },     // marble pillar
-    { SPR_STAT_49, bo_25clip }, // bonus 25 clip
-    { SPR_STAT_50, block },     // truck
-    { SPR_STAT_51, bo_spear },  // SPEAR OF DESTINY!
+    { static_cast<short>(sprite::SPR_STAT_48), wl_stat_t::block },     // marble pillar
+    { static_cast<short>(sprite::SPR_STAT_49), wl_stat_t::bo_25clip }, // bonus 25 clip
+    { static_cast<short>(sprite::SPR_STAT_50), wl_stat_t::block },     // truck
+    { static_cast<short>(sprite::SPR_STAT_51), wl_stat_t::bo_spear },  // SPEAR OF DESTINY!
 #endif
 
-    { SPR_STAT_26, bo_clip2 }, // Clip            "
+    { static_cast<short>(sprite::SPR_STAT_26), wl_stat_t::bo_clip2 }, // Clip            "
 
     { -1 } // terminator
 };
@@ -142,34 +142,34 @@ void SpawnStatic(int tilex, int tiley, int type)
     laststatobj->visspot = &spotvis[tilex][tiley];
 
     switch (statinfo[type].type) {
-    case block:
-        actorat[tilex][tiley] = (objtype*)64; // consider it a blocking tile
-    case none:
+    case wl_stat_t::block:
+        actorat[tilex][tiley] = (objstruct*)64; // consider it a blocking tile
+    case wl_stat_t::none:
         laststatobj->flags = 0;
         break;
 
-    case bo_cross:
-    case bo_chalice:
-    case bo_bible:
-    case bo_crown:
-    case bo_fullheal:
+    case wl_stat_t::bo_cross:
+    case wl_stat_t::bo_chalice:
+    case wl_stat_t::bo_bible:
+    case wl_stat_t::bo_crown:
+    case wl_stat_t::bo_fullheal:
         if (!loadedgame)
             gamestate.treasuretotal++;
 
-    case bo_firstaid:
-    case bo_key1:
-    case bo_key2:
-    case bo_key3:
-    case bo_key4:
-    case bo_clip:
-    case bo_25clip:
-    case bo_machinegun:
-    case bo_chaingun:
-    case bo_food:
-    case bo_alpo:
-    case bo_gibs:
-    case bo_spear:
-        laststatobj->flags = FL_BONUS;
+    case wl_stat_t::bo_firstaid:
+    case wl_stat_t::bo_key1:
+    case wl_stat_t::bo_key2:
+    case wl_stat_t::bo_key3:
+    case wl_stat_t::bo_key4:
+    case wl_stat_t::bo_clip:
+    case wl_stat_t::bo_25clip:
+    case wl_stat_t::bo_machinegun:
+    case wl_stat_t::bo_chaingun:
+    case wl_stat_t::bo_food:
+    case wl_stat_t::bo_alpo:
+    case wl_stat_t::bo_gibs:
+    case wl_stat_t::bo_spear:
+        laststatobj->flags = static_cast<uint32_t>(objflag_t::FL_BONUS);
         laststatobj->itemnumber = statinfo[type].type;
         break;
     }
@@ -194,10 +194,10 @@ void SpawnStatic(int tilex, int tiley, int type)
 ===============
 */
 
-void PlaceItemType(int itemtype, int tilex, int tiley)
+void PlaceItemType(wl_stat_t itemtype, int tilex, int tiley)
 {
-    int        type;
-    statobj_t* spot;
+    int         type;
+    statstruct* spot;
 
     //
     // find the item number
@@ -230,7 +230,7 @@ void PlaceItemType(int itemtype, int tilex, int tiley)
     spot->tilex = tilex;
     spot->tiley = tiley;
     spot->visspot = &spotvis[tilex][tiley];
-    spot->flags = FL_BONUS | statinfo[type].specialFlags;
+    spot->flags = static_cast<std::uint32_t>(objflag_t::FL_BONUS) | statinfo[type].specialFlags;
     spot->itemnumber = statinfo[type].type;
 }
 
@@ -262,8 +262,8 @@ Every time a door opens or closes the areabyplayer matrix gets recalculated.
 #define DOORWIDTH 0x7800
 #define OPENTICS  300
 
-doorobj_t doorobjlist[MAXDOORS], *lastdoorobj;
-short     doornum;
+doorstruct doorobjlist[MAXDOORS], *lastdoorobj;
+short      doornum;
 
 word doorposition[MAXDOORS]; // leading edge of door 0=closed
                              // 0xffff = fully open
@@ -333,7 +333,7 @@ void InitDoorList(void)
 ===============
 */
 
-void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
+void SpawnDoor(int tilex, int tiley, boolean vertical, door_t lock)
 {
     word* map;
 
@@ -345,9 +345,9 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
     lastdoorobj->tiley = tiley;
     lastdoorobj->vertical = vertical;
     lastdoorobj->lock = lock;
-    lastdoorobj->action = dr_closed;
+    lastdoorobj->action = doortype::dr_closed;
 
-    actorat[tilex][tiley] = (objtype*)(uintptr_t)(doornum | 0x80); // consider it a solid wall
+    actorat[tilex][tiley] = (objstruct*)(uintptr_t)(doornum | 0x80); // consider it a solid wall
 
     //
     // make the door tile a special tile, and mark the adjacent tiles
@@ -381,10 +381,10 @@ void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)
 
 void OpenDoor(int door)
 {
-    if (doorobjlist[door].action == dr_open)
+    if (doorobjlist[door].action == doortype::dr_open)
         doorobjlist[door].ticcount = 0; // reset open time
     else
-        doorobjlist[door].action = dr_opening; // start it opening
+        doorobjlist[door].action = doortype::dr_opening; // start it opening
 }
 
 /*
@@ -397,8 +397,8 @@ void OpenDoor(int door)
 
 void CloseDoor(int door)
 {
-    int      tilex, tiley, area;
-    objtype* check;
+    int        tilex, tiley, area;
+    objstruct* check;
 
     //
     // don't close on anything solid
@@ -450,11 +450,11 @@ void CloseDoor(int door)
         PlaySoundLocTile(CLOSEDOORSND, doorobjlist[door].tilex, doorobjlist[door].tiley); // JAB
     }
 
-    doorobjlist[door].action = dr_closing;
+    doorobjlist[door].action = doortype::dr_closing;
     //
     // make the door space solid
     //
-    actorat[tilex][tiley] = (objtype*)(uintptr_t)(door | 0x80);
+    actorat[tilex][tiley] = (objstruct*)(uintptr_t)(door | 0x80);
 }
 
 /*
@@ -469,23 +469,23 @@ void CloseDoor(int door)
 
 void OperateDoor(int door)
 {
-    int lock;
+    byte lock = static_cast<byte>(doorobjlist[door].lock);
 
-    lock = doorobjlist[door].lock;
-    if (lock >= dr_lock1 && lock <= dr_lock4) {
-        if (!(gamestate.keys & (1 << (lock - dr_lock1)))) {
+    if (lock >= static_cast<byte>(door_t::dr_lock1) && lock <= static_cast<byte>(door_t::dr_lock4)) {
+        if (!(gamestate.keys & (1 << (lock - static_cast<byte>(door_t::dr_lock1))))) {
+
             SD_PlaySound(NOWAYSND); // locked
             return;
         }
     }
 
     switch (doorobjlist[door].action) {
-    case dr_closed:
-    case dr_closing:
+    case doortype::dr_closed:
+    case doortype::dr_closing:
         OpenDoor(door);
         break;
-    case dr_open:
-    case dr_opening:
+    case doortype::dr_open:
+    case doortype::dr_opening:
         CloseDoor(door);
         break;
     }
@@ -563,7 +563,7 @@ void DoorOpening(int door)
         //
         position = 0xffff;
         doorobjlist[door].ticcount = 0;
-        doorobjlist[door].action = dr_open;
+        doorobjlist[door].action = doortype::dr_open;
         actorat[doorobjlist[door].tilex][doorobjlist[door].tiley] = 0;
     }
 
@@ -606,7 +606,7 @@ void DoorClosing(int door)
         //
         position = 0;
 
-        doorobjlist[door].action = dr_closed;
+        doorobjlist[door].action = doortype::dr_closed;
 
         map = mapsegs[0] + (doorobjlist[door].tiley << mapshift) + doorobjlist[door].tilex;
 
@@ -651,15 +651,15 @@ void MoveDoors(void)
 
     for (door = 0; door < doornum; door++) {
         switch (doorobjlist[door].action) {
-        case dr_open:
+        case doortype::dr_open:
             DoorOpen(door);
             break;
 
-        case dr_opening:
+        case doortype::dr_opening:
             DoorOpening(door);
             break;
 
-        case dr_closing:
+        case doortype::dr_closing:
             DoorClosing(door);
             break;
         }
@@ -674,11 +674,12 @@ void MoveDoors(void)
 =============================================================================
 */
 
-word pwallstate;
-word pwallpos; // amount a pushable wall has been moved (0-63)
-word pwallx, pwally;
-byte pwalldir, pwalltile;
-int  dirs[4][2] = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+word         pwallstate;
+word         pwallpos; // amount a pushable wall has been moved (0-63)
+word         pwallx, pwally;
+controldir_t pwalldir;
+byte         pwalltile;
+int          dirs[4][2] = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
 
 /*
 ===============
@@ -688,7 +689,7 @@ int  dirs[4][2] = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
 ===============
 */
 
-void PushWall(int checkx, int checky, int dir)
+void PushWall(int checkx, int checky, controldir_t dir)
 {
     int oldtile, dx, dy;
 
@@ -699,14 +700,14 @@ void PushWall(int checkx, int checky, int dir)
     if (!oldtile)
         return;
 
-    dx = dirs[dir][0];
-    dy = dirs[dir][1];
+    dx = dirs[static_cast<byte>(dir)][0];
+    dy = dirs[static_cast<byte>(dir)][1];
 
     if (actorat[checkx + dx][checky + dy]) {
         SD_PlaySound(NOWAYSND);
         return;
     }
-    actorat[checkx + dx][checky + dy] = (objtype*)(uintptr_t)(tilemap[checkx + dx][checky + dy] = oldtile);
+    actorat[checkx + dx][checky + dy] = (objstruct*)(uintptr_t)(tilemap[checkx + dx][checky + dy] = oldtile);
 
     gamestate.secretcount++;
     pwallx = checkx;
@@ -753,7 +754,7 @@ void MovePWalls(void)
         actorat[pwallx][pwally] = 0;
         *(mapsegs[0] + (pwally << mapshift) + pwallx) = player->areanumber + AREATILE;
 
-        int dx = dirs[pwalldir][0], dy = dirs[pwalldir][1];
+        int dx = dirs[static_cast<byte>(pwalldir)][0], dy = dirs[static_cast<byte>(pwalldir)][1];
         //
         // see if it should be pushed farther
         //
@@ -781,7 +782,7 @@ void MovePWalls(void)
                 tilemap[pwallx][pwally] = oldtile;
                 return;
             }
-            actorat[pwallx + dx][pwally + dy] = (objtype*)(uintptr_t)(tilemap[pwallx + dx][pwally + dy] = oldtile);
+            actorat[pwallx + dx][pwally + dy] = (objstruct*)(uintptr_t)(tilemap[pwallx + dx][pwally + dy] = oldtile);
             tilemap[pwallx + dx][pwally + dy] = 64;
         }
     }

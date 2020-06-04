@@ -19,32 +19,32 @@
 =============================================================================
 */
 
-static const dirtype opposite[9] = { west, southwest, south, southeast, east, northeast, north, northwest, nodir };
+static const dirtype opposite[9] = { dirtype::west, dirtype::southwest, dirtype::south, dirtype::southeast, dirtype::east, dirtype::northeast, dirtype::north, dirtype::northwest, dirtype::nodir };
 
 static const dirtype diagonal[9][9] = {
-    /* east */ { nodir, nodir, northeast, nodir, nodir, nodir, southeast, nodir, nodir },
-    { nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir },
-    /* north */ { northeast, nodir, nodir, nodir, northwest, nodir, nodir, nodir, nodir },
-    { nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir },
-    /* west */ { nodir, nodir, northwest, nodir, nodir, nodir, southwest, nodir, nodir },
-    { nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir },
-    /* south */ { southeast, nodir, nodir, nodir, southwest, nodir, nodir, nodir, nodir },
-    { nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir },
-    { nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir, nodir }
+    /* dirtype::east */ { dirtype::nodir, dirtype::nodir, dirtype::northeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southeast, dirtype::nodir, dirtype::nodir },
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    /* dirtype::north */ { dirtype::northeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::northwest, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    /* dirtype::west */ { dirtype::nodir, dirtype::nodir, dirtype::northwest, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southwest, dirtype::nodir, dirtype::nodir },
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    /* dirtype::south */ { dirtype::southeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southwest, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir }
 };
 
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
-void NewState(objtype* ob, statetype* state);
+void NewState(objstruct* ob, statetype* state);
 
-boolean TryWalk(objtype* ob);
-void    MoveObj(objtype* ob, int32_t move);
+boolean TryWalk(objstruct* ob);
+void    MoveObj(objstruct* ob, int32_t move);
 
-void KillActor(objtype* ob);
-void DamageActor(objtype* ob, unsigned damage);
+void KillActor(objstruct* ob);
+void DamageActor(objstruct* ob, unsigned damage);
 
-boolean CheckLine(objtype* ob);
-void    FirstSighting(objtype* ob);
-boolean CheckSight(objtype* ob);
+boolean CheckLine(objstruct* ob);
+void    FirstSighting(objstruct* ob);
+boolean CheckSight(objstruct* ob);
 
 /*
 =============================================================================
@@ -84,7 +84,7 @@ void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state)
     newobj->tiley = (short)tiley;
     newobj->x = ((int32_t)tilex << TILESHIFT) + TILEGLOBAL / 2;
     newobj->y = ((int32_t)tiley << TILESHIFT) + TILEGLOBAL / 2;
-    newobj->dir = nodir;
+    newobj->dir = dirtype::nodir;
 
     actorat[tilex][tiley] = newobj;
     newobj->areanumber = *(mapsegs[0] + (newobj->tiley << mapshift) + newobj->tilex) - AREATILE;
@@ -100,7 +100,7 @@ void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state)
 ===================
 */
 
-void NewState(objtype* ob, statetype* state)
+void NewState(objstruct* ob, statetype* state)
 {
     ob->state = state;
     ob->ticcount = state->tictime;
@@ -138,15 +138,15 @@ void NewState(objtype* ob, statetype* state)
 ==================================
 */
 
-#define CHECKDIAG(x, y)                                 \
-    {                                                   \
-        temp = (uintptr_t)actorat[x][y];                \
-        if (temp) {                                     \
-            if (temp < 256)                             \
-                return false;                           \
-            if (((objtype*)temp)->flags & FL_SHOOTABLE) \
-                return false;                           \
-        }                                               \
+#define CHECKDIAG(x, y)                                                                          \
+    {                                                                                            \
+        temp = (uintptr_t)actorat[x][y];                                                         \
+        if (temp) {                                                                              \
+            if (temp < 256)                                                                      \
+                return false;                                                                    \
+            if (((objstruct*)temp)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) \
+                return false;                                                                    \
+        }                                                                                        \
     }
 
 #ifdef PLAYDEMOLIKEORIGINAL
@@ -167,67 +167,67 @@ void NewState(objtype* ob, statetype* state)
     return true;
 #endif
 
-#define CHECKSIDE(x, y)                                        \
-    {                                                          \
-        temp = (uintptr_t)actorat[x][y];                       \
-        if (temp) {                                            \
-            if (temp < 128)                                    \
-                return false;                                  \
-            if (temp < 256) {                                  \
-                DOORCHECK                                      \
-            } else if (((objtype*)temp)->flags & FL_SHOOTABLE) \
-                return false;                                  \
-        }                                                      \
+#define CHECKSIDE(x, y)                                                                                 \
+    {                                                                                                   \
+        temp = (uintptr_t)actorat[x][y];                                                                \
+        if (temp) {                                                                                     \
+            if (temp < 128)                                                                             \
+                return false;                                                                           \
+            if (temp < 256) {                                                                           \
+                DOORCHECK                                                                               \
+            } else if (((objstruct*)temp)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) \
+                return false;                                                                           \
+        }                                                                                               \
     }
 
-boolean TryWalk(objtype* ob)
+boolean TryWalk(objstruct* ob)
 {
     int       doornum = -1;
     uintptr_t temp;
 
-    if (ob->obclass == inertobj) {
+    if (ob->obclass == classtype::inertobj) {
         switch (ob->dir) {
-        case north:
+        case dirtype::north:
             ob->tiley--;
             break;
 
-        case northeast:
+        case dirtype::northeast:
             ob->tilex++;
             ob->tiley--;
             break;
 
-        case east:
+        case dirtype::east:
             ob->tilex++;
             break;
 
-        case southeast:
+        case dirtype::southeast:
             ob->tilex++;
             ob->tiley++;
             break;
 
-        case south:
+        case dirtype::south:
             ob->tiley++;
             break;
 
-        case southwest:
+        case dirtype::southwest:
             ob->tilex--;
             ob->tiley++;
             break;
 
-        case west:
+        case dirtype::west:
             ob->tilex--;
             break;
 
-        case northwest:
+        case dirtype::northwest:
             ob->tilex--;
             ob->tiley--;
             break;
         }
     } else {
         switch (ob->dir) {
-        case north:
-            if (ob->obclass == dogobj || ob->obclass == fakeobj
-                || ob->obclass == ghostobj || ob->obclass == spectreobj) {
+        case dirtype::north:
+            if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
+                || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
                 CHECKDIAG(ob->tilex, ob->tiley - 1);
             } else {
                 CHECKSIDE(ob->tilex, ob->tiley - 1);
@@ -235,7 +235,7 @@ boolean TryWalk(objtype* ob)
             ob->tiley--;
             break;
 
-        case northeast:
+        case dirtype::northeast:
             CHECKDIAG(ob->tilex + 1, ob->tiley - 1);
             CHECKDIAG(ob->tilex + 1, ob->tiley);
             CHECKDIAG(ob->tilex, ob->tiley - 1);
@@ -243,9 +243,9 @@ boolean TryWalk(objtype* ob)
             ob->tiley--;
             break;
 
-        case east:
-            if (ob->obclass == dogobj || ob->obclass == fakeobj
-                || ob->obclass == ghostobj || ob->obclass == spectreobj) {
+        case dirtype::east:
+            if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
+                || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
                 CHECKDIAG(ob->tilex + 1, ob->tiley);
             } else {
                 CHECKSIDE(ob->tilex + 1, ob->tiley);
@@ -253,7 +253,7 @@ boolean TryWalk(objtype* ob)
             ob->tilex++;
             break;
 
-        case southeast:
+        case dirtype::southeast:
             CHECKDIAG(ob->tilex + 1, ob->tiley + 1);
             CHECKDIAG(ob->tilex + 1, ob->tiley);
             CHECKDIAG(ob->tilex, ob->tiley + 1);
@@ -261,9 +261,9 @@ boolean TryWalk(objtype* ob)
             ob->tiley++;
             break;
 
-        case south:
-            if (ob->obclass == dogobj || ob->obclass == fakeobj
-                || ob->obclass == ghostobj || ob->obclass == spectreobj) {
+        case dirtype::south:
+            if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
+                || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
                 CHECKDIAG(ob->tilex, ob->tiley + 1);
             } else {
                 CHECKSIDE(ob->tilex, ob->tiley + 1);
@@ -271,7 +271,7 @@ boolean TryWalk(objtype* ob)
             ob->tiley++;
             break;
 
-        case southwest:
+        case dirtype::southwest:
             CHECKDIAG(ob->tilex - 1, ob->tiley + 1);
             CHECKDIAG(ob->tilex - 1, ob->tiley);
             CHECKDIAG(ob->tilex, ob->tiley + 1);
@@ -279,9 +279,9 @@ boolean TryWalk(objtype* ob)
             ob->tiley++;
             break;
 
-        case west:
-            if (ob->obclass == dogobj || ob->obclass == fakeobj
-                || ob->obclass == ghostobj || ob->obclass == spectreobj) {
+        case dirtype::west:
+            if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
+                || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
                 CHECKDIAG(ob->tilex - 1, ob->tiley);
             } else {
                 CHECKSIDE(ob->tilex - 1, ob->tiley);
@@ -289,7 +289,7 @@ boolean TryWalk(objtype* ob)
             ob->tilex--;
             break;
 
-        case northwest:
+        case dirtype::northwest:
             CHECKDIAG(ob->tilex - 1, ob->tiley - 1);
             CHECKDIAG(ob->tilex - 1, ob->tiley);
             CHECKDIAG(ob->tilex, ob->tiley - 1);
@@ -297,7 +297,7 @@ boolean TryWalk(objtype* ob)
             ob->tiley--;
             break;
 
-        case nodir:
+        case dirtype::nodir:
             return false;
 
         default:
@@ -329,7 +329,7 @@ boolean TryWalk(objtype* ob)
 =
 = If there is no possible move (ob is totally surrounded)
 =
-= ob->dir           =       nodir
+= ob->dir           =      dirtype::nodir
 =
 = Otherwise
 =
@@ -342,22 +342,22 @@ boolean TryWalk(objtype* ob)
 ==================================
 */
 
-void SelectDodgeDir(objtype* ob)
+void SelectDodgeDir(objstruct* ob)
 {
     int      deltax, deltay, i;
     unsigned absdx, absdy;
     dirtype  dirtry[5];
     dirtype  turnaround, tdir;
 
-    if (ob->flags & FL_FIRSTATTACK) {
+    if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_FIRSTATTACK)) {
         //
         // turning around is only ok the very first time after noticing the
         // player
         //
-        turnaround = nodir;
-        ob->flags &= ~FL_FIRSTATTACK;
+        turnaround = dirtype::nodir;
+        ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_FIRSTATTACK);
     } else
-        turnaround = opposite[ob->dir];
+        turnaround = opposite[static_cast<byte>(ob->dir)];
 
     deltax = player->tilex - ob->tilex;
     deltay = player->tiley - ob->tiley;
@@ -369,19 +369,19 @@ void SelectDodgeDir(objtype* ob)
     //
 
     if (deltax > 0) {
-        dirtry[1] = east;
-        dirtry[3] = west;
+        dirtry[1] = dirtype::east;
+        dirtry[3] = dirtype::west;
     } else {
-        dirtry[1] = west;
-        dirtry[3] = east;
+        dirtry[1] = dirtype::west;
+        dirtry[3] = dirtype::east;
     }
 
     if (deltay > 0) {
-        dirtry[2] = south;
-        dirtry[4] = north;
+        dirtry[2] = dirtype::south;
+        dirtry[4] = dirtype::north;
     } else {
-        dirtry[2] = north;
-        dirtry[4] = south;
+        dirtry[2] = dirtype::north;
+        dirtry[4] = dirtype::south;
     }
 
     //
@@ -408,13 +408,13 @@ void SelectDodgeDir(objtype* ob)
         dirtry[4] = tdir;
     }
 
-    dirtry[0] = diagonal[dirtry[1]][dirtry[2]];
+    dirtry[0] = diagonal[static_cast<byte>(dirtry[1])][static_cast<byte>(dirtry[2])];
 
     //
     // try the directions util one works
     //
     for (i = 0; i < 5; i++) {
-        if (dirtry[i] == nodir || dirtry[i] == turnaround)
+        if (dirtry[i] == dirtype::nodir || dirtry[i] == turnaround)
             continue;
 
         ob->dir = dirtry[i];
@@ -425,14 +425,14 @@ void SelectDodgeDir(objtype* ob)
     //
     // turn around only as a last resort
     //
-    if (turnaround != nodir) {
+    if (turnaround != dirtype::nodir) {
         ob->dir = turnaround;
 
         if (TryWalk(ob))
             return;
     }
 
-    ob->dir = nodir;
+    ob->dir = dirtype::nodir;
 }
 
 /*
@@ -445,29 +445,29 @@ void SelectDodgeDir(objtype* ob)
 ============================
 */
 
-void SelectChaseDir(objtype* ob)
+void SelectChaseDir(objstruct* ob)
 {
     int     deltax, deltay;
     dirtype d[3];
     dirtype tdir, olddir, turnaround;
 
     olddir = ob->dir;
-    turnaround = opposite[olddir];
+    turnaround = opposite[static_cast<byte>(olddir)];
 
     deltax = player->tilex - ob->tilex;
     deltay = player->tiley - ob->tiley;
 
-    d[1] = nodir;
-    d[2] = nodir;
+    d[1] = dirtype::nodir;
+    d[2] = dirtype::nodir;
 
     if (deltax > 0)
-        d[1] = east;
+        d[1] = dirtype::east;
     else if (deltax < 0)
-        d[1] = west;
+        d[1] = dirtype::west;
     if (deltay > 0)
-        d[2] = south;
+        d[2] = dirtype::south;
     else if (deltay < 0)
-        d[2] = north;
+        d[2] = dirtype::north;
 
     if (abs(deltay) > abs(deltax)) {
         tdir = d[1];
@@ -476,17 +476,17 @@ void SelectChaseDir(objtype* ob)
     }
 
     if (d[1] == turnaround)
-        d[1] = nodir;
+        d[1] = dirtype::nodir;
     if (d[2] == turnaround)
-        d[2] = nodir;
+        d[2] = dirtype::nodir;
 
-    if (d[1] != nodir) {
+    if (d[1] != dirtype::nodir) {
         ob->dir = d[1];
         if (TryWalk(ob))
             return; /*either moved forward or attacked*/
     }
 
-    if (d[2] != nodir) {
+    if (d[2] != dirtype::nodir) {
         ob->dir = d[2];
         if (TryWalk(ob))
             return;
@@ -494,7 +494,7 @@ void SelectChaseDir(objtype* ob)
 
     /* there is no direct path to the player, so pick another direction */
 
-    if (olddir != nodir) {
+    if (olddir != dirtype::nodir) {
         ob->dir = olddir;
         if (TryWalk(ob))
             return;
@@ -502,7 +502,7 @@ void SelectChaseDir(objtype* ob)
 
     if (US_RndT() > 128) /*randomly determine direction of search*/
     {
-        for (tdir = north; tdir <= west; tdir = (dirtype)(tdir + 1)) {
+        for (tdir = dirtype::north; tdir <= dirtype::west; tdir = (dirtype)(static_cast<byte>(tdir) + 1)) {
             if (tdir != turnaround) {
                 ob->dir = tdir;
                 if (TryWalk(ob))
@@ -510,7 +510,7 @@ void SelectChaseDir(objtype* ob)
             }
         }
     } else {
-        for (tdir = west; tdir >= north; tdir = (dirtype)(tdir - 1)) {
+        for (tdir = dirtype::west; tdir >= dirtype::north; tdir = (dirtype)(static_cast<byte>(tdir) - 1)) {
             if (tdir != turnaround) {
                 ob->dir = tdir;
                 if (TryWalk(ob))
@@ -519,15 +519,15 @@ void SelectChaseDir(objtype* ob)
         }
     }
 
-    if (turnaround != nodir) {
+    if (turnaround != dirtype::nodir) {
         ob->dir = turnaround;
-        if (ob->dir != nodir) {
+        if (ob->dir != dirtype::nodir) {
             if (TryWalk(ob))
                 return;
         }
     }
 
-    ob->dir = nodir; // can't move
+    ob->dir = dirtype::nodir; // can't move
 }
 
 /*
@@ -540,7 +540,7 @@ void SelectChaseDir(objtype* ob)
 ============================
 */
 
-void SelectRunDir(objtype* ob)
+void SelectRunDir(objstruct* ob)
 {
     int     deltax, deltay;
     dirtype d[3];
@@ -550,13 +550,13 @@ void SelectRunDir(objtype* ob)
     deltay = player->tiley - ob->tiley;
 
     if (deltax < 0)
-        d[1] = east;
+        d[1] = dirtype::east;
     else
-        d[1] = west;
+        d[1] = dirtype::west;
     if (deltay < 0)
-        d[2] = south;
+        d[2] = dirtype::south;
     else
-        d[2] = north;
+        d[2] = dirtype::north;
 
     if (abs(deltay) > abs(deltax)) {
         tdir = d[1];
@@ -576,20 +576,20 @@ void SelectRunDir(objtype* ob)
 
     if (US_RndT() > 128) /*randomly determine direction of search*/
     {
-        for (tdir = north; tdir <= west; tdir = (dirtype)(tdir + 1)) {
+        for (tdir = dirtype::north; tdir <= dirtype::west; tdir = (dirtype)(static_cast<byte>(tdir) + 1)) {
             ob->dir = tdir;
             if (TryWalk(ob))
                 return;
         }
     } else {
-        for (tdir = west; tdir >= north; tdir = (dirtype)(tdir - 1)) {
+        for (tdir = dirtype::west; tdir >= dirtype::north; tdir = (dirtype)(static_cast<byte>(tdir) - 1)) {
             ob->dir = tdir;
             if (TryWalk(ob))
                 return;
         }
     }
 
-    ob->dir = nodir; // can't move
+    ob->dir = dirtype::nodir; // can't move
 }
 
 /*
@@ -607,41 +607,41 @@ void SelectRunDir(objtype* ob)
 =================
 */
 
-void MoveObj(objtype* ob, int32_t move)
+void MoveObj(objstruct* ob, int32_t move)
 {
     int32_t deltax, deltay;
 
     switch (ob->dir) {
-    case north:
+    case dirtype::north:
         ob->y -= move;
         break;
-    case northeast:
+    case dirtype::northeast:
         ob->x += move;
         ob->y -= move;
         break;
-    case east:
+    case dirtype::east:
         ob->x += move;
         break;
-    case southeast:
+    case dirtype::southeast:
         ob->x += move;
         ob->y += move;
         break;
-    case south:
+    case dirtype::south:
         ob->y += move;
         break;
-    case southwest:
+    case dirtype::southwest:
         ob->x -= move;
         ob->y += move;
         break;
-    case west:
+    case dirtype::west:
         ob->x -= move;
         break;
-    case northwest:
+    case dirtype::northwest:
         ob->x -= move;
         ob->y -= move;
         break;
 
-    case nodir:
+    case dirtype::nodir:
         return;
 
     default:
@@ -662,43 +662,43 @@ void MoveObj(objtype* ob, int32_t move)
         if (ob->hidden) // move closer until he meets CheckLine
             goto moveok;
 
-        if (ob->obclass == ghostobj || ob->obclass == spectreobj)
+        if (ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj)
             TakeDamage(tics * 2, ob);
 
         //
         // back up
         //
         switch (ob->dir) {
-        case north:
+        case dirtype::north:
             ob->y += move;
             break;
-        case northeast:
+        case dirtype::northeast:
             ob->x -= move;
             ob->y += move;
             break;
-        case east:
+        case dirtype::east:
             ob->x -= move;
             break;
-        case southeast:
+        case dirtype::southeast:
             ob->x -= move;
             ob->y -= move;
             break;
-        case south:
+        case dirtype::south:
             ob->y -= move;
             break;
-        case southwest:
+        case dirtype::southwest:
             ob->x += move;
             ob->y -= move;
             break;
-        case west:
+        case dirtype::west:
             ob->x += move;
             break;
-        case northwest:
+        case dirtype::northwest:
             ob->x += move;
             ob->y += move;
             break;
 
-        case nodir:
+        case dirtype::nodir:
             return;
         }
         return;
@@ -761,7 +761,7 @@ void DropItem(wl_stat_t itemtype, int tilex, int tiley)
 ===============
 */
 
-void KillActor(objtype* ob)
+void KillActor(objstruct* ob)
 {
     int tilex, tiley;
 
@@ -769,91 +769,91 @@ void KillActor(objtype* ob)
     tiley = ob->tiley = (word)(ob->y >> TILESHIFT);
 
     switch (ob->obclass) {
-    case guardobj:
+    case classtype::guardobj:
         GivePoints(100);
         NewState(ob, &s_grddie1);
-        PlaceItemType(bo_clip2, tilex, tiley);
+        PlaceItemType(wl_stat_t::bo_clip2, tilex, tiley);
         break;
 
-    case officerobj:
+    case classtype::officerobj:
         GivePoints(400);
         NewState(ob, &s_ofcdie1);
-        PlaceItemType(bo_clip2, tilex, tiley);
+        PlaceItemType(wl_stat_t::bo_clip2, tilex, tiley);
         break;
 
-    case mutantobj:
+    case classtype::mutantobj:
         GivePoints(700);
         NewState(ob, &s_mutdie1);
-        PlaceItemType(bo_clip2, tilex, tiley);
+        PlaceItemType(wl_stat_t::bo_clip2, tilex, tiley);
         break;
 
-    case ssobj:
+    case classtype::ssobj:
         GivePoints(500);
         NewState(ob, &s_ssdie1);
-        if (gamestate.bestweapon < wp_machinegun)
-            PlaceItemType(bo_machinegun, tilex, tiley);
+        if (static_cast<byte>(gamestate.bestweapon) < static_cast<byte>(weapontype::wp_machinegun))
+            PlaceItemType(wl_stat_t::bo_machinegun, tilex, tiley);
         else
-            PlaceItemType(bo_clip2, tilex, tiley);
+            PlaceItemType(wl_stat_t::bo_clip2, tilex, tiley);
         break;
 
-    case dogobj:
+    case classtype::dogobj:
         GivePoints(200);
         NewState(ob, &s_dogdie1);
         break;
 
 #ifndef SPEAR
-    case bossobj:
+    case classtype::bossobj:
         GivePoints(5000);
         NewState(ob, &s_bossdie1);
-        PlaceItemType(bo_key1, tilex, tiley);
+        PlaceItemType(wl_stat_t::bo_key1, tilex, tiley);
         break;
 
-    case gretelobj:
+    case classtype::gretelobj:
         GivePoints(5000);
         NewState(ob, &s_greteldie1);
-        PlaceItemType(bo_key1, tilex, tiley);
+        PlaceItemType(wl_stat_t::bo_key1, tilex, tiley);
         break;
 
-    case giftobj:
+    case classtype::giftobj:
         GivePoints(5000);
         gamestate.killx = player->x;
         gamestate.killy = player->y;
         NewState(ob, &s_giftdie1);
         break;
 
-    case fatobj:
+    case classtype::fatobj:
         GivePoints(5000);
         gamestate.killx = player->x;
         gamestate.killy = player->y;
         NewState(ob, &s_fatdie1);
         break;
 
-    case schabbobj:
+    case classtype::schabbobj:
         GivePoints(5000);
         gamestate.killx = player->x;
         gamestate.killy = player->y;
         NewState(ob, &s_schabbdie1);
         break;
-    case fakeobj:
+    case classtype::fakeobj:
         GivePoints(2000);
         NewState(ob, &s_fakedie1);
         break;
 
-    case mechahitlerobj:
+    case classtype::mechahitlerobj:
         GivePoints(5000);
         NewState(ob, &s_mechadie1);
         break;
-    case realhitlerobj:
+    case classtype::realhitlerobj:
         GivePoints(5000);
         gamestate.killx = player->x;
         gamestate.killy = player->y;
         NewState(ob, &s_hitlerdie1);
         break;
 #else
-    case spectreobj:
-        if (ob->flags & FL_BONUS) {
+    case classtype::spectreobj:
+        if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_BONUS)) {
             GivePoints(200); // Get points once for each
-            ob->flags &= ~FL_BONUS;
+            ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_BONUS);
         }
         NewState(ob, &s_spectredie1);
         break;
@@ -890,9 +890,9 @@ void KillActor(objtype* ob)
     }
 
     gamestate.killcount++;
-    ob->flags &= ~FL_SHOOTABLE;
+    ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE);
     actorat[ob->tilex][ob->tiley] = NULL;
-    ob->flags |= FL_NONMARK;
+    ob->flags |= static_cast<std::uint32_t>(objflag_t::FL_NONMARK);
 }
 
 /*
@@ -908,14 +908,14 @@ void KillActor(objtype* ob)
 ===================
 */
 
-void DamageActor(objtype* ob, unsigned damage)
+void DamageActor(objstruct* ob, unsigned damage)
 {
     madenoise = true;
 
     //
     // do double damage if shooting a non attack mode actor
     //
-    if (!(ob->flags & FL_ATTACKMODE))
+    if (!(ob->flags & static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE)))
         damage <<= 1;
 
     ob->hitpoints -= (short)damage;
@@ -923,33 +923,33 @@ void DamageActor(objtype* ob, unsigned damage)
     if (ob->hitpoints <= 0)
         KillActor(ob);
     else {
-        if (!(ob->flags & FL_ATTACKMODE))
+        if (!(ob->flags & static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE)))
             FirstSighting(ob); // put into combat mode
 
         switch (ob->obclass) // dogs only have one hit point
         {
-        case guardobj:
+        case classtype::guardobj:
             if (ob->hitpoints & 1)
                 NewState(ob, &s_grdpain);
             else
                 NewState(ob, &s_grdpain1);
             break;
 
-        case officerobj:
+        case classtype::officerobj:
             if (ob->hitpoints & 1)
                 NewState(ob, &s_ofcpain);
             else
                 NewState(ob, &s_ofcpain1);
             break;
 
-        case mutantobj:
+        case classtype::mutantobj:
             if (ob->hitpoints & 1)
                 NewState(ob, &s_mutpain);
             else
                 NewState(ob, &s_mutpain1);
             break;
 
-        case ssobj:
+        case classtype::ssobj:
             if (ob->hitpoints & 1)
                 NewState(ob, &s_sspain);
             else
@@ -978,7 +978,7 @@ void DamageActor(objtype* ob, unsigned damage)
 =====================
 */
 
-boolean CheckLine(objtype* ob)
+boolean CheckLine(objstruct* ob)
 {
     int      x1, y1, xt1, yt1, x2, y2, xt2, yt2;
     int      x, y;
@@ -1114,7 +1114,7 @@ boolean CheckLine(objtype* ob)
 
 #define MINSIGHT 0x18000l
 
-boolean CheckSight(objtype* ob)
+boolean CheckSight(objstruct* ob)
 {
     int32_t deltax, deltay;
 
@@ -1138,44 +1138,44 @@ boolean CheckSight(objtype* ob)
     // see if they are looking in the right direction
     //
     switch (ob->dir) {
-    case north:
+    case dirtype::north:
         if (deltay > 0)
             return false;
         break;
 
-    case east:
+    case dirtype::east:
         if (deltax < 0)
             return false;
         break;
 
-    case south:
+    case dirtype::south:
         if (deltay < 0)
             return false;
         break;
 
-    case west:
+    case dirtype::west:
         if (deltax > 0)
             return false;
         break;
 
         // check diagonal moving guards fix
 
-    case northwest:
+    case dirtype::northwest:
         if (DEMOCOND_SDL && deltay > -deltax)
             return false;
         break;
 
-    case northeast:
+    case dirtype::northeast:
         if (DEMOCOND_SDL && deltay > deltax)
             return false;
         break;
 
-    case southwest:
+    case dirtype::southwest:
         if (DEMOCOND_SDL && deltax > deltay)
             return false;
         break;
 
-    case southeast:
+    case dirtype::southeast:
         if (DEMOCOND_SDL && -deltax > deltay)
             return false;
         break;
@@ -1198,127 +1198,127 @@ boolean CheckSight(objtype* ob)
 ===============
 */
 
-void FirstSighting(objtype* ob)
+void FirstSighting(objstruct* ob)
 {
     //
     // react to the player
     //
     switch (ob->obclass) {
-    case guardobj:
+    case classtype::guardobj:
         PlaySoundLocActor(HALTSND, ob);
         NewState(ob, &s_grdchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case officerobj:
+    case classtype::officerobj:
         PlaySoundLocActor(SPIONSND, ob);
         NewState(ob, &s_ofcchase1);
         ob->speed *= 5; // go faster when chasing player
         break;
 
-    case mutantobj:
+    case classtype::mutantobj:
         NewState(ob, &s_mutchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case ssobj:
+    case classtype::ssobj:
         PlaySoundLocActor(SCHUTZADSND, ob);
         NewState(ob, &s_sschase1);
         ob->speed *= 4; // go faster when chasing player
         break;
 
-    case dogobj:
+    case classtype::dogobj:
         PlaySoundLocActor(DOGBARKSND, ob);
         NewState(ob, &s_dogchase1);
         ob->speed *= 2; // go faster when chasing player
         break;
 
 #ifndef SPEAR
-    case bossobj:
+    case classtype::bossobj:
         SD_PlaySound(GUTENTAGSND);
         NewState(ob, &s_bosschase1);
         ob->speed = SPDPATROL * 3; // go faster when chasing player
         break;
 
 #ifndef APOGEE_1_0
-    case gretelobj:
+    case classtype::gretelobj:
         SD_PlaySound(KEINSND);
         NewState(ob, &s_gretelchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case giftobj:
+    case classtype::giftobj:
         SD_PlaySound(EINESND);
         NewState(ob, &s_giftchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case fatobj:
+    case classtype::fatobj:
         SD_PlaySound(ERLAUBENSND);
         NewState(ob, &s_fatchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 #endif
 
-    case schabbobj:
+    case classtype::schabbobj:
         SD_PlaySound(SCHABBSHASND);
         NewState(ob, &s_schabbchase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case fakeobj:
+    case classtype::fakeobj:
         SD_PlaySound(TOT_HUNDSND);
         NewState(ob, &s_fakechase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case mechahitlerobj:
+    case classtype::mechahitlerobj:
         SD_PlaySound(DIESND);
         NewState(ob, &s_mechachase1);
         ob->speed *= 3; // go faster when chasing player
         break;
 
-    case realhitlerobj:
+    case classtype::realhitlerobj:
         SD_PlaySound(DIESND);
         NewState(ob, &s_hitlerchase1);
         ob->speed *= 5; // go faster when chasing player
         break;
 
-    case ghostobj:
+    case classtype::ghostobj:
         NewState(ob, &s_blinkychase1);
         ob->speed *= 2; // go faster when chasing player
         break;
 #else
-    case spectreobj:
+    case classtype::spectreobj:
         SD_PlaySound(GHOSTSIGHTSND);
         NewState(ob, &s_spectrechase1);
         ob->speed = 800; // go faster when chasing player
         break;
 
-    case angelobj:
+    case classtype::angelobj:
         SD_PlaySound(ANGELSIGHTSND);
         NewState(ob, &s_angelchase1);
         ob->speed = 1536; // go faster when chasing player
         break;
 
-    case transobj:
+    case classtype::transobj:
         SD_PlaySound(TRANSSIGHTSND);
         NewState(ob, &s_transchase1);
         ob->speed = 1536; // go faster when chasing player
         break;
 
-    case uberobj:
+    case classtype::uberobj:
         NewState(ob, &s_uberchase1);
         ob->speed = 3000; // go faster when chasing player
         break;
 
-    case willobj:
+    case classtype::willobj:
         SD_PlaySound(WILHELMSIGHTSND);
         NewState(ob, &s_willchase1);
         ob->speed = 2048; // go faster when chasing player
         break;
 
-    case deathobj:
+    case classtype::deathobj:
         SD_PlaySound(KNIGHTSIGHTSND);
         NewState(ob, &s_deathchase1);
         ob->speed = 2048; // go faster when chasing player
@@ -1329,7 +1329,7 @@ void FirstSighting(objtype* ob)
     if (ob->distance < 0)
         ob->distance = 0; // ignore the door opening command
 
-    ob->flags |= FL_ATTACKMODE | FL_FIRSTATTACK;
+    ob->flags |= static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE) | static_cast<std::uint32_t>(objflag_t::FL_FIRSTATTACK);
 }
 
 /*
@@ -1346,9 +1346,9 @@ void FirstSighting(objtype* ob)
 ===============
 */
 
-boolean SightPlayer(objtype* ob)
+boolean SightPlayer(objstruct* ob)
 {
-    if (ob->flags & FL_ATTACKMODE)
+    if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE))
         Quit("An actor in ATTACKMODE called SightPlayer!");
 
     if (ob->temp2) {
@@ -1363,46 +1363,46 @@ boolean SightPlayer(objtype* ob)
         if (!areabyplayer[ob->areanumber])
             return false;
 
-        if (ob->flags & FL_AMBUSH) {
+        if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_AMBUSH)) {
             if (!CheckSight(ob))
                 return false;
-            ob->flags &= ~FL_AMBUSH;
+            ob->flags &= ~static_cast<std::uint32_t>(objflag_t::FL_AMBUSH);
         } else {
             if (!madenoise && !CheckSight(ob))
                 return false;
         }
 
         switch (ob->obclass) {
-        case guardobj:
+        case classtype::guardobj:
             ob->temp2 = 1 + US_RndT() / 4;
             break;
-        case officerobj:
+        case classtype::officerobj:
             ob->temp2 = 2;
             break;
-        case mutantobj:
+        case classtype::mutantobj:
             ob->temp2 = 1 + US_RndT() / 6;
             break;
-        case ssobj:
+        case classtype::ssobj:
             ob->temp2 = 1 + US_RndT() / 6;
             break;
-        case dogobj:
+        case classtype::dogobj:
             ob->temp2 = 1 + US_RndT() / 8;
             break;
 
-        case bossobj:
-        case schabbobj:
-        case fakeobj:
-        case mechahitlerobj:
-        case realhitlerobj:
-        case gretelobj:
-        case giftobj:
-        case fatobj:
-        case spectreobj:
-        case angelobj:
-        case transobj:
-        case uberobj:
-        case willobj:
-        case deathobj:
+        case classtype::bossobj:
+        case classtype::schabbobj:
+        case classtype::fakeobj:
+        case classtype::mechahitlerobj:
+        case classtype::realhitlerobj:
+        case classtype::gretelobj:
+        case classtype::giftobj:
+        case classtype::fatobj:
+        case classtype::spectreobj:
+        case classtype::angelobj:
+        case classtype::transobj:
+        case classtype::uberobj:
+        case classtype::willobj:
+        case classtype::deathobj:
             ob->temp2 = 1;
             break;
         }

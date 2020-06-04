@@ -751,7 +751,7 @@ int CP_CheckQuick(ScanCode scancode)
         if (Confirm(ENDGAMESTR))
 #endif
         {
-            playstate = ex_died;
+            playstate = exit_t::ex_died;
             killerobj = NULL;
             pickquick = gamestate.lives = 0;
         }
@@ -802,7 +802,7 @@ int CP_CheckQuick(ScanCode scancode)
                 ContinueMusic(lastgamemusicoffset);
 
             if (loadedgame)
-                playstate = ex_abort;
+                playstate = exit_t::ex_abort;
             lasttimecount = GetTimeCount();
 
             if (MousePresent && IN_IsInputGrabbed())
@@ -869,7 +869,7 @@ int CP_CheckQuick(ScanCode scancode)
                 ContinueMusic(lastgamemusicoffset);
 
             if (loadedgame)
-                playstate = ex_abort;
+                playstate = exit_t::ex_abort;
 
             lasttimecount = GetTimeCount();
 
@@ -943,7 +943,7 @@ int CP_EndGame(int)
         return 0;
 
     pickquick = gamestate.lives = 0;
-    playstate = ex_died;
+    playstate = exit_t::ex_died;
     killerobj = NULL;
 
     MainMenu[savegame].active = 0;
@@ -1082,7 +1082,7 @@ firstpart:
     }
 
     ShootSnd();
-    NewGame(which, episode);
+    NewGame(to_difficulty(which), episode);
     StartGame = 1;
     MenuFadeOut();
 

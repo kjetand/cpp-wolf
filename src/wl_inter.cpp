@@ -244,7 +244,7 @@ void Victory(void)
     //
     // TOTAL TIME VERIFICATION CODE
     //
-    if (gamestate.difficulty >= gd_medium) {
+    if (static_cast<byte>(gamestate.difficulty) >= static_cast<byte>(difficulty::gd_medium)) {
         VWB_DrawPic(30 * 8, TIMEY * 8, C_TIMECODEPIC);
         fontnumber = 0;
         fontcolor = READHCOLOR;
