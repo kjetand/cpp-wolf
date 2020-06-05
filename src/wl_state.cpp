@@ -36,15 +36,15 @@ static const dirtype diagonal[9][9] = {
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
 void NewState(objstruct* ob, statetype* state);
 
-boolean TryWalk(objstruct* ob);
-void    MoveObj(objstruct* ob, int32_t move);
+bool TryWalk(objstruct* ob);
+void MoveObj(objstruct* ob, int32_t move);
 
 void KillActor(objstruct* ob);
 void DamageActor(objstruct* ob, unsigned damage);
 
-boolean CheckLine(objstruct* ob);
-void    FirstSighting(objstruct* ob);
-boolean CheckSight(objstruct* ob);
+bool CheckLine(objstruct* ob);
+void FirstSighting(objstruct* ob);
+bool CheckSight(objstruct* ob);
 
 /*
 =============================================================================
@@ -180,7 +180,7 @@ void NewState(objstruct* ob, statetype* state)
         }                                                                                               \
     }
 
-boolean TryWalk(objstruct* ob)
+bool TryWalk(objstruct* ob)
 {
     int       doornum = -1;
     uintptr_t temp;
@@ -978,7 +978,7 @@ void DamageActor(objstruct* ob, unsigned damage)
 =====================
 */
 
-boolean CheckLine(objstruct* ob)
+bool CheckLine(objstruct* ob)
 {
     int      x1, y1, xt1, yt1, x2, y2, xt2, yt2;
     int      x, y;
@@ -1114,7 +1114,7 @@ boolean CheckLine(objstruct* ob)
 
 #define MINSIGHT 0x18000l
 
-boolean CheckSight(objstruct* ob)
+bool CheckSight(objstruct* ob)
 {
     int32_t deltax, deltay;
 
@@ -1346,7 +1346,7 @@ void FirstSighting(objstruct* ob)
 ===============
 */
 
-boolean SightPlayer(objstruct* ob)
+bool SightPlayer(objstruct* ob)
 {
     if (ob->flags & static_cast<std::uint32_t>(objflag_t::FL_ATTACKMODE))
         Quit("An actor in ATTACKMODE called SightPlayer!");

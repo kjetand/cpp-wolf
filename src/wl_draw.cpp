@@ -29,7 +29,7 @@ unsigned     vbufPitch = 0;
 
 int32_t lasttimecount;
 int32_t frameon;
-boolean fpscounter;
+bool    fpscounter;
 
 int fps_frames = 0, fps_time = 0, fps = 0;
 
@@ -186,7 +186,7 @@ void TransformActor(objstruct* ob)
 ========================
 */
 
-boolean TransformTile(int tx, int ty, short* dispx, short* dispheight)
+bool TransformTile(int tx, int ty, short* dispx, short* dispheight)
 {
     fixed gx, gy, gxt, gyt, nx, ny;
 
@@ -1020,7 +1020,7 @@ void AsmRefresh()
 {
     int32_t  xstep, ystep;
     longword xpartial, ypartial;
-    boolean  playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
+    bool     playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
 
     for (pixx = 0; pixx < viewwidth; pixx++) {
         short angl = midangle + pixelangle[pixx];

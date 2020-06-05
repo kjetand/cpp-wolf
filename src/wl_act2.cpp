@@ -263,7 +263,7 @@ void A_Smoke(objstruct* ob)
 
 #define PROJSIZE 0x2000
 
-boolean ProjectileTryMove(objstruct* ob)
+bool ProjectileTryMove(objstruct* ob)
 {
     int        xl, yl, xh, yh, x, y;
     objstruct* check;
@@ -413,8 +413,8 @@ statetype s_grdpath3 = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 20, (st
 statetype s_grdpath3s = { true, static_cast<short>(sprite::SPR_GRD_W3_1), 5, NULL, NULL, &s_grdpath4 };
 statetype s_grdpath4 = { true, static_cast<short>(sprite::SPR_GRD_W4_1), 15, (statefunc)T_Path, NULL, &s_grdpath1 };
 
-statetype s_grdpain = { 2, static_cast<short>(sprite::SPR_GRD_PAIN_1), 10, NULL, NULL, &s_grdchase1 };
-statetype s_grdpain1 = { 2, static_cast<short>(sprite::SPR_GRD_PAIN_2), 10, NULL, NULL, &s_grdchase1 };
+statetype s_grdpain = { true, static_cast<short>(sprite::SPR_GRD_PAIN_1), 10, NULL, NULL, &s_grdchase1 };
+statetype s_grdpain1 = { true, static_cast<short>(sprite::SPR_GRD_PAIN_2), 10, NULL, NULL, &s_grdchase1 };
 
 statetype s_grdshoot1 = { false, static_cast<short>(sprite::SPR_GRD_SHOOT1), 20, NULL, NULL, &s_grdshoot2 };
 statetype s_grdshoot2 = { false, static_cast<short>(sprite::SPR_GRD_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_grdshoot3 };
@@ -558,8 +558,8 @@ statetype s_ofcpath3 = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 20, (st
 statetype s_ofcpath3s = { true, static_cast<short>(sprite::SPR_OFC_W3_1), 5, NULL, NULL, &s_ofcpath4 };
 statetype s_ofcpath4 = { true, static_cast<short>(sprite::SPR_OFC_W4_1), 15, (statefunc)T_Path, NULL, &s_ofcpath1 };
 
-statetype s_ofcpain = { 2, static_cast<short>(sprite::SPR_OFC_PAIN_1), 10, NULL, NULL, &s_ofcchase1 };
-statetype s_ofcpain1 = { 2, static_cast<short>(sprite::SPR_OFC_PAIN_2), 10, NULL, NULL, &s_ofcchase1 };
+statetype s_ofcpain = { true, static_cast<short>(sprite::SPR_OFC_PAIN_1), 10, NULL, NULL, &s_ofcchase1 };
+statetype s_ofcpain1 = { true, static_cast<short>(sprite::SPR_OFC_PAIN_2), 10, NULL, NULL, &s_ofcchase1 };
 
 statetype s_ofcshoot1 = { false, static_cast<short>(sprite::SPR_OFC_SHOOT1), 6, NULL, NULL, &s_ofcshoot2 };
 statetype s_ofcshoot2 = { false, static_cast<short>(sprite::SPR_OFC_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_ofcshoot3 };
@@ -623,8 +623,8 @@ statetype s_mutpath3 = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 20, (st
 statetype s_mutpath3s = { true, static_cast<short>(sprite::SPR_MUT_W3_1), 5, NULL, NULL, &s_mutpath4 };
 statetype s_mutpath4 = { true, static_cast<short>(sprite::SPR_MUT_W4_1), 15, (statefunc)T_Path, NULL, &s_mutpath1 };
 
-statetype s_mutpain = { 2, static_cast<short>(sprite::SPR_MUT_PAIN_1), 10, NULL, NULL, &s_mutchase1 };
-statetype s_mutpain1 = { 2, static_cast<short>(sprite::SPR_MUT_PAIN_2), 10, NULL, NULL, &s_mutchase1 };
+statetype s_mutpain = { true, static_cast<short>(sprite::SPR_MUT_PAIN_1), 10, NULL, NULL, &s_mutchase1 };
+statetype s_mutpain1 = { true, static_cast<short>(sprite::SPR_MUT_PAIN_2), 10, NULL, NULL, &s_mutchase1 };
 
 statetype s_mutshoot1 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT1), 6, NULL, (statefunc)T_Shoot, &s_mutshoot2 };
 statetype s_mutshoot2 = { false, static_cast<short>(sprite::SPR_MUT_SHOOT2), 20, NULL, NULL, &s_mutshoot3 };
@@ -691,8 +691,8 @@ statetype s_sspath3 = { true, static_cast<short>(sprite::SPR_SS_W3_1), 20, (stat
 statetype s_sspath3s = { true, static_cast<short>(sprite::SPR_SS_W3_1), 5, NULL, NULL, &s_sspath4 };
 statetype s_sspath4 = { true, static_cast<short>(sprite::SPR_SS_W4_1), 15, (statefunc)T_Path, NULL, &s_sspath1 };
 
-statetype s_sspain = { 2, static_cast<short>(sprite::SPR_SS_PAIN_1), 10, NULL, NULL, &s_sschase1 };
-statetype s_sspain1 = { 2, static_cast<short>(sprite::SPR_SS_PAIN_2), 10, NULL, NULL, &s_sschase1 };
+statetype s_sspain = { true, static_cast<short>(sprite::SPR_SS_PAIN_1), 10, NULL, NULL, &s_sschase1 };
+statetype s_sspain1 = { true, static_cast<short>(sprite::SPR_SS_PAIN_2), 10, NULL, NULL, &s_sschase1 };
 
 statetype s_ssshoot1 = { false, static_cast<short>(sprite::SPR_SS_SHOOT1), 20, NULL, NULL, &s_ssshoot2 };
 statetype s_ssshoot2 = { false, static_cast<short>(sprite::SPR_SS_SHOOT2), 20, NULL, (statefunc)T_Shoot, &s_ssshoot3 };
@@ -1409,7 +1409,7 @@ void T_Will(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
-    boolean dodge;
+    bool    dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2286,7 +2286,7 @@ void T_Schabb(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
-    boolean dodge;
+    bool    dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2371,7 +2371,7 @@ void T_Gift(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
-    boolean dodge;
+    bool    dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2456,7 +2456,7 @@ void T_Fat(objstruct* ob)
 {
     int32_t move;
     int     dx, dy, dist;
-    boolean dodge;
+    bool    dodge;
 
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2936,7 +2936,7 @@ void T_Chase(objstruct* ob)
 {
     int32_t move, target;
     int     dx, dy, dist, chance;
-    boolean dodge;
+    bool    dodge;
 
     if (gamestate.victoryflag)
         return;
@@ -3554,7 +3554,7 @@ void T_BJDone(objstruct*)
 ===============
 */
 
-boolean CheckPosition(objstruct* ob)
+bool CheckPosition(objstruct* ob)
 {
     int        x, y, xl, yl, xh, yh;
     objstruct* check;

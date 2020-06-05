@@ -21,7 +21,7 @@
 =============================================================================
 */
 
-boolean madenoise; // true when shooting or screaming
+bool madenoise; // true when shooting or screaming
 
 exit_t playstate;
 
@@ -32,8 +32,8 @@ static int DebugOk;
 objstruct  objlist[MAXACTORS];
 objstruct *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
-boolean noclip, ammocheat;
-int     godmode, singlestep, extravbls = 0;
+bool noclip, ammocheat;
+int  godmode, singlestep, extravbls = 0;
 
 byte       tilemap[MAPSIZE][MAPSIZE]; // wall values only
 byte       spotvis[MAPSIZE][MAPSIZE];
@@ -47,11 +47,11 @@ unsigned tics;
 //
 // control info
 //
-boolean mouseenabled, joystickenabled;
-int     dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
-int     buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
-int     buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
-int     buttonjoy[32] = {
+bool mouseenabled, joystickenabled;
+int  dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
+int  buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
+int  buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
+int  buttonjoy[32] = {
 
     bt_attack, bt_strafe, bt_use, bt_run, bt_strafeleft, bt_straferight, bt_esc, bt_pause,
     bt_prevweapon, bt_nextweapon, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
@@ -62,17 +62,17 @@ int     buttonjoy[32] = {
 
 int viewsize;
 
-boolean buttonheld[NUMBUTTONS];
+bool buttonheld[NUMBUTTONS];
 
-boolean demorecord, demoplayback;
+bool    demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
 void*   demobuffer;
 
 //
 // current user input
 //
-int     controlx, controly; // range from -100 to 100 per tic
-boolean buttonstate[NUMBUTTONS];
+int  controlx, controly; // range from -100 to 100 per tic
+bool buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
 
@@ -907,8 +907,8 @@ void ContinueMusic(int offs)
 SDL_Color redshifts[NUMREDSHIFTS][256];
 SDL_Color whiteshifts[NUMWHITESHIFTS][256];
 
-int     damagecount, bonuscount;
-boolean palshifted;
+int  damagecount, bonuscount;
+bool palshifted;
 
 /*
 =====================

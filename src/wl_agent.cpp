@@ -71,8 +71,8 @@ void SelectItem(void);
 
 //----------
 
-boolean TryMove(objstruct* ob);
-void    T_Player(objstruct* ob);
+bool TryMove(objstruct* ob);
+void T_Player(objstruct* ob);
 
 void ClipMove(objstruct* ob, int32_t xmove, int32_t ymove);
 
@@ -778,7 +778,7 @@ void GetBonus(statstruct* check)
 ===================
 */
 
-boolean TryMove(objstruct* ob)
+bool TryMove(objstruct* ob)
 {
     int        xl, yl, xh, yh, x, y;
     objstruct* check;
@@ -1031,7 +1031,7 @@ void Cmd_Use(void)
 {
     int          checkx, checky, doornum;
     controldir_t dir;
-    boolean      elevatorok;
+    bool         elevatorok;
 
     //
     // find which cardinal direction the player is facing

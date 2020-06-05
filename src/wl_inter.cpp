@@ -908,7 +908,7 @@ void LevelCompleted(void)
 =================
 */
 
-boolean
+bool
 PreloadUpdate(unsigned current, unsigned total)
 {
     unsigned w = WindowW - scaleFactor * 10;

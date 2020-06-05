@@ -67,9 +67,9 @@ int32_t  heightnumerator;
 
 void Quit(const char* error, ...);
 
-boolean startgame;
-boolean loadedgame;
-int     mouseadjustment;
+bool startgame;
+bool loadedgame;
+int  mouseadjustment;
 
 char configdir[256] = "";
 char configname[13] = "config.";
@@ -77,19 +77,19 @@ char configname[13] = "config.";
 //
 // Command line parameter variables
 //
-boolean    param_debugmode = false;
-boolean    param_nowait = false;
+bool       param_debugmode = false;
+bool       param_nowait = false;
 difficulty param_difficulty = difficulty::gd_medium; // default is "normal"
-int        param_tedlevel = -1;                    // default is not to start a level
+int        param_tedlevel = -1;                      // default is not to start a level
 int        param_joystickindex = 0;
 
 int param_joystickhat = -1;
 int param_samplerate = 44100;
 int param_audiobuffer = 2048 / (44100 / param_samplerate);
 
-int     param_mission = 0;
-boolean param_goodtimes = false;
-boolean param_ignorenumchunks = false;
+int  param_mission = 0;
+bool param_goodtimes = false;
+bool param_ignorenumchunks = false;
 
 /*
 =============================================================================
@@ -139,9 +139,9 @@ void ReadConfig(void)
 
         read(file, &mouseenabled, sizeof(mouseenabled));
         read(file, &joystickenabled, sizeof(joystickenabled));
-        boolean dummyJoypadEnabled;
+        bool dummyJoypadEnabled;
         read(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive;
+        bool dummyJoystickProgressive;
         read(file, &dummyJoystickProgressive, sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         read(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
@@ -251,9 +251,9 @@ void WriteConfig(void)
 
         write(file, &mouseenabled, sizeof(mouseenabled));
         write(file, &joystickenabled, sizeof(joystickenabled));
-        boolean dummyJoypadEnabled = false;
+        bool dummyJoypadEnabled = false;
         write(file, &dummyJoypadEnabled, sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive = false;
+        bool dummyJoystickProgressive = false;
         write(file, &dummyJoystickProgressive, sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         write(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
@@ -330,7 +330,7 @@ int32_t DoChecksum(byte* source, unsigned size, int32_t checksum)
 extern statetype s_grdstand;
 extern statetype s_player;
 
-boolean SaveTheGame(FILE* file, int x, int y)
+bool SaveTheGame(FILE* file, int x, int y)
 {
     //    struct diskfree_t dfree;
     //    int32_t avail,size,checksum;
@@ -477,7 +477,7 @@ boolean SaveTheGame(FILE* file, int x, int y)
 ==================
 */
 
-boolean LoadTheGame(FILE* file, int x, int y)
+bool LoadTheGame(FILE* file, int x, int y)
 {
     int32_t    checksum, oldchecksum;
     objstruct  nullobj;
@@ -1139,7 +1139,7 @@ void DoJukebox(void)
 static void InitGame()
 {
 #ifndef SPEARDEMO
-    boolean didjukebox = false;
+    bool didjukebox = false;
 #endif
 
     // initialize SDL
@@ -1265,7 +1265,7 @@ static void InitGame()
 ==========================
 */
 
-boolean SetViewSize(unsigned width, unsigned height)
+bool SetViewSize(unsigned width, unsigned height)
 {
     viewwidth = width & ~15;  // must be divisable by 16
     viewheight = height & ~1; // must be even

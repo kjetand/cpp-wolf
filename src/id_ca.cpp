@@ -148,7 +148,7 @@ void CAL_GetGrChunkLength(int chunk)
 ==========================
 */
 
-boolean CA_WriteFile(const char* filename, void* ptr, int32_t length)
+bool CA_WriteFile(const char* filename, void* ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (handle == -1)
@@ -172,7 +172,7 @@ boolean CA_WriteFile(const char* filename, void* ptr, int32_t length)
 ==========================
 */
 
-boolean CA_LoadFile(const char* filename, void** ptr)
+bool CA_LoadFile(const char* filename, void** ptr)
 {
     int32_t size;
 

@@ -1045,9 +1045,9 @@ enum class enemy_t : byte {
 typedef void (*statefunc)(void*);
 
 struct statetype {
-    boolean rotate;
-    short   shapenum; // a shapenum of -1 means get from ob->temp1
-    short   tictime;
+    bool  rotate;
+    short shapenum; // a shapenum of -1 means get from ob->temp1
+    short tictime;
     void (*think)(void*), (*action)(void*);
     struct statetype* next;
 };
@@ -1081,7 +1081,7 @@ enum class doortype {
 
 struct doorstruct {
     byte     tilex, tiley;
-    boolean  vertical;
+    bool     vertical;
     door_t   lock;
     doortype action;
     short    ticcount;
@@ -1212,7 +1212,7 @@ typedef struct
         secrettotal, treasuretotal, killtotal;
     int32_t TimeCount;
     int32_t killx, killy;
-    boolean victoryflag; // set during victory animations
+    bool    victoryflag; // set during victory animations
 } gametype;
 
 enum class exit_t : byte {
@@ -1239,7 +1239,7 @@ extern int   mapon;
 =============================================================================
 */
 
-extern boolean loadedgame;
+extern bool    loadedgame;
 extern fixed   focallength;
 extern int     viewscreenx, viewscreeny;
 extern int     viewwidth;
@@ -1254,16 +1254,16 @@ extern int      mouseadjustment;
 extern int      shootdelta;
 extern unsigned screenofs;
 
-extern boolean startgame;
-extern char    str[80];
-extern char    configdir[256];
-extern char    configname[13];
+extern bool startgame;
+extern char str[80];
+extern char configdir[256];
+extern char configname[13];
 
 //
 // Command line parameter variables
 //
-extern boolean    param_debugmode;
-extern boolean    param_nowait;
+extern bool       param_debugmode;
+extern bool       param_nowait;
 extern difficulty param_difficulty;
 extern int        param_tedlevel;
 extern int        param_joystickindex;
@@ -1271,17 +1271,17 @@ extern int        param_joystickhat;
 extern int        param_samplerate;
 extern int        param_audiobuffer;
 extern int        param_mission;
-extern boolean    param_goodtimes;
-extern boolean    param_ignorenumchunks;
+extern bool       param_goodtimes;
+extern bool       param_ignorenumchunks;
 
-void    NewGame(difficulty difficulty, int episode);
-void    CalcProjection(int32_t focal);
-void    NewViewSize(int width);
-boolean SetViewSize(unsigned width, unsigned height);
-boolean LoadTheGame(FILE* file, int x, int y);
-boolean SaveTheGame(FILE* file, int x, int y);
-void    ShowViewSize(int width);
-void    ShutdownId();
+void NewGame(difficulty difficulty, int episode);
+void CalcProjection(int32_t focal);
+void NewViewSize(int width);
+bool SetViewSize(unsigned width, unsigned height);
+bool LoadTheGame(FILE* file, int x, int y);
+bool SaveTheGame(FILE* file, int x, int y);
+void ShowViewSize(int width);
+void ShutdownId();
 
 /*
 =============================================================================
@@ -1310,7 +1310,7 @@ void RecordDemo();
 #ifdef SPEAR
 extern int32_t  spearx, speary;
 extern unsigned spearangle;
-extern boolean  spearflag;
+extern bool     spearflag;
 #endif
 
 #define ClearMemory SD_StopDigitized
@@ -1351,11 +1351,11 @@ extern int lastgamemusicoffset;
 // current user input
 //
 extern int         controlx, controly; // range from -100 to 100
-extern boolean     buttonstate[NUMBUTTONS];
+extern bool        buttonstate[NUMBUTTONS];
 extern objstruct   objlist[MAXACTORS];
-extern boolean     buttonheld[NUMBUTTONS];
+extern bool        buttonheld[NUMBUTTONS];
 extern exit_t      playstate;
-extern boolean     madenoise;
+extern bool        madenoise;
 extern statstruct  statobjlist[MAXSTATS];
 extern statstruct* laststatobj;
 extern objstruct * newobj, *killerobj;
@@ -1363,18 +1363,18 @@ extern doorstruct  doorobjlist[MAXDOORS];
 extern doorstruct* lastdoorobj;
 extern int         godmode;
 
-extern boolean demorecord, demoplayback;
+extern bool    demorecord, demoplayback;
 extern int8_t *demoptr, *lastdemoptr;
 extern void*   demobuffer;
 
 //
 // control info
 //
-extern boolean mouseenabled, joystickenabled;
-extern int     dirscan[4];
-extern int     buttonscan[NUMBUTTONS];
-extern int     buttonmouse[4];
-extern int     buttonjoy[32];
+extern bool mouseenabled, joystickenabled;
+extern int  dirscan[4];
+extern int  buttonscan[NUMBUTTONS];
+extern int  buttonmouse[4];
+extern int  buttonjoy[32];
 
 void InitActorList();
 void GetNewActor();
@@ -1399,8 +1399,8 @@ extern int32_t funnyticount; // FOR FUNNY BJ FACE
 
 extern objstruct* objfreelist; // *obj,*player,*lastobj,
 
-extern boolean noclip, ammocheat;
-extern int     singlestep, extravbls;
+extern bool noclip, ammocheat;
+extern int  singlestep, extravbls;
 
 /*
 =============================================================================
@@ -1452,7 +1452,7 @@ extern int32_t frameon;
 
 extern unsigned screenloc[3];
 
-extern boolean fizzlein, fpscounter;
+extern bool fizzlein, fpscounter;
 
 extern fixed viewx, viewy; // the focal point
 extern fixed viewsin, viewcos;
@@ -1481,18 +1481,18 @@ void InitHitRect(objstruct* ob, unsigned radius);
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
 void NewState(objstruct* ob, statetype* state);
 
-boolean TryWalk(objstruct* ob);
-void    SelectChaseDir(objstruct* ob);
-void    SelectDodgeDir(objstruct* ob);
-void    SelectRunDir(objstruct* ob);
-void    MoveObj(objstruct* ob, int32_t move);
-boolean SightPlayer(objstruct* ob);
+bool TryWalk(objstruct* ob);
+void SelectChaseDir(objstruct* ob);
+void SelectDodgeDir(objstruct* ob);
+void SelectRunDir(objstruct* ob);
+void MoveObj(objstruct* ob, int32_t move);
+bool SightPlayer(objstruct* ob);
 
 void KillActor(objstruct* ob);
 void DamageActor(objstruct* ob, unsigned damage);
 
-boolean CheckLine(objstruct* ob);
-boolean CheckSight(objstruct* ob);
+bool CheckLine(objstruct* ob);
+bool CheckSight(objstruct* ob);
 
 /*
 =============================================================================
@@ -1549,7 +1549,7 @@ extern word doorposition[MAXDOORS];
 
 extern byte areaconnect[NUMAREAS][NUMAREAS];
 
-extern boolean areabyplayer[NUMAREAS];
+extern bool areabyplayer[NUMAREAS];
 
 extern word         pwallstate;
 extern word         pwallpos; // amount a pushable wall has been moved (0-63)
@@ -1560,7 +1560,7 @@ extern byte         pwalltile;
 void InitDoorList();
 void InitStaticList();
 void SpawnStatic(int tilex, int tiley, int type);
-void SpawnDoor(int tilex, int tiley, boolean vertical, door_t lock);
+void SpawnDoor(int tilex, int tiley, bool vertical, door_t lock);
 void MoveDoors();
 void MovePWalls();
 void OpenDoor(int door);

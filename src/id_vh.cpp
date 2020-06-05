@@ -322,8 +322,8 @@ void VH_Startup()
     rndmask = rndmasks[rndbits - 17];
 }
 
-boolean FizzleFade(SDL_Surface* source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+bool FizzleFade(SDL_Surface* source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, bool abortable)
 {
 
     unsigned x, y, frame, pixperframe;

@@ -20,9 +20,9 @@
 #define assert_ret(x) assert(x)
 #endif
 
-boolean fullscreen = false;
+bool fullscreen = false;
 
-boolean  usedoublebuffering = true;
+bool     usedoublebuffering = true;
 unsigned screenWidth = 640;
 unsigned screenHeight = 480;
 unsigned screenBits = -1; // use "best" color depth according to libSDL
@@ -38,7 +38,7 @@ unsigned     curPitch;
 
 unsigned scaleFactor;
 
-boolean  screenfaded;
+bool     screenfaded;
 unsigned bordercolor;
 
 SDL_Color palette1[256], palette2[256];

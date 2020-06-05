@@ -57,11 +57,11 @@ static unsigned rightmargin[TEXTROWS];
 static char*    text;
 static unsigned rowon;
 
-static int     picx;
-static int     picy;
-static int     picnum;
-static int     picdelay;
-static boolean layoutdone;
+static int  picx;
+static int  picy;
+static int  picnum;
+static int  picdelay;
+static bool layoutdone;
 
 //===========================================================================
 
@@ -390,7 +390,7 @@ void HandleWord(void)
 =====================
 */
 
-void PageLayout(boolean shownumber)
+void PageLayout(bool shownumber)
 {
     int  i, oldfontcolor;
     char ch;
@@ -592,7 +592,7 @@ void ShowArticle(char* article)
     };
 #endif
     unsigned    oldfontnumber;
-    boolean     newpage, firstpage;
+    bool        newpage, firstpage;
     ControlInfo ci;
 
 #ifdef JAPAN

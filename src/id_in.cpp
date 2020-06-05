@@ -30,12 +30,12 @@
 //
 // configuration variables
 //
-boolean MousePresent;
-boolean forcegrabmouse;
+bool MousePresent;
+bool forcegrabmouse;
 
 //  Global variables
-volatile boolean  Keyboard[SDLK_LAST];
-volatile boolean  Paused;
+volatile bool     Keyboard[SDLK_LAST];
+volatile bool     Paused;
 volatile char     LastASCII;
 volatile ScanCode LastScan;
 
@@ -103,7 +103,7 @@ byte SpecialNames[] = // ASCII for 0xe0 prefixed codes
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0    // 7
     };
 
-static boolean IN_Started;
+static bool IN_Started;
 
 static Direction DirTable[] = // Quick lookup for total direction
     {
@@ -230,7 +230,7 @@ int IN_JoyButtons()
     return res;
 }
 
-boolean IN_JoyPresent()
+bool IN_JoyPresent()
 {
     return Joystick != NULL;
 }
@@ -492,7 +492,7 @@ void IN_ReadControl(int player, ControlInfo* info)
 //
 ///////////////////////////////////////////////////////////////////////////
 
-boolean btnstate[NUMBUTTONS];
+bool btnstate[NUMBUTTONS];
 
 void IN_StartAck(void)
 {
@@ -513,7 +513,7 @@ void IN_StartAck(void)
             btnstate[i] = true;
 }
 
-boolean IN_CheckAck(void)
+bool IN_CheckAck(void)
 {
     IN_ProcessEvents();
     //
@@ -565,7 +565,7 @@ void IN_Ack(void)
 //      button up.
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean IN_UserInput(longword delay)
+bool IN_UserInput(longword delay)
 {
     longword lasttime;
 
