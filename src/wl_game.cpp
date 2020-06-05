@@ -17,6 +17,8 @@
 #include <TIME.H>
 #endif
 
+#include <magic_enum.hpp>
+
 /*
 =============================================================================
 
@@ -676,7 +678,7 @@ void SetupGameLevel(void)
                 case 96:
                 case 98:
                 case 100:
-                    SpawnDoor(x, y, 1, to_door((tile - 90) / 2));
+                    SpawnDoor(x, y, 1, magic_enum::enum_cast<door_t>((tile - 90) / 2).value());
                     break;
                 case 91:
                 case 93:
@@ -684,7 +686,7 @@ void SetupGameLevel(void)
                 case 97:
                 case 99:
                 case 101:
-                    SpawnDoor(x, y, 0, to_door((tile - 91) / 2));
+                    SpawnDoor(x, y, 0, magic_enum::enum_cast<door_t>((tile - 91) / 2).value());
                     break;
                 }
             }
@@ -1110,7 +1112,7 @@ void PlayDemo(int demonumber)
     demoptr = (int8_t*)demobuffer;
 #endif
 
-    NewGame(to_difficulty(1), 0);
+    NewGame(magic_enum::enum_cast<difficulty>(1).value(), 0);
     gamestate.mapon = *demoptr++;
     gamestate.difficulty = difficulty::gd_hard;
     length = READWORD(*(uint8_t**)&demoptr);

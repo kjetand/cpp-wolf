@@ -923,23 +923,6 @@ enum class door_t : byte {
     dr_elevator
 };
 
-constexpr auto to_door(const byte b)
-{
-    constexpr std::array<std::pair<byte, door_t>, 6> conversion_table { { { static_cast<byte>(door_t::dr_normal), door_t::dr_normal },
-        { static_cast<byte>(door_t::dr_lock1), door_t::dr_lock1 },
-        { static_cast<byte>(door_t::dr_lock2), door_t::dr_lock2 },
-        { static_cast<byte>(door_t::dr_lock3), door_t::dr_lock3 },
-        { static_cast<byte>(door_t::dr_lock4), door_t::dr_lock4 },
-        { static_cast<byte>(door_t::dr_elevator), door_t::dr_elevator } } };
-
-    for (auto e : conversion_table) {
-        if (b == e.first) {
-            return e.second;
-        }
-    }
-    throw;
-}
-
 enum class activetype {
     ac_badobject = -1,
     ac_no,
@@ -1151,42 +1134,12 @@ enum class weapontype : byte {
     wp_chaingun
 };
 
-constexpr auto to_weapontype(const byte b)
-{
-    constexpr std::array<std::pair<byte, weapontype>, 4> conversion_table { { { static_cast<byte>(weapontype::wp_knife), weapontype::wp_knife },
-        { static_cast<byte>(weapontype::wp_pistol), weapontype::wp_pistol },
-        { static_cast<byte>(weapontype::wp_machinegun), weapontype::wp_machinegun },
-        { static_cast<byte>(weapontype::wp_chaingun), weapontype::wp_chaingun } } };
-
-    for (const auto& w : conversion_table) {
-        if (w.first == b) {
-            return w.second;
-        }
-    }
-    throw;
-}
-
 enum class difficulty : byte {
     gd_baby,
     gd_easy,
     gd_medium,
     gd_hard
 };
-
-constexpr auto to_difficulty(const byte b)
-{
-    constexpr std::array<std::pair<byte, difficulty>, 4> conversion_table { { { static_cast<byte>(difficulty::gd_baby), difficulty::gd_baby },
-        { static_cast<byte>(difficulty::gd_easy), difficulty::gd_easy },
-        { static_cast<byte>(difficulty::gd_medium), difficulty::gd_medium },
-        { static_cast<byte>(difficulty::gd_hard), difficulty::gd_hard } } };
-
-    for (const auto& d : conversion_table) {
-        if (d.first == b) {
-            return d.second;
-        }
-    }
-    throw;
-}
 
 //---------------
 //

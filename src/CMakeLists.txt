@@ -24,6 +24,7 @@ add_library(wolf3d STATIC
 
 target_include_directories(wolf3d PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/ext/magic_enum/include
     ${SDL_INCLUDE_DIR}
     ${SDLMIXER_INCLUDE_DIR})
 

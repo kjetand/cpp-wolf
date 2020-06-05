@@ -17,6 +17,8 @@
 #include "wl_def.h"
 #pragma hdrstop
 
+#include <magic_enum.hpp>
+
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;
 
@@ -1082,7 +1084,7 @@ firstpart:
     }
 
     ShootSnd();
-    NewGame(to_difficulty(which), episode);
+    NewGame(magic_enum::enum_cast<difficulty>(which).value(), episode);
     StartGame = 1;
     MenuFadeOut();
 

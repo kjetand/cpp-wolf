@@ -6,6 +6,8 @@
 #include <unistd.h>
 #endif
 
+#include <magic_enum.hpp>
+
 #include "wl_def.h"
 #pragma hdrstop
 
@@ -523,7 +525,7 @@ int DebugKeys(void)
         GivePoints(100000);
         HealSelf(99);
         if (static_cast<byte>(gamestate.bestweapon) < static_cast<byte>(weapontype::wp_chaingun))
-            GiveWeapon(to_weapontype(static_cast<byte>(gamestate.bestweapon) + 1));
+            GiveWeapon(magic_enum::enum_cast<weapontype>(static_cast<byte>(gamestate.bestweapon) + 1).value());
         gamestate.ammo += 50;
         if (gamestate.ammo > 99)
             gamestate.ammo = 99;
