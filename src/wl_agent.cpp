@@ -1215,8 +1215,8 @@ void GunAttack(objstruct* ob)
     //
     // hit something
     //
-    dx = ABS(closest->tilex - player->tilex);
-    dy = ABS(closest->tiley - player->tiley);
+    dx = std::abs(closest->tilex - player->tilex);
+    dy = std::abs(closest->tiley - player->tiley);
     dist = dx > dy ? dx : dy;
     if (dist < 2)
         damage = US_RndT() / 4;

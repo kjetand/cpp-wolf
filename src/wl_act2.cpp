@@ -314,8 +314,8 @@ void T_Projectile(objstruct* ob)
     ob->x += deltax;
     ob->y += deltay;
 
-    deltax = LABS(ob->x - player->x);
-    deltay = LABS(ob->y - player->y);
+    deltax = std::labs(ob->x - player->x);
+    deltay = std::labs(ob->y - player->y);
 
     if (!ProjectileTryMove(ob)) {
 #ifndef APOGEE_1_0 // actually the whole method is never reached in shareware 1.0

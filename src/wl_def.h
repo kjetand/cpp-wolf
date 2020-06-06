@@ -78,12 +78,8 @@ void Quit(const char* errorStr, ...);
 
 #include "wl_menu.h"
 
+// TODO: Make constexpr, or move (mapshift?)
 #define MAPSPOT(x, y, plane) (mapsegs[plane][((y) << mapshift) + (x)])
-
-#define ABS(x)  ((int)(x) > 0 ? (x) : -(x))
-#define LABS(x) ((int32_t)(x) > 0 ? (x) : -(x))
-
-#define abs(x) ABS(x)
 
 /*
 =============================================================================
