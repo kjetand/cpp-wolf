@@ -307,14 +307,14 @@ static void ScanInfoPlane(void)
             case 181:
             case 182:
             case 183:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 144:
             case 145:
             case 146:
             case 147:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 108:
@@ -328,14 +328,14 @@ static void ScanInfoPlane(void)
             case 185:
             case 186:
             case 187:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 148:
             case 149:
             case 150:
             case 151:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 112:
@@ -355,14 +355,14 @@ static void ScanInfoPlane(void)
             case 189:
             case 190:
             case 191:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 152:
             case 153:
             case 154:
             case 155:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 116:
@@ -376,14 +376,14 @@ static void ScanInfoPlane(void)
             case 193:
             case 194:
             case 195:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 156:
             case 157:
             case 158:
             case 159:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 120:
@@ -400,14 +400,14 @@ static void ScanInfoPlane(void)
             case 199:
             case 200:
             case 201:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 162:
             case 163:
             case 164:
             case 165:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 126:
@@ -421,14 +421,14 @@ static void ScanInfoPlane(void)
             case 203:
             case 204:
             case 205:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 166:
             case 167:
             case 168:
             case 169:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 130:
@@ -445,14 +445,14 @@ static void ScanInfoPlane(void)
             case 207:
             case 208:
             case 209:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 170:
             case 171:
             case 172:
             case 173:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 134:
@@ -466,14 +466,14 @@ static void ScanInfoPlane(void)
             case 211:
             case 212:
             case 213:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 36;
             case 174:
             case 175:
             case 176:
             case 177:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 36;
             case 138:
@@ -537,14 +537,14 @@ static void ScanInfoPlane(void)
             case 253:
             case 254:
             case 255:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 18;
             case 234:
             case 235:
             case 236:
             case 237:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 18;
             case 216:
@@ -558,14 +558,14 @@ static void ScanInfoPlane(void)
             case 257:
             case 258:
             case 259:
-                if (gamestate.difficulty < difficulty::gd_hard)
+                if (gamestate.difficulty < difficulty_t::gd_hard)
                     break;
                 tile -= 18;
             case 238:
             case 239:
             case 240:
             case 241:
-                if (gamestate.difficulty < difficulty::gd_medium)
+                if (gamestate.difficulty < difficulty_t::gd_medium)
                     break;
                 tile -= 18;
             case 220:
@@ -1041,7 +1041,7 @@ void RecordDemo(void)
     VW_FadeOut();
 
 #ifndef SPEAR
-    NewGame(difficulty::gd_hard, level / 10);
+    NewGame(difficulty_t::gd_hard, level / 10);
     gamestate.mapon = level % 10;
 #else
     NewGame(difficulty::gd_hard, 0);
@@ -1112,9 +1112,9 @@ void PlayDemo(int demonumber)
     demoptr = (int8_t*)demobuffer;
 #endif
 
-    NewGame(magic_enum::enum_cast<difficulty>(1).value(), 0);
+    NewGame(magic_enum::enum_cast<difficulty_t>(1).value(), 0);
     gamestate.mapon = *demoptr++;
-    gamestate.difficulty = difficulty::gd_hard;
+    gamestate.difficulty = difficulty_t::gd_hard;
     length = READWORD(*(uint8_t**)&demoptr);
     // TODO: Seems like the original demo format supports 16 MB demos
     //       But T_DEM00 and T_DEM01 of Wolf have a 0xd8 as third length size...

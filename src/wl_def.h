@@ -1134,7 +1134,7 @@ enum class weapontype : byte {
     wp_chaingun
 };
 
-enum class difficulty : byte {
+enum class difficulty_t : byte {
     gd_baby,
     gd_easy,
     gd_medium,
@@ -1149,14 +1149,14 @@ enum class difficulty : byte {
 
 typedef struct
 {
-    difficulty difficulty;
-    short      mapon;
-    int32_t    oldscore, score, nextextra;
-    short      lives;
-    short      health;
-    short      ammo;
-    short      keys;
-    weapontype bestweapon, weapon, chosenweapon;
+    difficulty_t difficulty;
+    short        mapon;
+    int32_t      oldscore, score, nextextra;
+    short        lives;
+    short        health;
+    short        ammo;
+    short        keys;
+    weapontype   bestweapon, weapon, chosenweapon;
 
     short faceframe;
     short attackframe, attackcount, weaponframe;
@@ -1215,19 +1215,19 @@ extern char configname[13];
 //
 // Command line parameter variables
 //
-extern bool       param_debugmode;
-extern bool       param_nowait;
-extern difficulty param_difficulty;
-extern int        param_tedlevel;
-extern int        param_joystickindex;
-extern int        param_joystickhat;
-extern int        param_samplerate;
-extern int        param_audiobuffer;
-extern int        param_mission;
-extern bool       param_goodtimes;
-extern bool       param_ignorenumchunks;
+extern bool         param_debugmode;
+extern bool         param_nowait;
+extern difficulty_t param_difficulty;
+extern int          param_tedlevel;
+extern int          param_joystickindex;
+extern int          param_joystickhat;
+extern int          param_samplerate;
+extern int          param_audiobuffer;
+extern int          param_mission;
+extern bool         param_goodtimes;
+extern bool         param_ignorenumchunks;
 
-void NewGame(difficulty difficulty, int episode);
+void NewGame(difficulty_t difficulty, int episode);
 void CalcProjection(int32_t focal);
 void NewViewSize(int width);
 bool SetViewSize(unsigned width, unsigned height);

@@ -376,7 +376,7 @@ void TakeDamage(int points, objstruct* attacker)
 
     if (gamestate.victoryflag)
         return;
-    if (gamestate.difficulty == difficulty::gd_baby)
+    if (gamestate.difficulty == difficulty_t::gd_baby)
         points >>= 2;
 
     if (!godmode)

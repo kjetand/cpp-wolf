@@ -1084,7 +1084,7 @@ firstpart:
     }
 
     ShootSnd();
-    NewGame(magic_enum::enum_cast<difficulty>(which).value(), episode);
+    NewGame(magic_enum::enum_cast<difficulty_t>(which).value(), episode);
     StartGame = 1;
     MenuFadeOut();
 

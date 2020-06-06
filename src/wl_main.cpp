@@ -79,7 +79,7 @@ char configname[13] = "config.";
 //
 bool       param_debugmode = false;
 bool       param_nowait = false;
-difficulty param_difficulty = difficulty::gd_medium; // default is "normal"
+difficulty_t param_difficulty = difficulty_t::gd_medium; // default is "normal"
 int        param_tedlevel = -1;                      // default is not to start a level
 int        param_joystickindex = 0;
 
@@ -282,7 +282,7 @@ void WriteConfig(void)
 =====================
 */
 
-void NewGame(difficulty difficulty, int episode)
+void NewGame(difficulty_t difficulty, int episode)
 {
     memset(&gamestate, 0, sizeof(gamestate));
     gamestate.difficulty = difficulty;
@@ -1581,16 +1581,16 @@ void CheckParameters(int argc, char* argv[])
         param_debugmode = true;
         else IFARG("--baby")
             param_difficulty
-            = difficulty::gd_baby;
+            = difficulty_t::gd_baby;
         else IFARG("--easy")
             param_difficulty
-            = difficulty::gd_easy;
+            = difficulty_t::gd_easy;
         else IFARG("--normal")
             param_difficulty
-            = difficulty::gd_medium;
+            = difficulty_t::gd_medium;
         else IFARG("--hard")
             param_difficulty
-            = difficulty::gd_hard;
+            = difficulty_t::gd_hard;
         else IFARG("--nowait")
             param_nowait
             = true;
