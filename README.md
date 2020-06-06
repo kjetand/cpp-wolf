@@ -41,14 +41,14 @@ The above commands will download dependencies automatically for you. However, if
 want to use local dependencies, you can define their paths explicitly with `SDL_ROOT`
 and `SDL_MIXER_ROOT`.
 
-When running the game it will probably output something like _"NO WOLFENSTEIN 3D
+When running the game, it will probably output something like _"NO WOLFENSTEIN 3D
 DATA FILES to be found!"_. This is because you are missing the asset files that
 are shipped with the original game. These are not part of this repo due to copyright
-reasons. Either download the _shareware version_ of _Wolfenstein 3D_ to obtain the
+reasons. Either download the _shareware version_ of _Wolfenstein 3D_ and obtain the
 `.WL1` files, or buy the _full version_ to obtain the full episode `.WL6` files.
-Define `-DCPP_WOLF_SHAREWARE_ASSETS_DIR=/path/to/assets` or
-`-DCPP_WOLF_FULL_ASSETS_DIR=/path/to/assets`, depending on your version of the game.
-The `WL`-files will be copied for you automatically.
+Define `-DCPP_WOLF_ASSETS_DIR=/path/to/assets`, and the `WL`-files will be copied
+for you automatically. The full version is by default. To enable the shareware version,
+define `-DCPP_WOLF_SHAREWARE=TRUE`.
 
 ### Linux
 Currently not supported.
