@@ -31,9 +31,6 @@
 
 #pragma pack(1)
 
-#define YESBUTTONNAME "Y"
-#define NOBUTTONNAME  "N"
-
 #include "foreign.h"
 
 #ifndef SPEAR
@@ -52,6 +49,8 @@
 #include "gfxv_sod.h"
 #include "f_spear.h"
 #endif
+
+#include <magic_enum.hpp>
 
 using byte = std::uint8_t;
 using word = std::uint16_t;
@@ -89,86 +88,82 @@ void Quit(const char* errorStr, ...);
 =============================================================================
 */
 
-#define MAXTICS  10
-#define DEMOTICS 4
+constexpr auto MAXTICS = 10;
+constexpr auto DEMOTICS = 4;
 
-#define MAXACTORS    150 // max number of nazis, etc / map
-#define MAXSTATS     400 // max number of lamps, bonus, etc
-#define MAXDOORS     64  // max number of sliding doors
-#define MAXWALLTILES 64  // max number of wall tiles
+constexpr auto MAXACTORS = 150;   // max number of nazis, etc / map
+constexpr auto MAXSTATS = 400;    // max number of lamps, bonus, etc
+constexpr auto MAXDOORS = 64;     // max number of sliding doors
+constexpr auto MAXWALLTILES = 64; // max number of wall tiles
 
 //
 // tile constants
 //
 
-#define ICONARROWS      90
-#define PUSHABLETILE    98
-#define EXITTILE        99  // at end of castle
-#define AREATILE        107 // first of NUMAREAS floor tiles
-#define NUMAREAS        37
-#define ELEVATORTILE    21
-#define AMBUSHTILE      106
-#define ALTELEVATORTILE 107
+constexpr auto ICONARROWS = 90;
+constexpr auto PUSHABLETILE = 98;
+constexpr auto EXITTILE = 99;  // at end of castle
+constexpr auto AREATILE = 107; // first of NUMAREAS floor tiles
+constexpr auto NUMAREAS = 37;
+constexpr auto ELEVATORTILE = 21;
+constexpr auto AMBUSHTILE = 106;
+constexpr auto ALTELEVATORTILE = 107;
 
-#define NUMBERCHARS 9
+constexpr auto NUMBERCHARS = 9;
 
 //----------------
 
-#define EXTRAPOINTS 40000
-#define RUNSPEED    6000
-#define SCREENBWIDE 80
-#define HEIGHTRATIO 0.50 // also defined in id_mm.c
+constexpr auto EXTRAPOINTS = 40000;
+constexpr auto RUNSPEED = 6000;
+constexpr auto SCREENBWIDE = 80;
+constexpr auto HEIGHTRATIO = 0.50; // also defined in id_mm.c
 
 #ifndef SPEAR
-#define LRpack 8 // # of levels to store in endgame
+constexpr auto LRpack = 8; // # of levels to store in endgame
 #else
-#define LRpack 20
+constexpr auto LRpack = 20;
 #endif
 
-#define PLAYERSIZE   MINDIST  // player radius
-#define MINACTORDIST 0x10000l // minimum dist from player center \
+constexpr auto MINDIST = (0x5800l);
+constexpr auto PLAYERSIZE = MINDIST;    // player radius
+constexpr auto MINACTORDIST = 0x10000l; // minimum dist from player center \
                               // to any actor center
 
-#define NUMLATCHPICS 100
-
 #undef M_PI
-#define PI   3.141592657
-#define M_PI PI
+constexpr auto M_PI = 3.141592657;
 
-#define GLOBAL1       (1l << 16)
-#define TILEGLOBAL    GLOBAL1
-#define TILESHIFT     16l
-#define UNSIGNEDSHIFT 8
+constexpr auto GLOBAL1 = (1l << 16);
+constexpr auto TILEGLOBAL = GLOBAL1;
+constexpr auto TILESHIFT = 16l;
+constexpr auto UNSIGNEDSHIFT = 8;
 
-#define ANGLES     360 // must be divisable by 4
-#define ANGLEQUAD  (ANGLES / 4)
-#define FINEANGLES 3600
+constexpr auto ANGLES = 360; // must be divisable by 4
+constexpr auto ANGLEQUAD = (ANGLES / 4);
+constexpr auto FINEANGLES = 3600;
 
-#define MINDIST (0x5800l)
+constexpr auto mapshift = 6;
+constexpr auto MAPSIZE = (1 << mapshift);
+constexpr auto maparea = MAPSIZE * MAPSIZE;
 
-#define mapshift 6
-#define MAPSIZE  (1 << mapshift)
-#define maparea  MAPSIZE* MAPSIZE
+constexpr auto mapheight = MAPSIZE;
+constexpr auto mapwidth = MAPSIZE;
 
-#define mapheight MAPSIZE
-#define mapwidth  MAPSIZE
+constexpr auto TEXTURESHIFT = 6;
+constexpr auto TEXTURESIZE = (1 << TEXTURESHIFT);
+constexpr auto TEXTUREFROMFIXEDSHIFT = 4;
+constexpr auto TEXTUREMASK = (TEXTURESIZE * (TEXTURESIZE - 1));
 
-#define TEXTURESHIFT          6
-#define TEXTURESIZE           (1 << TEXTURESHIFT)
-#define TEXTUREFROMFIXEDSHIFT 4
-#define TEXTUREMASK           (TEXTURESIZE * (TEXTURESIZE - 1))
+constexpr auto SPRITESCALEFACTOR = 2;
 
-#define SPRITESCALEFACTOR 2
+constexpr auto NORTH = 0;
 
-#define NORTH 0
+constexpr auto STATUSLINES = 40;
 
-#define STATUSLINES 40
+constexpr auto SCREENSIZE = (SCREENBWIDE * 208);
+constexpr auto PAGE1START = 0;
+constexpr auto PAGE2START = (SCREENSIZE);
 
-#define SCREENSIZE (SCREENBWIDE * 208)
-#define PAGE1START 0
-#define PAGE2START (SCREENSIZE)
-
-#define STARTAMMO 8
+constexpr auto STARTAMMO = 8;
 
 // object flag values
 
@@ -995,7 +990,7 @@ enum class dirtype {
     nodir
 };
 
-#define NUMENEMIES 22
+constexpr auto NUMENEMIES = 22;
 enum class enemy_t : byte {
     en_guard,
     en_officer,
@@ -1099,6 +1094,7 @@ struct objstruct {
     struct objstruct *next, *prev;
 };
 
+// TODO: make enum class
 enum {
     bt_nobutton = -1,
     bt_attack = 0,
@@ -1122,13 +1118,14 @@ enum {
     NUMBUTTONS
 };
 
-#define NUMWEAPONS 4
 enum class weapontype : byte {
     wp_knife,
     wp_pistol,
     wp_machinegun,
     wp_chaingun
 };
+
+constexpr auto NUMWEAPONS = magic_enum::enum_count<weapontype>();
 
 enum class difficulty_t : byte {
     gd_baby,
@@ -1278,12 +1275,12 @@ void UpdateSoundLoc();
 =============================================================================
 */
 
-#define BASEMOVE 35
-#define RUNMOVE  70
-#define BASETURN 35
-#define RUNTURN  70
+constexpr auto BASEMOVE = 35;
+constexpr auto RUNMOVE = 70;
+constexpr auto BASETURN = 35;
+constexpr auto RUNTURN = 70;
 
-#define JOYSCALE 2
+constexpr auto JOYSCALE = 2;
 
 extern byte       tilemap[MAPSIZE][MAPSIZE]; // wall values only
 extern byte       spotvis[MAPSIZE][MAPSIZE];
@@ -1422,9 +1419,9 @@ struct t_compshape {
 
 =============================================================================
 */
-#define TURNTICS  10
-#define SPDPATROL 512
-#define SPDDOG    1500
+constexpr auto TURNTICS = 10;
+constexpr auto SPDPATROL = 512;
+constexpr auto SPDDOG = 1500;
 
 void InitHitRect(objstruct* ob, unsigned radius);
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
@@ -1525,8 +1522,6 @@ void InitAreas();
 
 =============================================================================
 */
-
-#define s_nakedbody s_static10
 
 extern statetype s_grddie1;
 extern statetype s_dogdie1;
@@ -1647,8 +1642,6 @@ static inline fixed FixedMul(fixed a, fixed b)
 #define DEMOIF_SDL
 #endif
 #define DEMOCOND_SDL (!DEMOCOND_ORIG)
-
-#define GetTicks() ((SDL_GetTicks() * 7) / 100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 

@@ -77,11 +77,11 @@ char configname[13] = "config.";
 //
 // Command line parameter variables
 //
-bool       param_debugmode = false;
-bool       param_nowait = false;
+bool         param_debugmode = false;
+bool         param_nowait = false;
 difficulty_t param_difficulty = difficulty_t::gd_medium; // default is "normal"
-int        param_tedlevel = -1;                      // default is not to start a level
-int        param_joystickindex = 0;
+int          param_tedlevel = -1;                        // default is not to start a level
+int          param_joystickindex = 0;
 
 int param_joystickhat = -1;
 int param_samplerate = 44100;
@@ -656,7 +656,7 @@ void ShutdownId(void)
 ==================
 */
 
-const float radtoint = (float)(FINEANGLES / 2 / PI);
+const float radtoint = (float)(FINEANGLES / 2 / M_PI);
 
 void BuildTables(void)
 {
@@ -677,7 +677,7 @@ void BuildTables(void)
     //
 
     float angle = 0;
-    float anglestep = (float)(PI / 2 / ANGLEQUAD);
+    float anglestep = (float)(M_PI / 2 / ANGLEQUAD);
     for (i = 0; i < ANGLEQUAD; i++) {
         fixed value = (int32_t)(GLOBAL1 * sin(angle));
         sintable[i] = sintable[i + ANGLES] = sintable[ANGLES / 2 - i] = value;
