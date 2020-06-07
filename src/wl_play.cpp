@@ -50,14 +50,14 @@ unsigned tics;
 bool mouseenabled, joystickenabled;
 int  dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 int  buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
-int  buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
+int  buttonmouse[4] = { static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_nobutton) };
 int  buttonjoy[32] = {
 
-    bt_attack, bt_strafe, bt_use, bt_run, bt_strafeleft, bt_straferight, bt_esc, bt_pause,
-    bt_prevweapon, bt_nextweapon, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
+    static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_run), static_cast<int>(button_t::bt_strafeleft), static_cast<int>(button_t::bt_straferight), static_cast<int>(button_t::bt_esc), static_cast<int>(button_t::bt_pause),
+    static_cast<int>(button_t::bt_prevweapon), static_cast<int>(button_t::bt_nextweapon), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
 
-    bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton,
-    bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton, bt_nobutton
+    static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
+    static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton)
 };
 
 int viewsize;
@@ -300,7 +300,7 @@ void PollJoystickButtons(void)
 
 void PollKeyboardMove(void)
 {
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    int delta = buttonstate[static_cast<int>(button_t::bt_run)] ? RUNMOVE * tics : BASEMOVE * tics;
 
     if (Keyboard[dirscan[static_cast<byte>(controldir_t::di_north)]])
         controly -= delta;
@@ -349,15 +349,15 @@ void PollJoystickMove(void)
 
     IN_GetJoyDelta(&joyx, &joyy);
 
-    int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
+    int delta = buttonstate[static_cast<int>(button_t::bt_run)] ? RUNMOVE * tics : BASEMOVE * tics;
 
-    if (joyx > 64 || buttonstate[bt_turnright])
+    if (joyx > 64 || buttonstate[static_cast<int>(button_t::bt_turnright)])
         controlx += delta;
-    else if (joyx < -64 || buttonstate[bt_turnleft])
+    else if (joyx < -64 || buttonstate[static_cast<int>(button_t::bt_turnleft)])
         controlx -= delta;
-    if (joyy > 64 || buttonstate[bt_movebackward])
+    if (joyy > 64 || buttonstate[static_cast<int>(button_t::bt_movebackward)])
         controly += delta;
-    else if (joyy < -64 || buttonstate[bt_moveforward])
+    else if (joyy < -64 || buttonstate[static_cast<int>(button_t::bt_moveforward)])
         controly -= delta;
 }
 
@@ -625,7 +625,7 @@ void CheckKeys(void)
     //
     // pause key weirdness can't be checked as a scan code
     //
-    if (buttonstate[bt_pause])
+    if (buttonstate[static_cast<int>(button_t::bt_pause)])
         Paused = true;
     if (Paused) {
         int lastoffs = StopMusic();
@@ -660,12 +660,12 @@ void CheckKeys(void)
         return;
     }
 
-    if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc]) {
+    if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[static_cast<int>(button_t::bt_esc)]) {
         int lastoffs = StopMusic();
         ClearMemory();
         VW_FadeOut();
 
-        US_ControlPanel(buttonstate[bt_esc] ? sc_Escape : scan);
+        US_ControlPanel(buttonstate[static_cast<int>(button_t::bt_esc)] ? sc_Escape : scan);
 
         SETFONTCOLOR(0, 15);
         IN_ClearKeysDown();

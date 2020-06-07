@@ -2153,7 +2153,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                     if (result) {
                         for (int z = 0; z < 4; z++)
                             if (order[which] == buttonmouse[z]) {
-                                buttonmouse[z] = bt_nobutton;
+                                buttonmouse[z] = static_cast<int>(button_t::bt_nobutton);
                                 break;
                             }
 
@@ -2176,7 +2176,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                     if (result) {
                         for (int z = 0; z < 4; z++) {
                             if (order[which] == buttonjoy[z]) {
-                                buttonjoy[z] = bt_nobutton;
+                                buttonjoy[z] = static_cast<int>(button_t::bt_nobutton);
                                 break;
                             }
                         }

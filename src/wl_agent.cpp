@@ -101,17 +101,17 @@ void CheckWeaponChange(void)
     if (!gamestate.ammo) // must use knife with no ammo
         return;
 
-    if (buttonstate[bt_nextweapon] && !buttonheld[bt_nextweapon]) {
+    if (buttonstate[static_cast<int>(button_t::bt_nextweapon)] && !buttonheld[static_cast<int>(button_t::bt_nextweapon)]) {
         newWeapon = static_cast<byte>(gamestate.weapon) + 1;
         if (newWeapon > static_cast<byte>(gamestate.bestweapon))
             newWeapon = 0;
-    } else if (buttonstate[bt_prevweapon] && !buttonheld[bt_prevweapon]) {
+    } else if (buttonstate[static_cast<int>(button_t::bt_prevweapon)] && !buttonheld[static_cast<int>(button_t::bt_prevweapon)]) {
         newWeapon = static_cast<byte>(gamestate.weapon) - 1;
         if (newWeapon < 0)
             newWeapon = static_cast<byte>(gamestate.bestweapon);
     } else {
         for (int i = static_cast<byte>(weapontype::wp_knife); i <= static_cast<byte>(gamestate.bestweapon); i++) {
-            if (buttonstate[bt_readyknife + i - static_cast<byte>(weapontype::wp_knife)]) {
+            if (buttonstate[static_cast<int>(button_t::bt_readyknife) + i - static_cast<byte>(weapontype::wp_knife)]) {
                 newWeapon = i;
                 break;
             }
@@ -129,7 +129,7 @@ void CheckWeaponChange(void)
 =
 = ControlMovement
 =
-= Takes controlx,controly, and buttonstate[bt_strafe]
+= Takes controlx,controly, and buttonstate[static_cast<int>(button_t::bt_strafe)]
 =
 = Changes the player's angle and position
 =
@@ -150,21 +150,21 @@ void ControlMovement(objstruct* ob)
     oldx = player->x;
     oldy = player->y;
 
-    if (buttonstate[bt_strafeleft]) {
+    if (buttonstate[static_cast<int>(button_t::bt_strafeleft)]) {
         angle = ob->angle + ANGLES / 4;
         if (angle >= ANGLES)
             angle -= ANGLES;
-        if (buttonstate[bt_run])
+        if (buttonstate[static_cast<int>(button_t::bt_run)])
             Thrust(angle, RUNMOVE * MOVESCALE * tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * tics);
     }
 
-    if (buttonstate[bt_straferight]) {
+    if (buttonstate[static_cast<int>(button_t::bt_straferight)]) {
         angle = ob->angle - ANGLES / 4;
         if (angle < 0)
             angle += ANGLES;
-        if (buttonstate[bt_run])
+        if (buttonstate[static_cast<int>(button_t::bt_run)])
             Thrust(angle, RUNMOVE * MOVESCALE * tics);
         else
             Thrust(angle, BASEMOVE * MOVESCALE * tics);
@@ -173,7 +173,7 @@ void ControlMovement(objstruct* ob)
     //
     // side to side move
     //
-    if (buttonstate[bt_strafe]) {
+    if (buttonstate[static_cast<int>(button_t::bt_strafe)]) {
         //
         // strafing
         //
@@ -1006,7 +1006,7 @@ void Thrust(int angle, int32_t speed)
 
 void Cmd_Fire(void)
 {
-    buttonheld[bt_attack] = true;
+    buttonheld[static_cast<int>(button_t::bt_attack)] = true;
 
     gamestate.weaponframe = 0;
 
@@ -1067,11 +1067,11 @@ void Cmd_Use(void)
         PushWall(checkx, checky, dir);
         return;
     }
-    if (!buttonheld[bt_use] && doornum == ELEVATORTILE && elevatorok) {
+    if (!buttonheld[static_cast<int>(button_t::bt_use)] && doornum == ELEVATORTILE && elevatorok) {
         //
         // use elevator
         //
-        buttonheld[bt_use] = true;
+        buttonheld[static_cast<int>(button_t::bt_use)] = true;
 
         tilemap[checkx][checky]++; // flip switch
         if (*(mapsegs[0] + (player->tiley << mapshift) + player->tilex) == ALTELEVATORTILE)
@@ -1080,8 +1080,8 @@ void Cmd_Use(void)
             playstate = exit_t::ex_completed;
         SD_PlaySound(LEVELDONESND);
         SD_WaitSoundDone();
-    } else if (!buttonheld[bt_use] && doornum & 0x80) {
-        buttonheld[bt_use] = true;
+    } else if (!buttonheld[static_cast<int>(button_t::bt_use)] && doornum & 0x80) {
+        buttonheld[static_cast<int>(button_t::bt_use)] = true;
         OperateDoor(doornum & ~0x80);
     } else
         SD_PlaySound(DONOTHINGSND);
@@ -1285,11 +1285,11 @@ void T_Attack(objstruct* ob)
         return;
     }
 
-    if (buttonstate[bt_use] && !buttonheld[bt_use])
-        buttonstate[bt_use] = false;
+    if (buttonstate[static_cast<int>(button_t::bt_use)] && !buttonheld[static_cast<int>(button_t::bt_use)])
+        buttonstate[static_cast<int>(button_t::bt_use)] = false;
 
-    if (buttonstate[bt_attack] && !buttonheld[bt_attack])
-        buttonstate[bt_attack] = false;
+    if (buttonstate[static_cast<int>(button_t::bt_attack)] && !buttonheld[static_cast<int>(button_t::bt_attack)])
+        buttonstate[static_cast<int>(button_t::bt_attack)] = false;
 
     ControlMovement(ob);
     if (gamestate.victoryflag) // watching the BJ actor
@@ -1324,7 +1324,7 @@ void T_Attack(objstruct* ob)
         case 4:
             if (!gamestate.ammo)
                 break;
-            if (buttonstate[bt_attack])
+            if (buttonstate[static_cast<int>(button_t::bt_attack)])
                 gamestate.attackframe -= 2;
         case 1:
             if (!gamestate.ammo) { // can only happen with chain gun
@@ -1342,7 +1342,7 @@ void T_Attack(objstruct* ob)
             break;
 
         case 3:
-            if (gamestate.ammo && buttonstate[bt_attack])
+            if (gamestate.ammo && buttonstate[static_cast<int>(button_t::bt_attack)])
                 gamestate.attackframe -= 2;
             break;
         }
@@ -1374,10 +1374,10 @@ void T_Player(objstruct* ob)
     UpdateFace();
     CheckWeaponChange();
 
-    if (buttonstate[bt_use])
+    if (buttonstate[static_cast<int>(button_t::bt_use)])
         Cmd_Use();
 
-    if (buttonstate[bt_attack] && !buttonheld[bt_attack])
+    if (buttonstate[static_cast<int>(button_t::bt_attack)] && !buttonheld[static_cast<int>(button_t::bt_attack)])
         Cmd_Fire();
 
     ControlMovement(ob);

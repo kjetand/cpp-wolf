@@ -990,7 +990,6 @@ enum class dirtype {
     nodir
 };
 
-constexpr auto NUMENEMIES = 22;
 enum class enemy_t : byte {
     en_guard,
     en_officer,
@@ -1015,6 +1014,8 @@ enum class enemy_t : byte {
     en_will,
     en_death
 };
+
+constexpr auto NUMENEMIES = magic_enum::enum_count<enemy_t>();
 
 typedef void (*statefunc)(void*);
 
@@ -1094,8 +1095,7 @@ struct objstruct {
     struct objstruct *next, *prev;
 };
 
-// TODO: make enum class
-enum {
+enum class button_t : int {
     bt_nobutton = -1,
     bt_attack = 0,
     bt_strafe,
@@ -1115,8 +1115,9 @@ enum {
     bt_movebackward,
     bt_turnleft,
     bt_turnright,
-    NUMBUTTONS
 };
+
+constexpr auto NUMBUTTONS = magic_enum::enum_count<button_t>();
 
 enum class weapontype : byte {
     wp_knife,
