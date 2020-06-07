@@ -1399,9 +1399,9 @@ restartgame:
 
                 CheckHighScore(gamestate.score, gamestate.mapon + 1);
 #ifndef JAPAN
-                strcpy(MainMenu[viewscores].string, STR_VS);
+                strcpy(MainMenu[static_cast<byte>(menuitems::viewscores)].string, STR_VS);
 #endif
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[static_cast<byte>(menuitems::viewscores)].routine = CP_ViewScores;
                 return;
             }
 #endif
@@ -1416,9 +1416,9 @@ restartgame:
 
                 CheckHighScore(gamestate.score, gamestate.mapon + 1);
 #ifndef JAPAN
-                strcpy(MainMenu[viewscores].string, STR_VS);
+                strcpy(MainMenu[static_cast<byte>(menuitems::viewscores)].string, STR_VS);
 #endif
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[static_cast<byte>(menuitems::viewscores)].routine = CP_ViewScores;
                 return;
             }
 #endif
@@ -1490,9 +1490,9 @@ restartgame:
 
             CheckHighScore(gamestate.score, gamestate.mapon + 1);
 #ifndef JAPAN
-            strcpy(MainMenu[viewscores].string, STR_VS);
+            strcpy(MainMenu[static_cast<byte>(menuitems::viewscores)].string, STR_VS);
 #endif
-            MainMenu[viewscores].routine = CP_ViewScores;
+            MainMenu[static_cast<byte>(menuitems::viewscores)].routine = CP_ViewScores;
             return;
 
         case exit_t::ex_victorious:
@@ -1511,9 +1511,9 @@ restartgame:
 
             CheckHighScore(gamestate.score, gamestate.mapon + 1);
 #ifndef JAPAN
-            strcpy(MainMenu[viewscores].string, STR_VS);
+            strcpy(MainMenu[static_cast<byte>(menuitems::viewscores)].string, STR_VS);
 #endif
-            MainMenu[viewscores].routine = CP_ViewScores;
+            MainMenu[static_cast<byte>(menuitems::viewscores)].routine = CP_ViewScores;
             return;
 
         default:

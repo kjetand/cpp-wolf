@@ -188,7 +188,7 @@ void ReadConfig(void)
             viewsize = 21;
 
         MainMenu[6].active = 1;
-        MainItems.curpos = 0;
+        MainItems.curpos = menuitems::newgame;
     } else {
         //
         // no config file, so select by hardware
@@ -976,7 +976,7 @@ void InitDigiMap(void)
 }
 
 #ifndef SPEAR
-CP_iteminfo MusicItems = { CTL_X, CTL_Y, 6, 0, 32 };
+CP_iteminfo MusicItems = { CTL_X, CTL_Y, 6, menuitems::newgame, 32 };
 CP_itemtype MusicMenu[] = {
     { 1, "Get Them!", 0 },
     { 1, "Searching", 0 },
@@ -1103,7 +1103,7 @@ void DoJukebox(void)
     MenuFadeIn();
 
     do {
-        which = HandleMenu(&MusicItems, &MusicMenu[start], NULL);
+        which = static_cast<int>(HandleMenu(&MusicItems, &MusicMenu[start], NULL));
         if (which >= 0) {
             if (lastsong >= 0)
                 MusicMenu[start + lastsong].active = 1;

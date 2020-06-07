@@ -32,10 +32,10 @@ int CP_ReadThis(int);
 
 #else
 #ifdef GOODTIMES
-#define STARTITEM newgame
+constexpr auto STARTITEM = menuitems::newgame;
 
 #else
-#define STARTITEM readthis
+constexpr auto STARTITEM = menuitems::readthis;
 #endif
 #endif
 
@@ -265,14 +265,14 @@ CP_itemtype CusMenu[] = {
 
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
-            SndItems = { SM_X, SM_Y1, lengthof(SndMenu), 0, 52 },
-            LSItems = { LSM_X, LSM_Y, lengthof(LSMenu), 0, 24 },
-            CtlItems = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
-            CusItems = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0 },
+            SndItems = { SM_X, SM_Y1, lengthof(SndMenu), menuitems::newgame, 52 },
+            LSItems = { LSM_X, LSM_Y, lengthof(LSMenu), menuitems::newgame, 24 },
+            CtlItems = { CTL_X, CTL_Y, lengthof(CtlMenu), {}, 56 },
+            CusItems = { 8, CST_Y + 13 * 2, lengthof(CusMenu), {}, 0 },
 #ifndef SPEAR
-            NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
+            NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), menuitems::newgame, 88 },
 #endif
-            NewItems = { NM_X, NM_Y, lengthof(NewMenu), 2, 24 };
+            NewItems = { NM_X, NM_Y, lengthof(NewMenu), menuitems::control, 24 };
 
 int color_hlite[] = {
     DEACTIVE,
@@ -412,7 +412,7 @@ static const char* const ScanNames[SDLK_LAST] = {
 ////////////////////////////////////////////////////////////////////
 void US_ControlPanel(ScanCode scancode)
 {
-    int which;
+    menuitems which;
 
     if (ingame) {
         if (CP_CheckQuick(scancode))
@@ -527,8 +527,8 @@ void US_ControlPanel(ScanCode scancode)
 #endif
 
         switch (which) {
-        case viewscores:
-            if (MainMenu[viewscores].routine == NULL) {
+        case menuitems::viewscores:
+            if (MainMenu[static_cast<byte>(menuitems::viewscores)].routine == NULL) {
                 if (CP_EndGame(0))
                     StartGame = 1;
             } else {
@@ -537,15 +537,15 @@ void US_ControlPanel(ScanCode scancode)
             }
             break;
 
-        case backtodemo:
+        case menuitems::backtodemo:
             StartGame = 1;
             if (!ingame)
                 StartCPMusic(INTROSONG);
             VL_FadeOut(0, 255, 0, 0, 0, 10);
             break;
 
-        case -1:
-        case quit:
+        case menuitems::undefined:
+        case menuitems::quit:
             CP_Quit(0);
             break;
 
@@ -581,9 +581,9 @@ void US_ControlPanel(ScanCode scancode)
 
 void EnableEndGameMenuItem()
 {
-    MainMenu[viewscores].routine = NULL;
+    MainMenu[static_cast<byte>(menuitems::viewscores)].routine = NULL;
 #ifndef JAPAN
-    strcpy(MainMenu[viewscores].string, STR_EG);
+    strcpy(MainMenu[static_cast<byte>(menuitems::viewscores)].string, STR_EG);
 #endif
 }
 
@@ -616,9 +616,9 @@ void DrawMainMenu(void)
 #ifndef JAPAN
 
 #ifdef SPANISH
-        strcpy(&MainMenu[backtodemo].string, STR_GAME);
+        strcpy(&MainMenu[static_cast<byte>(menuitems::backtodemo)].string, STR_GAME);
 #else
-        strcpy(&MainMenu[backtodemo].string[8], STR_GAME);
+        strcpy(&MainMenu[static_cast<byte>(menuitems::backtodemo)].string[8], STR_GAME);
 #endif
 
 #else
@@ -629,13 +629,13 @@ void DrawMainMenu(void)
         VWB_DrawPic(12 * 8, 18 * 8, C_MENDGAMEPIC);
         UNCACHEGRCHUNK(C_MENDGAMEPIC);
 #endif
-        MainMenu[backtodemo].active = 2;
+        MainMenu[static_cast<byte>(menuitems::backtodemo)].active = 2;
     } else {
 #ifndef JAPAN
 #ifdef SPANISH
-        strcpy(&MainMenu[backtodemo].string, STR_BD);
+        strcpy(&MainMenu[static_cast<byte>(menuitems::backtodemo)].string, STR_BD);
 #else
-        strcpy(&MainMenu[backtodemo].string[8], STR_DEMO);
+        strcpy(&MainMenu[static_cast<byte>(menuitems::backtodemo)].string[8], STR_DEMO);
 #endif
 #else
         CA_CacheGrChunk(C_MRETDEMOPIC);
@@ -645,7 +645,7 @@ void DrawMainMenu(void)
         VWB_DrawPic(12 * 8, 18 * 8, C_MSCORESPIC);
         UNCACHEGRCHUNK(C_MSCORESPIC);
 #endif
-        MainMenu[backtodemo].active = 1;
+        MainMenu[static_cast<byte>(menuitems::backtodemo)].active = 1;
     }
 
     DrawMenu(&MainItems, &MainMenu[0]);
@@ -760,14 +760,15 @@ int CP_CheckQuick(ScanCode scancode)
 
         WindowH = 200;
         fontnumber = 0;
-        MainMenu[savegame].active = 0;
+        MainMenu[static_cast<byte>(menuitems::savegame)].active = 0;
         return 1;
 
     //
     // QUICKSAVE
     //
     case sc_F8:
-        if (SaveGamesAvail[LSItems.curpos] && pickquick) {
+        // TODO: These casts may be dangerous (see more below). What if curpos == -1
+        if (SaveGamesAvail[static_cast<short>(LSItems.curpos)] && pickquick) {
             CA_CacheGrChunk(STARTFONT + 1);
             fontnumber = 1;
             Message(STR_SAVING "...");
@@ -827,13 +828,13 @@ int CP_CheckQuick(ScanCode scancode)
     // QUICKLOAD
     //
     case sc_F9:
-        if (SaveGamesAvail[LSItems.curpos] && pickquick) {
+        if (SaveGamesAvail[static_cast<short>(LSItems.curpos)] && pickquick) {
             char string[100] = STR_LGC;
 
             CA_CacheGrChunk(STARTFONT + 1);
             fontnumber = 1;
 
-            strcat(string, SaveGameNames[LSItems.curpos]);
+            strcat(string, SaveGameNames[static_cast<short>(LSItems.curpos)]);
             strcat(string, "\"?");
 
             if (Confirm(string))
@@ -948,10 +949,10 @@ int CP_EndGame(int)
     playstate = exit_t::ex_died;
     killerobj = NULL;
 
-    MainMenu[savegame].active = 0;
-    MainMenu[viewscores].routine = CP_ViewScores;
+    MainMenu[static_cast<short>(menuitems::savegame)].active = 0;
+    MainMenu[static_cast<short>(menuitems::viewscores)].routine = CP_ViewScores;
 #ifndef JAPAN
-    strcpy(MainMenu[viewscores].string, STR_VS);
+    strcpy(MainMenu[static_cast<short>(menuitems::viewscores)].string, STR_VS);
 #endif
 
     return 1;
@@ -1008,7 +1009,7 @@ firstpart:
 
     DrawNewEpisode();
     do {
-        which = HandleMenu(&NewEitems, &NewEmenu[0], NULL);
+        which = static_cast<int>(HandleMenu(&NewEitems, &NewEmenu[0], NULL));
         switch (which) {
         case -1:
             MenuFadeOut();
@@ -1071,7 +1072,7 @@ firstpart:
 #endif
 
     DrawNewGame();
-    which = HandleMenu(&NewItems, &NewMenu[0], DrawNewGameDiff);
+    which = static_cast<int>(HandleMenu(&NewItems, &NewMenu[0], DrawNewGameDiff));
     if (which < 0) {
         MenuFadeOut();
 #ifndef SPEAR
@@ -1185,9 +1186,9 @@ void DrawNewGame(void)
 //
 // DRAW NEW GAME GRAPHIC
 //
-void DrawNewGameDiff(int w)
+void DrawNewGameDiff(menuitems w)
 {
-    VWB_DrawPic(NM_X + 185, NM_Y + 7, w + C_BABYMODEPIC);
+    VWB_DrawPic(NM_X + 185, NM_Y + 7, static_cast<short>(w) + C_BABYMODEPIC);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1209,7 +1210,7 @@ int CP_Sound(int)
     WaitKeyUp();
 
     do {
-        which = HandleMenu(&SndItems, &SndMenu[0], NULL);
+        which = static_cast<int>(HandleMenu(&SndItems, &SndMenu[0], NULL));
         //
         // HANDLE MENU CHOICES
         //
@@ -1452,7 +1453,7 @@ int CP_LoadGame(int quick)
     // QUICKLOAD?
     //
     if (quick) {
-        which = LSItems.curpos;
+        which = static_cast<int>(LSItems.curpos);
 
         if (SaveGamesAvail[which]) {
             name[7] = which + '0';
@@ -1490,7 +1491,7 @@ int CP_LoadGame(int quick)
     DrawLoadSaveScreen(0);
 
     do {
-        which = HandleMenu(&LSItems, &LSMenu[0], TrackWhichGame);
+        which = static_cast<int>(HandleMenu(&LSItems, &LSMenu[0], TrackWhichGame));
         if (which >= 0 && SaveGamesAvail[which]) {
             ShootSnd();
             name[7] = which + '0';
@@ -1541,14 +1542,14 @@ int CP_LoadGame(int quick)
 //
 // HIGHLIGHT CURRENT SELECTED ENTRY
 //
-void TrackWhichGame(int w)
+void TrackWhichGame(menuitems w)
 {
     static int lastgameon = 0;
 
     PrintLSEntry(lastgameon, TEXTCOLOR);
-    PrintLSEntry(w, HIGHLIGHT);
+    PrintLSEntry(static_cast<short>(w), HIGHLIGHT);
 
-    lastgameon = w;
+    lastgameon = static_cast<short>(w);
 }
 
 ////////////////////////////
@@ -1622,7 +1623,7 @@ int CP_SaveGame(int quick)
     // QUICKSAVE?
     //
     if (quick) {
-        which = LSItems.curpos;
+        which = static_cast<int>(LSItems.curpos);
 
         if (SaveGamesAvail[which]) {
             name[7] = which + '0';
@@ -1654,7 +1655,7 @@ int CP_SaveGame(int quick)
     DrawLoadSaveScreen(1);
 
     do {
-        which = HandleMenu(&LSItems, &LSMenu[0], TrackWhichGame);
+        which = static_cast<int>(HandleMenu(&LSItems, &LSMenu[0], TrackWhichGame));
         if (which >= 0) {
             //
             // OVERWRITE EXISTING SAVEGAME?
@@ -1752,21 +1753,21 @@ int CP_Control(int)
     WaitKeyUp();
 
     do {
-        which = HandleMenu(&CtlItems, CtlMenu, NULL);
+        which = static_cast<int>(HandleMenu(&CtlItems, CtlMenu, NULL));
         switch (which) {
         case CTL_MOUSEENABLE:
             mouseenabled ^= 1;
             if (IN_IsInputGrabbed())
                 IN_CenterMouse();
             DrawCtlScreen();
-            CusItems.curpos = -1;
+            CusItems.curpos = menuitems::undefined;
             ShootSnd();
             break;
 
         case CTL_JOYENABLE:
             joystickenabled ^= 1;
             DrawCtlScreen();
-            CusItems.curpos = -1;
+            CusItems.curpos = menuitems::undefined;
             ShootSnd();
             break;
 
@@ -1947,10 +1948,10 @@ void DrawCtlScreen(void)
     //
     // PICK FIRST AVAILABLE SPOT
     //
-    if (CtlItems.curpos < 0 || !CtlMenu[CtlItems.curpos].active) {
+    if (static_cast<short>(CtlItems.curpos) < 0 || !CtlMenu[static_cast<short>(CtlItems.curpos)].active) {
         for (i = 0; i < CtlItems.amount; i++) {
             if (CtlMenu[i].active) {
-                CtlItems.curpos = i;
+                CtlItems.curpos = magic_enum::enum_cast<menuitems>(i).value();
                 break;
             }
         }
@@ -1978,7 +1979,7 @@ int CustomControls(int)
 
     DrawCustomScreen();
     do {
-        which = HandleMenu(&CusItems, &CusMenu[0], FixupCustom);
+        which = static_cast<int>(HandleMenu(&CusItems, &CusMenu[0], FixupCustom));
         switch (which) {
         case 0:
             DefineMouseBtns();
@@ -2010,7 +2011,7 @@ int CustomControls(int)
 void DefineMouseBtns(void)
 {
     CustomCtrls mouseallowed = { 0, 1, 1, 1 };
-    EnterCtrlData(2, &mouseallowed, DrawCustMouse, PrintCustMouse, MOUSE);
+    EnterCtrlData(2, &mouseallowed, DrawCustMouse, PrintCustMouse, input_t::MOUSE);
 }
 
 ////////////////////////
@@ -2020,7 +2021,7 @@ void DefineMouseBtns(void)
 void DefineJoyBtns(void)
 {
     CustomCtrls joyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData(5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
+    EnterCtrlData(5, &joyallowed, DrawCustJoy, PrintCustJoy, input_t::JOYSTICK);
 }
 
 ////////////////////////
@@ -2030,7 +2031,7 @@ void DefineJoyBtns(void)
 void DefineKeyBtns(void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData(8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
+    EnterCtrlData(8, &keyallowed, DrawCustKeybd, PrintCustKeybd, input_t::KEYBOARDBTNS);
 }
 
 ////////////////////////
@@ -2040,7 +2041,7 @@ void DefineKeyBtns(void)
 void DefineKeyMove(void)
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
-    EnterCtrlData(10, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
+    EnterCtrlData(10, &keyallowed, DrawCustKeys, PrintCustKeys, input_t::KEYBOARDMOVE);
 }
 
 ////////////////////////
@@ -2054,7 +2055,7 @@ enum { FWRD,
 int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD };
 
 void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*PrintRtn)(int),
-    int type)
+    input_t type)
 {
     int         j, exit, tick, redraw, which, x, picked, lastFlashTime;
     ControlInfo ci;
@@ -2093,7 +2094,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
         SDL_Delay(5);
         ReadAnyControl(&ci);
 
-        if (type == MOUSE || type == JOYSTICK)
+        if (type == input_t::MOUSE || type == input_t::JOYSTICK)
             if (IN_KeyDown(sc_Enter) || IN_KeyDown(sc_Control) || IN_KeyDown(sc_Alt)) {
                 IN_ClearKeysDown();
                 ci.button0 = ci.button1 = false;
@@ -2102,12 +2103,12 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
         //
         // CHANGE BUTTON VALUE?
         //
-        if ((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) || ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter)) {
+        if ((type != input_t::KEYBOARDBTNS && type != input_t::KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) || ((type == input_t::KEYBOARDBTNS || type == input_t::KEYBOARDMOVE) && LastScan == sc_Enter)) {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
             SETFONTCOLOR(0, TEXTCOLOR);
 
-            if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
+            if (type == input_t::KEYBOARDBTNS || type == input_t::KEYBOARDMOVE)
                 IN_ClearKeysDown();
 
             while (1) {
@@ -2136,7 +2137,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                 // WHICH TYPE OF INPUT DO WE PROCESS?
                 //
                 switch (type) {
-                case MOUSE:
+                case input_t::MOUSE:
                     button = IN_MouseButtons();
                     switch (button) {
                     case 1:
@@ -2163,7 +2164,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                     }
                     break;
 
-                case JOYSTICK:
+                case input_t::JOYSTICK:
                     if (ci.button0)
                         result = 1;
                     else if (ci.button1)
@@ -2187,7 +2188,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                     }
                     break;
 
-                case KEYBOARDBTNS:
+                case input_t::KEYBOARDBTNS:
                     if (LastScan && LastScan != sc_Escape) {
                         buttonscan[order[which]] = LastScan;
                         picked = 1;
@@ -2196,7 +2197,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                     }
                     break;
 
-                case KEYBOARDMOVE:
+                case input_t::KEYBOARDMOVE:
                     if (LastScan && LastScan != sc_Escape) {
                         dirscan[moveorder[which]] = LastScan;
                         picked = 1;
@@ -2209,7 +2210,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                 //
                 // EXIT INPUT?
                 //
-                if (IN_KeyDown(sc_Escape) || type != JOYSTICK && ci.button1) {
+                if (IN_KeyDown(sc_Escape) || type != input_t::JOYSTICK && ci.button1) {
                     picked = 1;
                     SD_PlaySound(ESCPRESSEDSND);
                 }
@@ -2273,10 +2274,10 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 //
 // FIXUP GUN CURSOR OVERDRAW SHIT
 //
-void FixupCustom(int w)
+void FixupCustom(menuitems w)
 {
     static int lastwhich = -1;
-    int        y = CST_Y + 26 + w * 13;
+    int        y = CST_Y + 26 + static_cast<int>(w) * 13;
 
     VWB_Hlin(7, 32, y - 1, DEACTIVE);
     VWB_Hlin(7, 32, y + 12, BORD2COLOR);
@@ -2288,7 +2289,7 @@ void FixupCustom(int w)
     VWB_Hlin(7, 32, y + 13, BORD2COLOR);
 #endif
 
-    switch (w) {
+    switch (static_cast<short>(w)) {
     case 0:
         DrawCustMouse(1);
         break;
@@ -2314,7 +2315,7 @@ void FixupCustom(int w)
         VWB_Hlin(7, 32, y + 13, BORD2COLOR);
 #endif
 
-        if (lastwhich != w)
+        if (lastwhich != static_cast<short>(w))
             switch (lastwhich) {
             case 0:
                 DrawCustMouse(0);
@@ -2330,7 +2331,7 @@ void FixupCustom(int w)
             }
     }
 
-    lastwhich = w;
+    lastwhich = static_cast<short>(w);
 }
 
 ////////////////////////
@@ -2509,10 +2510,10 @@ void DrawCustomScreen(void)
     //
     // PICK STARTING POINT IN MENU
     //
-    if (CusItems.curpos < 0)
+    if (CusItems.curpos == menuitems::undefined)
         for (i = 0; i < CusItems.amount; i++)
             if (CusMenu[i].active) {
-                CusItems.curpos = i;
+                CusItems.curpos = magic_enum::enum_cast<menuitems>(i).value();
                 break;
             }
 
@@ -2931,7 +2932,7 @@ void SetupControlPanel(void)
     if (!ingame)
         CA_LoadAllSounds();
     else
-        MainMenu[savegame].active = 1;
+        MainMenu[static_cast<short>(menuitems::savegame)].active = 1;
 
     //
     // CENTER MOUSE
@@ -2992,25 +2993,25 @@ void CleanupControlPanel(void)
 // Handle moving gun around a menu
 //
 ////////////////////////////////////////////////////////////////////
-int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
+menuitems HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(menuitems w))
 {
     char        key;
     static int  redrawitem = 1, lastitem = -1;
-    int         i, x, y, basey, exit, which, shape;
+    int         i, x, y, basey, exit, shape;
     int32_t     lastBlinkTime, timer;
     ControlInfo ci;
 
-    which = item_i->curpos;
+    auto which = item_i->curpos;
     x = item_i->x & -8;
     basey = item_i->y - 2;
-    y = basey + which * 13;
+    y = basey + static_cast<short>(which) * 13;
 
     VWB_DrawPic(x, y, C_CURSOR1PIC);
-    SetTextColor(items + which, 1);
+    SetTextColor(items + static_cast<short>(which), 1);
     if (redrawitem) {
         PrintX = item_i->x + item_i->indent;
-        PrintY = item_i->y + which * 13;
-        US_Print((items + which)->string);
+        PrintY = item_i->y + static_cast<short>(which) * 13;
+        US_Print((items + static_cast<short>(which))->string);
     }
     //
     // CALL CUSTOM ROUTINE IF IT IS NEEDED
@@ -3057,10 +3058,10 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
             if (key >= 'a')
                 key -= 'a' - 'A';
 
-            for (i = which + 1; i < item_i->amount; i++)
+            for (i = static_cast<byte>(which) + 1; i < item_i->amount; i++)
                 if ((items + i)->active && (items + i)->string[0] == key) {
                     EraseGun(item_i, items, x, y, which);
-                    which = i;
+                    which = magic_enum::enum_cast<menuitems>(i).value();
                     DrawGun(item_i, items, x, &y, which, basey, routine);
                     ok = 1;
                     IN_ClearKeysDown();
@@ -3071,10 +3072,10 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
             // DIDN'T FIND A MATCH FIRST TIME THRU. CHECK AGAIN.
             //
             if (!ok) {
-                for (i = 0; i < which; i++)
+                for (i = 0; i < static_cast<short>(which); i++)
                     if ((items + i)->active && (items + i)->string[0] == key) {
                         EraseGun(item_i, items, x, y, which);
-                        which = i;
+                        which = magic_enum::enum_cast<menuitems>(i).value();
                         DrawGun(item_i, items, x, &y, which, basey, routine);
                         IN_ClearKeysDown();
                         break;
@@ -3098,7 +3099,7 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
             //
             // ANIMATE HALF-STEP
             //
-            if (which && (items + which - 1)->active) {
+            if (static_cast<short>(which) && (items + static_cast<short>(which) - 1)->active) {
                 y -= 6;
                 DrawHalfStep(x, y);
             }
@@ -3107,11 +3108,11 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
             // MOVE TO NEXT AVAILABLE SPOT
             //
             do {
-                if (!which)
-                    which = item_i->amount - 1;
+                if (!static_cast<short>(which))
+                    which = magic_enum::enum_cast<menuitems>(item_i->amount - 1).value();
                 else
-                    which--;
-            } while (!(items + which)->active);
+                    which = magic_enum::enum_cast<menuitems>(static_cast<short>(which) - 1).value();
+            } while (!(items + static_cast<short>(which))->active);
 
             DrawGun(item_i, items, x, &y, which, basey, routine);
             //
@@ -3130,17 +3131,17 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
             //
             // ANIMATE HALF-STEP
             //
-            if (which != item_i->amount - 1 && (items + which + 1)->active) {
+            if (static_cast<short>(which) != item_i->amount - 1 && (items + static_cast<short>(which) + 1)->active) {
                 y += 6;
                 DrawHalfStep(x, y);
             }
 
             do {
-                if (which == item_i->amount - 1)
-                    which = 0;
+                if (static_cast<short>(which) == item_i->amount - 1)
+                    which = menuitems::newgame;
                 else
-                    which++;
-            } while (!(items + which)->active);
+                    which = magic_enum::enum_cast<menuitems>(static_cast<short>(which) + 1).value();
+            } while (!(items + static_cast<short>(which))->active);
 
             DrawGun(item_i, items, x, &y, which, basey, routine);
 
@@ -3164,11 +3165,11 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
     //
     // ERASE EVERYTHING
     //
-    if (lastitem != which) {
+    if (lastitem != static_cast<short>(which)) {
         VWB_Bar(x - 1, y, 25, 16, BKGDCOLOR);
         PrintX = item_i->x + item_i->indent;
-        PrintY = item_i->y + which * 13;
-        US_Print((items + which)->string);
+        PrintY = item_i->y + static_cast<short>(which) * 13;
+        US_Print((items + static_cast<short>(which))->string);
         redrawitem = 1;
     } else
         redrawitem = 0;
@@ -3179,38 +3180,38 @@ int HandleMenu(CP_iteminfo* item_i, CP_itemtype* items, void (*routine)(int w))
 
     item_i->curpos = which;
 
-    lastitem = which;
+    lastitem = static_cast<short>(which);
     switch (exit) {
     case 1:
         //
         // CALL THE ROUTINE
         //
-        if ((items + which)->routine != NULL) {
+        if ((items + static_cast<short>(which))->routine != NULL) {
             ShootSnd();
             MenuFadeOut();
-            (items + which)->routine(0);
+            (items + static_cast<short>(which))->routine(0);
         }
         return which;
 
     case 2:
         SD_PlaySound(ESCPRESSEDSND);
-        return -1;
+        return menuitems::undefined;
     }
 
-    return 0; // JUST TO SHUT UP THE ERROR MESSAGES!
+    return menuitems::newgame; // JUST TO SHUT UP THE ERROR MESSAGES!
 }
 
 //
 // ERASE GUN & DE-HIGHLIGHT STRING
 //
-void EraseGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int y, int which)
+void EraseGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int y, menuitems which)
 {
     VWB_Bar(x - 1, y, 25, 16, BKGDCOLOR);
-    SetTextColor(items + which, 0);
+    SetTextColor(items + static_cast<short>(which), 0);
 
     PrintX = item_i->x + item_i->indent;
-    PrintY = item_i->y + which * 13;
-    US_Print((items + which)->string);
+    PrintY = item_i->y + static_cast<short>(which) * 13;
+    US_Print((items + static_cast<short>(which))->string);
     VW_UpdateScreen();
 }
 
@@ -3228,17 +3229,17 @@ void DrawHalfStep(int x, int y)
 //
 // DRAW GUN AT NEW POSITION
 //
-void DrawGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int* y, int which, int basey,
-    void (*routine)(int w))
+void DrawGun(CP_iteminfo* item_i, CP_itemtype* items, int x, int* y, menuitems which, int basey,
+    void (*routine)(menuitems w))
 {
     VWB_Bar(x - 1, *y, 25, 16, BKGDCOLOR);
-    *y = basey + which * 13;
+    *y = basey + static_cast<short>(which) * 13;
     VWB_DrawPic(x, *y, C_CURSOR1PIC);
-    SetTextColor(items + which, 1);
+    SetTextColor(items + static_cast<short>(which), 1);
 
     PrintX = item_i->x + item_i->indent;
-    PrintY = item_i->y + which * 13;
-    US_Print((items + which)->string);
+    PrintY = item_i->y + static_cast<short>(which) * 13;
+    US_Print((items + static_cast<short>(which))->string);
 
     //
     // CALL CUSTOM ROUTINE IF IT IS NEEDED
@@ -3272,7 +3273,7 @@ void TicDelay(int count)
 ////////////////////////////////////////////////////////////////////
 void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items)
 {
-    int i, which = item_i->curpos;
+    int i, which = static_cast<int>(item_i->curpos);
 
     WindowX = PrintX = item_i->x + item_i->indent;
     WindowY = PrintY = item_i->y;
@@ -3324,7 +3325,7 @@ void WaitKeyUp(void)
 
 ////////////////////////////////////////////////////////////////////
 //
-// READ KEYBOARD, JOYSTICK AND MOUSE FOR INPUT
+// READ KEYBOARD, JOYSTICK AND input_t::MOUSE FOR INPUT
 //
 ////////////////////////////////////////////////////////////////////
 void ReadAnyControl(ControlInfo* ci)
@@ -3632,7 +3633,7 @@ void DrawMenuGun(CP_iteminfo* iteminfo)
     int x, y;
 
     x = iteminfo->x;
-    y = iteminfo->y + iteminfo->curpos * 13 - 2;
+    y = iteminfo->y + static_cast<short>(iteminfo->curpos) * 13 - 2;
     VWB_DrawPic(x, y, C_CURSOR1PIC);
 }
 
