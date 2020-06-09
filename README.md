@@ -1,10 +1,10 @@
-```text
+<pre style="font-family: 'Courier New', Courier, monospace">
  ██████ ██████  ██████        ██     ██  ██████  ██      ███████ 
 ██      ██   ██ ██   ██       ██     ██ ██    ██ ██      ██      
 ██      ██████  ██████  █████ ██  █  ██ ██    ██ ██      █████   
 ██      ██      ██            ██ ███ ██ ██    ██ ██      ██      
  ██████ ██      ██             ███ ███   ██████  ███████ ██
-```
+</pre>
 
 The `cpp-wolf` project aims to modernize the existing code base of
 `Chocolate-Wolfenstein-3D` using modern `C++20` and `cmake`.
