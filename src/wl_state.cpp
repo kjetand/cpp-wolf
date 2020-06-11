@@ -1,28 +1,14 @@
-// WL_STATE.C
-
 #include "wl_def.h"
 #pragma hdrstop
 
-/*
-=============================================================================
+#include <array>
 
-                            LOCAL CONSTANTS
+static constexpr std::array opposite {
+    dirtype::west, dirtype::southwest, dirtype::south, dirtype::southeast, dirtype::east,
+    dirtype::northeast, dirtype::north, dirtype::northwest, dirtype::nodir
+};
 
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                            GLOBAL VARIABLES
-
-=============================================================================
-*/
-
-static const dirtype opposite[9] = { dirtype::west, dirtype::southwest, dirtype::south, dirtype::southeast, dirtype::east, dirtype::northeast, dirtype::north, dirtype::northwest, dirtype::nodir };
-
-static const dirtype diagonal[9][9] = {
-    /* dirtype::east */ { dirtype::nodir, dirtype::nodir, dirtype::northeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southeast, dirtype::nodir, dirtype::nodir },
+static constexpr std::array<std::array<dirtype, 9>, 9> diagonal = { { /* dirtype::east */ { dirtype::nodir, dirtype::nodir, dirtype::northeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southeast, dirtype::nodir, dirtype::nodir },
     { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
     /* dirtype::north */ { dirtype::northeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::northwest, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
     { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
@@ -30,31 +16,9 @@ static const dirtype diagonal[9][9] = {
     { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
     /* dirtype::south */ { dirtype::southeast, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::southwest, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
     { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir },
-    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir }
-};
+    { dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir, dirtype::nodir } } };
 
-void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state);
-void NewState(objstruct* ob, statetype* state);
-
-bool TryWalk(objstruct* ob);
-void MoveObj(objstruct* ob, int32_t move);
-
-void KillActor(objstruct* ob);
-void DamageActor(objstruct* ob, unsigned damage);
-
-bool CheckLine(objstruct* ob);
 void FirstSighting(objstruct* ob);
-bool CheckSight(objstruct* ob);
-
-/*
-=============================================================================
-
-                                LOCAL VARIABLES
-
-=============================================================================
-*/
-
-//===========================================================================
 
 /*
 ===================
@@ -68,7 +32,6 @@ bool CheckSight(objstruct* ob);
 =
 ===================
 */
-
 void SpawnNewObj(unsigned tilex, unsigned tiley, statetype* state)
 {
     GetNewActor();
