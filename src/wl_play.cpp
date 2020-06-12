@@ -1,17 +1,5 @@
-// WL_PLAY.C
-
 #include "wl_def.h"
 #pragma hdrstop
-
-/*
-=============================================================================
-
-                                                 LOCAL CONSTANTS
-
-=============================================================================
-*/
-
-#define sc_Question 0x35
 
 /*
 =============================================================================
@@ -52,10 +40,8 @@ int  dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 int  buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
 int  buttonmouse[4] = { static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_nobutton) };
 int  buttonjoy[32] = {
-
     static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_run), static_cast<int>(button_t::bt_strafeleft), static_cast<int>(button_t::bt_straferight), static_cast<int>(button_t::bt_esc), static_cast<int>(button_t::bt_pause),
     static_cast<int>(button_t::bt_prevweapon), static_cast<int>(button_t::bt_nextweapon), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
-
     static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
     static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton)
 };
@@ -79,13 +65,12 @@ int lastgamemusicoffset = 0;
 //===========================================================================
 
 void CenterWindow(word w, word h);
-void InitObjList(void);
 void RemoveObj(objstruct* gone);
-void PollControls(void);
-int  StopMusic(void);
-void StartMusic(void);
+void PollControls();
+int  StopMusic();
+void StartMusic();
 void ContinueMusic(int offs);
-void PlayLoop(void);
+void PlayLoop();
 
 /*
 =============================================================================
@@ -94,8 +79,6 @@ void PlayLoop(void);
 
 =============================================================================
 */
-
-objstruct dummyobj;
 
 //
 // LIST OF SONGS FOR EACH VERSION
@@ -243,7 +226,7 @@ int songs[] = {
 ===================
 */
 
-void PollKeyboardButtons(void)
+void PollKeyboardButtons()
 {
     int i;
 
@@ -260,7 +243,7 @@ void PollKeyboardButtons(void)
 ===================
 */
 
-void PollMouseButtons(void)
+void PollMouseButtons()
 {
     int buttons = IN_MouseButtons();
 
@@ -280,7 +263,7 @@ void PollMouseButtons(void)
 ===================
 */
 
-void PollJoystickButtons(void)
+void PollJoystickButtons()
 {
     int buttons = IN_JoyButtons();
 
@@ -298,7 +281,7 @@ void PollJoystickButtons(void)
 ===================
 */
 
-void PollKeyboardMove(void)
+void PollKeyboardMove()
 {
     int delta = buttonstate[static_cast<int>(button_t::bt_run)] ? RUNMOVE * tics : BASEMOVE * tics;
 
@@ -320,7 +303,7 @@ void PollKeyboardMove(void)
 ===================
 */
 
-void PollMouseMove(void)
+void PollMouseMove()
 {
     int mousexmove, mouseymove;
 
@@ -343,7 +326,7 @@ void PollMouseMove(void)
 ===================
 */
 
-void PollJoystickMove(void)
+void PollJoystickMove()
 {
     int joyx, joyy;
 
@@ -376,7 +359,7 @@ void PollJoystickMove(void)
 ===================
 */
 
-void PollControls(void)
+void PollControls()
 {
     int  max, min, i;
     byte buttonbits;
@@ -521,7 +504,7 @@ void CenterWindow(word w, word h)
 =====================
 */
 
-void CheckKeys(void)
+void CheckKeys()
 {
     ScanCode scan;
 
@@ -738,7 +721,7 @@ next element.
 
 int objcount;
 
-void InitActorList(void)
+void InitActorList()
 {
     int i;
 
@@ -780,7 +763,7 @@ void InitActorList(void)
 =========================
 */
 
-void GetNewActor(void)
+void GetNewActor()
 {
     if (!objfreelist)
         Quit("GetNewActor: No free spots in objlist!");
@@ -856,7 +839,7 @@ void RemoveObj(objstruct* gone)
 =
 =================
 */
-int StopMusic(void)
+int StopMusic()
 {
     int lastoffs = SD_MusicOff();
 
@@ -918,7 +901,7 @@ bool palshifted;
 =====================
 */
 
-void InitRedShifts(void)
+void InitRedShifts()
 {
     SDL_Color *workptr, *baseptr;
     int        i, j, delta;
@@ -967,7 +950,7 @@ void InitRedShifts(void)
 =====================
 */
 
-void ClearPaletteShifts(void)
+void ClearPaletteShifts()
 {
     bonuscount = damagecount = 0;
     palshifted = false;
@@ -981,7 +964,7 @@ void ClearPaletteShifts(void)
 =====================
 */
 
-void StartBonusFlash(void)
+void StartBonusFlash()
 {
     bonuscount = NUMWHITESHIFTS * WHITETICS; // white shift palette
 }
@@ -1007,7 +990,7 @@ void StartDamageFlash(int damage)
 =====================
 */
 
-void UpdatePaletteShifts(void)
+void UpdatePaletteShifts()
 {
     int red, white;
 
@@ -1054,7 +1037,7 @@ void UpdatePaletteShifts(void)
 =====================
 */
 
-void FinishPaletteShifts(void)
+void FinishPaletteShifts()
 {
     if (palshifted) {
         palshifted = 0;
@@ -1174,7 +1157,7 @@ think:
 */
 int32_t funnyticount;
 
-void PlayLoop(void)
+void PlayLoop()
 {
 
     playstate = exit_t::ex_stillplaying;
