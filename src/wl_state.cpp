@@ -116,36 +116,37 @@ void NewState(objstruct* ob, statetype* state)
     return false;
 }
 
+[[nodiscard]] static auto CheckSide(int* door_num_out, uintptr_t* temp_out, objstruct* ob, const word x, const word y) -> std::optional<bool>
+{
+    auto& door_num = *door_num_out;
+    auto& temp = *temp_out;
+    temp = reinterpret_cast<uintptr_t>(actorat[x][y]);
+
+    if (temp) {
+        if (temp < 128)
+            return false;
+        if (temp < 256) {
 #ifdef PLAYDEMOLIKEORIGINAL
-#define DOORCHECK                    \
-    if (DEMOCOND_ORIG)               \
-        doornum = temp & 63;         \
-    else {                           \
-        doornum = (int)temp & 127;   \
-        OpenDoor(doornum);           \
-        ob->distance = -doornum - 1; \
-        return true;                 \
-    }
+            if (DEMOCOND_ORIG)
+                door_num = temp & 63;
+            else {
+                door_num = static_cast<int>(temp) & 127;
+                OpenDoor(door_num);
+                ob->distance = -door_num - 1;
+                return true;
+            }
 #else
-#define DOORCHECK                \
-    doornum = (int)temp & 127;   \
-    OpenDoor(doornum);           \
-    ob->distance = -doornum - 1; \
-    return true;
+            door num = static_cast<int>(temp) & 127;
+            OpenDoor(door_num);
+            ob->distance = -door_num - 1;
+            return true;
 #endif
 
-#define CHECKSIDE(x, y)                                                                                 \
-    {                                                                                                   \
-        temp = (uintptr_t)actorat[x][y];                                                                \
-        if (temp) {                                                                                     \
-            if (temp < 128)                                                                             \
-                return false;                                                                           \
-            if (temp < 256) {                                                                           \
-                DOORCHECK                                                                               \
-            } else if (((objstruct*)temp)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) \
-                return false;                                                                           \
-        }                                                                                               \
+        } else if ((reinterpret_cast<objstruct*>(temp))->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE))
+            return false;
     }
+    return {};
+}
 
 bool TryWalk(objstruct* ob)
 {
@@ -199,7 +200,9 @@ bool TryWalk(objstruct* ob)
                     return false;
                 }
             } else {
-                CHECKSIDE(ob->tilex, ob->tiley - 1);
+                if (auto result = CheckSide(&doornum, &temp, ob, ob->tilex, ob->tiley - 1); result) {
+                    return result.value();
+                }
             }
             ob->tiley--;
             break;
@@ -219,7 +222,9 @@ bool TryWalk(objstruct* ob)
                     return false;
                 }
             } else {
-                CHECKSIDE(ob->tilex + 1, ob->tiley);
+                if (auto result = CheckSide(&doornum, &temp, ob, ob->tilex + 1, ob->tiley); result) {
+                    return result.value();
+                }
             }
             ob->tilex++;
             break;
@@ -239,7 +244,9 @@ bool TryWalk(objstruct* ob)
                     return false;
                 }
             } else {
-                CHECKSIDE(ob->tilex, ob->tiley + 1);
+                if (auto result = CheckSide(&doornum, &temp, ob, ob->tilex, ob->tiley + 1); result) {
+                    return result.value();
+                }
             }
             ob->tiley++;
             break;
@@ -259,7 +266,9 @@ bool TryWalk(objstruct* ob)
                     return false;
                 }
             } else {
-                CHECKSIDE(ob->tilex - 1, ob->tiley);
+                if (auto result = CheckSide(&doornum, &temp, ob, ob->tilex - 1, ob->tiley); result) {
+                    return result.value();
+                }
             }
             ob->tilex--;
             break;
