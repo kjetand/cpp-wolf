@@ -1317,11 +1317,11 @@ extern void*   demobuffer;
 //
 // control info
 //
-extern bool mouseenabled, joystickenabled;
-extern int  dirscan[4];
-extern int  buttonscan[NUMBUTTONS];
-extern int  buttonmouse[4];
-extern int  buttonjoy[32];
+extern bool                        mouseenabled, joystickenabled;
+extern std::array<int, 4>          dirscan;
+extern std::array<int, NUMBUTTONS> buttonscan;
+extern std::array<button_t, 4>     buttonmouse;
+extern std::array<button_t, 32>    buttonjoy;
 
 void InitActorList();
 void GetNewActor();

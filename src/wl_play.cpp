@@ -1,6 +1,8 @@
 #include "wl_def.h"
 #pragma hdrstop
 
+#include <array>
+
 /*
 =============================================================================
 
@@ -36,14 +38,15 @@ unsigned tics;
 // control info
 //
 bool mouseenabled, joystickenabled;
-int  dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
-int  buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
-int  buttonmouse[4] = { static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_nobutton) };
-int  buttonjoy[32] = {
-    static_cast<int>(button_t::bt_attack), static_cast<int>(button_t::bt_strafe), static_cast<int>(button_t::bt_use), static_cast<int>(button_t::bt_run), static_cast<int>(button_t::bt_strafeleft), static_cast<int>(button_t::bt_straferight), static_cast<int>(button_t::bt_esc), static_cast<int>(button_t::bt_pause),
-    static_cast<int>(button_t::bt_prevweapon), static_cast<int>(button_t::bt_nextweapon), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
-    static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton),
-    static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton), static_cast<int>(button_t::bt_nobutton)
+
+std::array<int, 4>          dirscan { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
+std::array<int, NUMBUTTONS> buttonscan { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
+std::array<button_t, 4>     buttonmouse { button_t::bt_attack, button_t::bt_strafe, button_t::bt_use, button_t::bt_nobutton };
+std::array<button_t, 32>    buttonjoy {
+    button_t::bt_attack, button_t::bt_strafe, button_t::bt_use, button_t::bt_run, button_t::bt_strafeleft, button_t::bt_straferight, button_t::bt_esc, button_t::bt_pause,
+    button_t::bt_prevweapon, button_t::bt_nextweapon, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton,
+    button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton,
+    button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton, button_t::bt_nobutton
 };
 
 int viewsize;
@@ -248,11 +251,11 @@ void PollMouseButtons()
     int buttons = IN_MouseButtons();
 
     if (buttons & 1)
-        buttonstate[buttonmouse[0]] = true;
+        buttonstate[static_cast<int>(buttonmouse[0])] = true;
     if (buttons & 2)
-        buttonstate[buttonmouse[1]] = true;
+        buttonstate[static_cast<int>(buttonmouse[1])] = true;
     if (buttons & 4)
-        buttonstate[buttonmouse[2]] = true;
+        buttonstate[static_cast<int>(buttonmouse[2])] = true;
 }
 
 /*
@@ -269,7 +272,7 @@ void PollJoystickButtons()
 
     for (int i = 0, val = 1; i < JoyNumButtons; i++, val <<= 1) {
         if (buttons & val)
-            buttonstate[buttonjoy[i]] = true;
+            buttonstate[static_cast<int>(buttonjoy[i])] = true;
     }
 }
 

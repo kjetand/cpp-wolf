@@ -2153,12 +2153,12 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 
                     if (result) {
                         for (int z = 0; z < 4; z++)
-                            if (order[which] == buttonmouse[z]) {
-                                buttonmouse[z] = static_cast<int>(button_t::bt_nobutton);
+                            if (order[which] == static_cast<int>(buttonmouse[z])) {
+                                buttonmouse[z] = button_t::bt_nobutton;
                                 break;
                             }
 
-                        buttonmouse[result - 1] = order[which];
+                        buttonmouse[result - 1] = magic_enum::enum_cast<button_t>(order[which]).value();
                         picked = 1;
                         SD_PlaySound(SHOOTDOORSND);
                     }
@@ -2176,13 +2176,13 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
 
                     if (result) {
                         for (int z = 0; z < 4; z++) {
-                            if (order[which] == buttonjoy[z]) {
-                                buttonjoy[z] = static_cast<int>(button_t::bt_nobutton);
+                            if (order[which] == static_cast<int>(buttonjoy[z])) {
+                                buttonjoy[z] = button_t::bt_nobutton;
                                 break;
                             }
                         }
 
-                        buttonjoy[result - 1] = order[which];
+                        buttonjoy[result - 1] = magic_enum::enum_cast<button_t>(order[which]).value();
                         picked = 1;
                         SD_PlaySound(SHOOTDOORSND);
                     }
@@ -2526,7 +2526,7 @@ void PrintCustMouse(int i)
     int j;
 
     for (j = 0; j < 4; j++)
-        if (order[i] == buttonmouse[j]) {
+        if (order[i] == static_cast<int>(buttonmouse[j])) {
             PrintX = CST_START + CST_SPC * i;
             US_Print(mbarray[j]);
             break;
@@ -2556,7 +2556,7 @@ void DrawCustMouse(int hilight)
 void PrintCustJoy(int i)
 {
     for (int j = 0; j < 4; j++) {
-        if (order[i] == buttonjoy[j]) {
+        if (order[i] == static_cast<int>(buttonjoy[j])) {
             PrintX = CST_START + CST_SPC * i;
             US_Print(mbarray[j]);
             break;

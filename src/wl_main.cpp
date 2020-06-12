@@ -109,6 +109,10 @@ bool param_ignorenumchunks = false;
 
 void ReadConfig(void)
 {
+    // Assume convertability from enum class to integer types
+    static_assert(sizeof(decltype(buttonmouse)::value_type) == sizeof(int));
+    static_assert(sizeof(decltype(buttonjoy)::value_type) == sizeof(int));
+
     SDMode  sd;
     SMMode  sm;
     SDSMode sds;
@@ -146,10 +150,10 @@ void ReadConfig(void)
         int dummyJoystickPort = 0;
         read(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
 
-        read(file, dirscan, sizeof(dirscan));
-        read(file, buttonscan, sizeof(buttonscan));
-        read(file, buttonmouse, sizeof(buttonmouse));
-        read(file, buttonjoy, sizeof(buttonjoy));
+        read(file, dirscan.data(), sizeof(decltype(dirscan)::value_type) * dirscan.size());
+        read(file, buttonscan.data(), sizeof(decltype(buttonscan)::value_type) * buttonscan.size());
+        read(file, buttonmouse.data(), sizeof(decltype(buttonmouse)::value_type) * buttonmouse.size());
+        read(file, buttonjoy.data(), sizeof(decltype(buttonjoy)::value_type) * buttonjoy.size());
 
         read(file, &viewsize, sizeof(viewsize));
         read(file, &mouseadjustment, sizeof(mouseadjustment));
@@ -258,10 +262,10 @@ void WriteConfig(void)
         int dummyJoystickPort = 0;
         write(file, &dummyJoystickPort, sizeof(dummyJoystickPort));
 
-        write(file, dirscan, sizeof(dirscan));
-        write(file, buttonscan, sizeof(buttonscan));
-        write(file, buttonmouse, sizeof(buttonmouse));
-        write(file, buttonjoy, sizeof(buttonjoy));
+        write(file, dirscan.data(), sizeof(decltype(dirscan)::value_type) * dirscan.size());
+        write(file, buttonscan.data(), sizeof(decltype(buttonscan)::value_type) * buttonscan.size());
+        write(file, buttonmouse.data(), sizeof(decltype(buttonmouse)::value_type) * buttonmouse.size());
+        write(file, buttonjoy.data(), sizeof(decltype(buttonjoy)::value_type) * buttonjoy.size());
 
         write(file, &viewsize, sizeof(viewsize));
         write(file, &mouseadjustment, sizeof(mouseadjustment));
