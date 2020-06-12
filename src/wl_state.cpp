@@ -101,16 +101,20 @@ void NewState(objstruct* ob, statetype* state)
 ==================================
 */
 
-#define CHECKDIAG(x, y)                                                                          \
-    {                                                                                            \
-        temp = (uintptr_t)actorat[x][y];                                                         \
-        if (temp) {                                                                              \
-            if (temp < 256)                                                                      \
-                return false;                                                                    \
-            if (((objstruct*)temp)->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) \
-                return false;                                                                    \
-        }                                                                                        \
+[[nodiscard]] static auto CheckDiag(uintptr_t* const temp_out, const word x, const word y)
+{
+    auto& temp = *temp_out;
+    temp = reinterpret_cast<uintptr_t>(actorat[x][y]);
+    if (temp) {
+        if (temp < 256) {
+            return true;
+        }
+        if ((reinterpret_cast<objstruct*>(temp))->flags & static_cast<std::uint32_t>(objflag_t::FL_SHOOTABLE)) {
+            return true;
+        }
     }
+    return false;
+}
 
 #ifdef PLAYDEMOLIKEORIGINAL
 #define DOORCHECK                    \
@@ -191,7 +195,9 @@ bool TryWalk(objstruct* ob)
         case dirtype::north:
             if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
                 || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
-                CHECKDIAG(ob->tilex, ob->tiley - 1);
+                if (CheckDiag(&temp, ob->tilex, ob->tiley - 1)) {
+                    return false;
+                }
             } else {
                 CHECKSIDE(ob->tilex, ob->tiley - 1);
             }
@@ -199,9 +205,9 @@ bool TryWalk(objstruct* ob)
             break;
 
         case dirtype::northeast:
-            CHECKDIAG(ob->tilex + 1, ob->tiley - 1);
-            CHECKDIAG(ob->tilex + 1, ob->tiley);
-            CHECKDIAG(ob->tilex, ob->tiley - 1);
+            if (CheckDiag(&temp, ob->tilex + 1, ob->tiley - 1) || CheckDiag(&temp, ob->tilex + 1, ob->tiley) || CheckDiag(&temp, ob->tilex, ob->tiley - 1)) {
+                return false;
+            }
             ob->tilex++;
             ob->tiley--;
             break;
@@ -209,7 +215,9 @@ bool TryWalk(objstruct* ob)
         case dirtype::east:
             if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
                 || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
-                CHECKDIAG(ob->tilex + 1, ob->tiley);
+                if (CheckDiag(&temp, ob->tilex + 1, ob->tiley)) {
+                    return false;
+                }
             } else {
                 CHECKSIDE(ob->tilex + 1, ob->tiley);
             }
@@ -217,9 +225,9 @@ bool TryWalk(objstruct* ob)
             break;
 
         case dirtype::southeast:
-            CHECKDIAG(ob->tilex + 1, ob->tiley + 1);
-            CHECKDIAG(ob->tilex + 1, ob->tiley);
-            CHECKDIAG(ob->tilex, ob->tiley + 1);
+            if (CheckDiag(&temp, ob->tilex + 1, ob->tiley + 1) || CheckDiag(&temp, ob->tilex + 1, ob->tiley) || CheckDiag(&temp, ob->tilex, ob->tiley + 1)) {
+                return false;
+            }
             ob->tilex++;
             ob->tiley++;
             break;
@@ -227,7 +235,9 @@ bool TryWalk(objstruct* ob)
         case dirtype::south:
             if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
                 || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
-                CHECKDIAG(ob->tilex, ob->tiley + 1);
+                if (CheckDiag(&temp, ob->tilex, ob->tiley + 1)) {
+                    return false;
+                }
             } else {
                 CHECKSIDE(ob->tilex, ob->tiley + 1);
             }
@@ -235,9 +245,9 @@ bool TryWalk(objstruct* ob)
             break;
 
         case dirtype::southwest:
-            CHECKDIAG(ob->tilex - 1, ob->tiley + 1);
-            CHECKDIAG(ob->tilex - 1, ob->tiley);
-            CHECKDIAG(ob->tilex, ob->tiley + 1);
+            if (CheckDiag(&temp, ob->tilex - 1, ob->tiley + 1) || CheckDiag(&temp, ob->tilex - 1, ob->tiley) || CheckDiag(&temp, ob->tilex, ob->tiley + 1)) {
+                return false;
+            }
             ob->tilex--;
             ob->tiley++;
             break;
@@ -245,7 +255,9 @@ bool TryWalk(objstruct* ob)
         case dirtype::west:
             if (ob->obclass == classtype::dogobj || ob->obclass == classtype::fakeobj
                 || ob->obclass == classtype::ghostobj || ob->obclass == classtype::spectreobj) {
-                CHECKDIAG(ob->tilex - 1, ob->tiley);
+                if (CheckDiag(&temp, ob->tilex - 1, ob->tiley)) {
+                    return false;
+                }
             } else {
                 CHECKSIDE(ob->tilex - 1, ob->tiley);
             }
@@ -253,9 +265,9 @@ bool TryWalk(objstruct* ob)
             break;
 
         case dirtype::northwest:
-            CHECKDIAG(ob->tilex - 1, ob->tiley - 1);
-            CHECKDIAG(ob->tilex - 1, ob->tiley);
-            CHECKDIAG(ob->tilex, ob->tiley - 1);
+            if (CheckDiag(&temp, ob->tilex - 1, ob->tiley - 1) || CheckDiag(&temp, ob->tilex - 1, ob->tiley) || CheckDiag(&temp, ob->tilex, ob->tiley - 1)) {
+                return false;
+            }
             ob->tilex--;
             ob->tiley--;
             break;
