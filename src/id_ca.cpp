@@ -648,7 +648,7 @@ void CA_Startup(void)
 
 void CA_Shutdown(void)
 {
-    int i, start;
+    int i, start = 0;
 
     if (maphandle != -1)
         close(maphandle);
@@ -658,7 +658,7 @@ void CA_Shutdown(void)
         close(audiohandle);
 
     for (i = 0; i < NUMCHUNKS; i++)
-        UNCACHEGRCHUNK(i);
+        UNCACHEGRCHUNK(i)
     free(pictable);
 
     switch (oldsoundmode) {
@@ -673,7 +673,7 @@ void CA_Shutdown(void)
     }
 
     for (i = 0; i < NUMSOUNDS; i++, start++)
-        UNCACHEAUDIOCHUNK(start);
+        UNCACHEAUDIOCHUNK(start)
 }
 
 //===========================================================================
@@ -757,7 +757,7 @@ void CA_CacheAdlibSoundChunk(int chunk)
 
 void CA_LoadAllSounds(void)
 {
-    unsigned start, i;
+    unsigned start = 0, i;
 
     switch (oldsoundmode) {
     case sdm_Off:
@@ -771,7 +771,7 @@ void CA_LoadAllSounds(void)
     }
 
     for (i = 0; i < NUMSOUNDS; i++, start++)
-        UNCACHEAUDIOCHUNK(start);
+        UNCACHEAUDIOCHUNK(start)
 
 cachein:
 
@@ -976,7 +976,7 @@ void CA_CacheMap(int mapnum)
     int32_t  pos, compressed;
     int      plane;
     word*    dest;
-    void*    bigbufferseg;
+    void*    bigbufferseg = nullptr;
     unsigned size;
     word*    source;
 #ifdef CARMACIZED

@@ -169,7 +169,7 @@ void US_Print(const char* sorg)
 void US_PrintUnsigned(longword n)
 {
     char buffer[32];
-    sprintf(buffer, "%lu", n);
+    sprintf(buffer, "%u", static_cast<unsigned long>(n));
 
     US_Print(buffer);
 }
@@ -460,11 +460,11 @@ US_LineInput(int x, int y, char* buf, const char* def, bool escok,
 {
     bool redraw,
         cursorvis, cursormoved,
-        done, result, checkkey;
+        done, result = false, checkkey;
     ScanCode sc;
     char     c;
     char     s[MaxString], olds[MaxString];
-    int      cursor, len;
+    int      cursor, len = 0;
     word     i,
         w, h,
         temp;

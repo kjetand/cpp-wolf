@@ -626,10 +626,7 @@ void SetupGameLevel(void)
         killerobj = NULL;
     }
 
-    if (demoplayback || demorecord)
-        US_InitRndT(false);
-    else
-        US_InitRndT(true);
+    US_InitRndT(!(demoplayback || demorecord));
 
     //
     // load the level
@@ -974,11 +971,11 @@ void FinishDemoRecord(void)
     demoptr[1] = (int8_t)(length >> 8);
     demoptr[2] = 0;
 
-    VW_FadeIn();
-    CenterWindow(24, 3);
+    VW_FadeIn()
+        CenterWindow(24, 3);
     PrintY += 6;
     fontnumber = 0;
-    SETFONTCOLOR(0, 15);
+    SETFONTCOLOR(0, 15)
     US_Print(" Demo number (0-9): ");
     VW_UpdateScreen();
 
@@ -1013,7 +1010,7 @@ void RecordDemo(void)
     PrintY += 6;
     CA_CacheGrChunk(STARTFONT);
     fontnumber = 0;
-    SETFONTCOLOR(0, 15);
+    SETFONTCOLOR(0, 15)
 #ifndef SPEAR
 #ifdef UPLOAD
     US_Print("  Demo which level(1-10): ");
@@ -1027,8 +1024,9 @@ void RecordDemo(void)
     maps = 21;
 #endif
     VW_UpdateScreen();
-    VW_FadeIn();
-    esc = !US_LineInput(px, py, str, NULL, true, 2, 0);
+    VW_FadeIn()
+        esc
+        = !US_LineInput(px, py, str, NULL, true, 2, 0);
     if (esc)
         return;
 
@@ -1038,22 +1036,23 @@ void RecordDemo(void)
     if (level >= maps || level < 0)
         return;
 
-    VW_FadeOut();
+    VW_FadeOut()
 
 #ifndef SPEAR
-    NewGame(difficulty_t::gd_hard, level / 10);
+        NewGame(difficulty_t::gd_hard, level / 10);
     gamestate.mapon = level % 10;
 #else
-    NewGame(difficulty::gd_hard, 0);
+        NewGame(difficulty::gd_hard, 0);
     gamestate.mapon = level;
 #endif
 
     StartDemoRecord(level);
 
     DrawPlayScreen();
-    VW_FadeIn();
+    VW_FadeIn()
 
-    startgame = false;
+        startgame
+        = false;
     demorecord = true;
 
     SetupGameLevel();
@@ -1068,8 +1067,8 @@ void RecordDemo(void)
     demoplayback = false;
 
     StopMusic();
-    VW_FadeOut();
-    ClearMemory();
+    VW_FadeOut()
+        ClearMemory();
 
     FinishDemoRecord();
 }
@@ -1121,10 +1120,10 @@ void PlayDemo(int demonumber)
     demoptr++;
     lastdemoptr = demoptr - 4 + length;
 
-    VW_FadeOut();
+    VW_FadeOut()
 
-    SETFONTCOLOR(0, 15);
-    DrawPlayScreen();
+        SETFONTCOLOR(0, 15)
+            DrawPlayScreen();
 
     startgame = false;
     demoplayback = true;
@@ -1135,7 +1134,7 @@ void PlayDemo(int demonumber)
     PlayLoop();
 
 #ifdef DEMOSEXTERN
-    UNCACHEGRCHUNK(dems[demonumber]);
+    UNCACHEGRCHUNK(dems[demonumber])
 #else
     MM_FreePtr(&demobuffer);
 #endif
@@ -1166,7 +1165,7 @@ void Died(void)
 
     if (screenfaded) {
         ThreeDRefresh();
-        VW_FadeIn();
+        VW_FadeIn()
     }
 
     gamestate.weapon = (weapontype)-1; // take away weapon
@@ -1299,9 +1298,9 @@ void GameLoop(void)
 
 restartgame:
     ClearMemory();
-    SETFONTCOLOR(0, 15);
-    VW_FadeOut();
-    DrawPlayScreen();
+    SETFONTCOLOR(0, 15)
+    VW_FadeOut()
+        DrawPlayScreen();
     died = false;
     do {
         if (!loadedgame)
@@ -1381,9 +1380,9 @@ restartgame:
                 DrawPlayScreen();
             gamestate.keys = 0;
             DrawKeys();
-            VW_FadeOut();
+            VW_FadeOut()
 
-            ClearMemory();
+                ClearMemory();
 
             LevelCompleted(); // do the intermission
             if (viewsize == 21)
@@ -1482,8 +1481,7 @@ restartgame:
             if (gamestate.lives > -1)
                 break; // more lives left
 
-            VW_FadeOut();
-            if (screenHeight % 200 != 0)
+            VW_FadeOut() if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 
             ClearMemory();
@@ -1499,11 +1497,11 @@ restartgame:
             if (viewsize == 21)
                 DrawPlayScreen();
 #ifndef SPEAR
-            VW_FadeOut();
+            VW_FadeOut()
 #else
             VL_FadeOut(0, 255, 0, 17, 17, 300);
 #endif
-            ClearMemory();
+                ClearMemory();
 
             Victory();
 

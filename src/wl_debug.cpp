@@ -173,7 +173,7 @@ void BasicOverhead(void)
     // left side (filtered)
 
     uintptr_t tile;
-    int       color;
+    int       color = 0;
     offx -= 128;
 
     for (x = 0; x < MAPSIZE; x++) {
@@ -549,16 +549,15 @@ int DebugKeys(void)
     {
         byte x, start, end = LRpack;
 
-        if (end == 8) // wolf3d
-        {
-            CenterWindow(17, 10);
-            start = 0;
-        } else // sod
-        {
-            CenterWindow(17, 12);
-            start = 0;
-            end = 10;
-        }
+#ifndef SPEAR
+        CenterWindow(17, 10);
+        start = 0;
+#else
+        CenterWindow(17, 12);
+        start = 0;
+        end = 10;
+#endif
+
     again:
         for (x = start; x < end; x++) {
             US_PrintUnsigned(x + 1);
@@ -578,12 +577,14 @@ int DebugKeys(void)
         }
         VW_UpdateScreen();
         IN_Ack();
-        if (end == 10 && gamestate.mapon > 9) {
+#ifdef SPEAR
+        if (gamestate.mapon > 9) {
             start = 10;
             end = 20;
             CenterWindow(17, 12);
             goto again;
         }
+#endif
 
         return 1;
     } else if (Keyboard[sc_N]) // N = no clip

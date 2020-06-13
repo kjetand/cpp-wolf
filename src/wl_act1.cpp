@@ -592,7 +592,7 @@ void DoorClosing(int door)
         || (player->tilex == tilex && player->tiley == tiley)) { // something got inside the door
         OpenDoor(door);
         return;
-    };
+    }
 
     position = doorposition[door];
 

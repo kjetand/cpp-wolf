@@ -499,7 +499,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 
 Sint16 GetSample(float csample, byte* samples, int size)
 {
-    float s0 = 0, s1 = 0, s2 = 0;
+    float s0 = 0, s1, s2 = 0;
     int   cursample = (int)csample;
     float sf = csample - (float)cursample;
 
@@ -1132,8 +1132,6 @@ bool SD_PlaySound(soundnames sound)
             DigiPriority = s->priority;
             return channel + 1;
         }
-
-        return (true);
     }
 
     if (SoundMode == sdm_Off)
@@ -1171,10 +1169,10 @@ word SD_SoundPlaying(void)
 
     switch (SoundMode) {
     case sdm_PC:
-        result = pcSound ? true : false;
+        result = pcSound != nullptr;
         break;
     case sdm_AdLib:
-        result = alSound ? true : false;
+        result = alSound != nullptr;
         break;
     }
 

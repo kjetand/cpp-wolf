@@ -141,14 +141,10 @@ void CheckWeaponChange(void)
 
 void ControlMovement(objstruct* ob)
 {
-    int32_t oldx, oldy;
     int     angle;
     int     angleunits;
 
     thrustspeed = 0;
-
-    oldx = player->x;
-    oldy = player->y;
 
     if (buttonstate[static_cast<int>(button_t::bt_strafeleft)]) {
         angle = ob->angle + ANGLES / 4;

@@ -236,7 +236,7 @@ void LoadLatchMem(void)
         VL_MemToLatch(src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
         src += 64;
     }
-    UNCACHEGRCHUNK(STARTTILE8);
+    UNCACHEGRCHUNK(STARTTILE8)
 
     //
     // pics
@@ -256,7 +256,7 @@ void LoadLatchMem(void)
         latchpics[2 + i - start] = surf;
         CA_CacheGrChunk(i);
         VL_MemToLatch(grsegs[i], width, height, surf, 0, 0);
-        UNCACHEGRCHUNK(i);
+        UNCACHEGRCHUNK(i)
     }
 }
 

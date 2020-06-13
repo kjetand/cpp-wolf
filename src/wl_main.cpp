@@ -803,7 +803,7 @@ void FinishSignon(void)
     PrintY = 190;
 
 #ifndef JAPAN
-    SETFONTCOLOR(14, 4);
+    SETFONTCOLOR(14, 4)
 
 #ifdef SPANISH
     US_CPrint("Oprima una tecla");
@@ -822,7 +822,7 @@ void FinishSignon(void)
     VW_Bar(0, 189, 300, 11, VL_GetPixel(0, 0));
 
     PrintY = 190;
-    SETFONTCOLOR(10, 4);
+    SETFONTCOLOR(10, 4)
 
 #ifdef SPANISH
     US_CPrint("pensando...");
@@ -833,7 +833,7 @@ void FinishSignon(void)
     VH_UpdateScreen();
 #endif
 
-    SETFONTCOLOR(0, 15);
+    SETFONTCOLOR(0, 15)
 #else
     VH_UpdateScreen();
 
@@ -1086,7 +1086,7 @@ void DoJukebox(void)
     ClearMScreen();
     VWB_DrawPic(112, 184, C_MOUSELBACKPIC);
     DrawStripes(10);
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 
 #ifndef SPEAR
     DrawWindow(CTL_X - 2, CTL_Y - 6, 280, 13 * 7, BKGDCOLOR);
@@ -1096,13 +1096,13 @@ void DoJukebox(void)
 
     DrawMenu(&MusicItems, &MusicMenu[start]);
 
-    SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READHCOLOR, BKGDCOLOR)
     PrintY = 15;
     WindowX = 0;
     WindowY = 320;
     US_CPrint("Robert's Jukebox");
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
     VW_UpdateScreen();
     MenuFadeIn();
 
@@ -1170,7 +1170,7 @@ static void InitGame()
 #if defined _WIN32
     if (!fullscreen) {
         struct SDL_SysWMinfo wmInfo;
-        SDL_VERSION(&wmInfo.version);
+        SDL_VERSION(&wmInfo.version)
 
         if (SDL_GetWMInfo(&wmInfo) != -1) {
             HWND  hwndSDL = wmInfo.window;
@@ -1502,26 +1502,26 @@ static void DemoLoop()
 #else
             CA_CacheScreen(TITLEPIC);
             VW_UpdateScreen();
-            VW_FadeIn();
+            VW_FadeIn()
 #endif
             if (IN_UserInput(TickBase * 15))
                 break;
-            VW_FadeOut();
+            VW_FadeOut()
             //
             // credits page
             //
             CA_CacheScreen(CREDITSPIC);
             VW_UpdateScreen();
-            VW_FadeIn();
+            VW_FadeIn()
             if (IN_UserInput(TickBase * 10))
                 break;
-            VW_FadeOut();
+            VW_FadeOut()
             //
             // high scores
             //
             DrawHighScores();
             VW_UpdateScreen();
-            VW_FadeIn();
+            VW_FadeIn()
 
             if (IN_UserInput(TickBase * 10))
                 break;
@@ -1538,13 +1538,13 @@ static void DemoLoop()
 
             if (playstate == exit_t::ex_abort)
                 break;
-            VW_FadeOut();
+            VW_FadeOut()
             if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
 
-        VW_FadeOut();
+        VW_FadeOut()
 
 #ifdef DEBUGKEYS
         if (Keyboard[sc_Tab] && param_debugmode)
@@ -1558,7 +1558,7 @@ static void DemoLoop()
         if (startgame || loadedgame) {
             GameLoop();
             if (!param_nowait) {
-                VW_FadeOut();
+                VW_FadeOut()
                 StartCPMusic(INTROSONG);
             }
         }

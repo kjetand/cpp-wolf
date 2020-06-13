@@ -435,13 +435,12 @@ void IN_ClearKeysDown(void)
 //      player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_ReadControl(int player, ControlInfo* info)
+void IN_ReadControl(ControlInfo* info)
 {
     word   buttons;
     int    dx, dy;
     Motion mx, my;
 
-    dx = dy = 0;
     mx = my = motion_None;
     buttons = 0;
 

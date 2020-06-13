@@ -148,7 +148,7 @@ typedef struct {
 } JoystickDef;
 // Global variables
 extern volatile bool Keyboard[];
-;
+
 extern bool              MousePresent;
 extern volatile bool     Paused;
 extern volatile char     LastASCII;
@@ -168,7 +168,7 @@ extern bool              forcegrabmouse;
 // DEBUG - put names in prototypes
 extern void IN_Startup(void), IN_Shutdown(void);
 extern void IN_ClearKeysDown(void);
-extern void IN_ReadControl(int, ControlInfo*);
+extern void IN_ReadControl(ControlInfo* info);
 extern void IN_GetJoyAbs(word joy, word* xp, word* yp);
 extern void IN_SetupJoy(word joy, word minx, word maxx,
     word miny, word maxy);

@@ -298,7 +298,7 @@ bool ProjectileTryMove(objstruct* ob)
 void T_Projectile(objstruct* ob)
 {
     int32_t deltax, deltay;
-    int     damage;
+    int     damage = 0;
     int32_t speed;
 
     speed = (int32_t)ob->speed * tics;
@@ -3614,11 +3614,11 @@ void A_StartDeathCam(objstruct* ob)
     if (bordercol != VIEWCOLOR) {
         CA_CacheGrChunk(STARTFONT + 1);
         fontnumber = 1;
-        SETFONTCOLOR(15, bordercol);
+        SETFONTCOLOR(15, bordercol)
         PrintX = 68;
         PrintY = 45;
         US_Print(STR_SEEAGAIN);
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UNCACHEGRCHUNK(STARTFONT + 1)
     } else {
         CacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
 #ifdef JAPAN

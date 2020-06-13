@@ -223,10 +223,7 @@ bool TransformTile(int tx, int ty, short* dispx, short* dispheight)
     //
     // see if it should be grabbed
     //
-    if (nx < TILEGLOBAL && ny > -TILEGLOBAL / 2 && ny < TILEGLOBAL / 2)
-        return true;
-    else
-        return false;
+    return nx < TILEGLOBAL && ny > -TILEGLOBAL / 2 && ny < TILEGLOBAL / 2;
 }
 
 //==========================================================================
@@ -644,7 +641,7 @@ int CalcRotate(objstruct* ob)
     return angle / (ANGLES / 8);
 }
 
-void ScaleShape(int xcenter, int shapenum, unsigned height, uint32_t flags)
+void ScaleShape(int xcenter, int shapenum, unsigned height)
 {
     t_compshape* shape;
     unsigned     scale, pixheight;
@@ -938,7 +935,7 @@ void DrawScaleds(void)
         //
         // draw farthest
         //
-        ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight, farthest->flags);
+        ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight);
 
         farthest->viewheight = 32000;
     }
@@ -1018,8 +1015,8 @@ void CalcTics(void)
 
 void AsmRefresh()
 {
-    int32_t  xstep, ystep;
-    longword xpartial, ypartial;
+    int32_t  xstep = 0, ystep = 0;
+    longword xpartial = 0, ypartial = 0;
     bool     playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
 
     for (pixx = 0; pixx < viewwidth; pixx++) {
@@ -1470,7 +1467,7 @@ void ThreeDRefresh(void)
 #ifndef REMDEBUG
         if (fpscounter) {
             fontnumber = 0;
-            SETFONTCOLOR(7, 127);
+            SETFONTCOLOR(7, 127)
             PrintX = 4;
             PrintY = 1;
             VWB_Bar(0, 0, 50, 10, bordercol);

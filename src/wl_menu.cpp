@@ -788,16 +788,16 @@ int CP_CheckQuick(ScanCode scancode)
             CA_CacheGrChunk(C_CURSOR1PIC);
 #endif
 
-            VW_FadeOut();
+            VW_FadeOut()
             if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 
             lastgamemusicoffset = StartCPMusic(MENUSONG);
             pickquick = CP_SaveGame(0);
 
-            SETFONTCOLOR(0, 15);
+            SETFONTCOLOR(0, 15)
             IN_ClearKeysDown();
-            VW_FadeOut();
+            VW_FadeOut()
             if (viewsize != 21)
                 DrawPlayScreen();
 
@@ -812,12 +812,12 @@ int CP_CheckQuick(ScanCode scancode)
                 IN_CenterMouse(); // Clear accumulated mouse movement
 
 #ifndef SPEAR
-            UNCACHEGRCHUNK(C_CURSOR1PIC);
-            UNCACHEGRCHUNK(C_CURSOR2PIC);
-            UNCACHEGRCHUNK(C_DISKLOADING1PIC);
-            UNCACHEGRCHUNK(C_DISKLOADING2PIC);
-            UNCACHEGRCHUNK(C_SAVEGAMEPIC);
-            UNCACHEGRCHUNK(C_MOUSELBACKPIC);
+            UNCACHEGRCHUNK(C_CURSOR1PIC)
+            UNCACHEGRCHUNK(C_CURSOR2PIC)
+            UNCACHEGRCHUNK(C_DISKLOADING1PIC)
+            UNCACHEGRCHUNK(C_DISKLOADING2PIC)
+            UNCACHEGRCHUNK(C_SAVEGAMEPIC)
+            UNCACHEGRCHUNK(C_MOUSELBACKPIC)
 #else
             UnCacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -855,16 +855,16 @@ int CP_CheckQuick(ScanCode scancode)
             CacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
 
-            VW_FadeOut();
+            VW_FadeOut()
             if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 
             lastgamemusicoffset = StartCPMusic(MENUSONG);
             pickquick = CP_LoadGame(0); // loads lastgamemusicoffs
 
-            SETFONTCOLOR(0, 15);
+            SETFONTCOLOR(0, 15)
             IN_ClearKeysDown();
-            VW_FadeOut();
+            VW_FadeOut()
             if (viewsize != 21)
                 DrawPlayScreen();
 
@@ -880,12 +880,12 @@ int CP_CheckQuick(ScanCode scancode)
                 IN_CenterMouse(); // Clear accumulated mouse movement
 
 #ifndef SPEAR
-            UNCACHEGRCHUNK(C_CURSOR1PIC);
-            UNCACHEGRCHUNK(C_CURSOR2PIC);
-            UNCACHEGRCHUNK(C_DISKLOADING1PIC);
-            UNCACHEGRCHUNK(C_DISKLOADING2PIC);
-            UNCACHEGRCHUNK(C_LOADGAMEPIC);
-            UNCACHEGRCHUNK(C_MOUSELBACKPIC);
+            UNCACHEGRCHUNK(C_CURSOR1PIC)
+            UNCACHEGRCHUNK(C_CURSOR2PIC)
+            UNCACHEGRCHUNK(C_DISKLOADING1PIC)
+            UNCACHEGRCHUNK(C_DISKLOADING2PIC)
+            UNCACHEGRCHUNK(C_LOADGAMEPIC)
+            UNCACHEGRCHUNK(C_MOUSELBACKPIC)
 #else
             UnCacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -1124,7 +1124,7 @@ void DrawNewEpisode(void)
     VWB_DrawPic(112, 184, C_MOUSELBACKPIC);
 
     DrawWindow(NE_X - 4, NE_Y - 4, NE_W + 8, NE_H + 8, BKGDCOLOR);
-    SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READHCOLOR, BKGDCOLOR)
     PrintY = 2;
     WindowX = 0;
 #ifdef SPANISH
@@ -1134,7 +1134,7 @@ void DrawNewEpisode(void)
 #endif
 #endif
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
     DrawMenu(&NewEitems, &NewEmenu[0]);
 
     for (i = 0; i < 6; i++)
@@ -1158,7 +1158,7 @@ void DrawNewGame(void)
     ClearMScreen();
     VWB_DrawPic(112, 184, C_MOUSELBACKPIC);
 
-    SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READHCOLOR, BKGDCOLOR)
     PrintX = NM_X + 20;
     PrintY = NM_Y - 32;
 
@@ -1423,7 +1423,7 @@ void DrawLSAction(int which)
     VWB_DrawPic(LSA_X + 8, LSA_Y + 5, C_DISKLOADING1PIC);
 
     fontnumber = 1;
-    SETFONTCOLOR(0, TEXTCOLOR);
+    SETFONTCOLOR(0, TEXTCOLOR)
     PrintX = LSA_X + 46;
     PrintY = LSA_Y + 13;
 
@@ -1589,7 +1589,7 @@ void DrawLoadSaveScreen(int loadsave)
 //
 void PrintLSEntry(int w, int color)
 {
-    SETFONTCOLOR(color, BKGDCOLOR);
+    SETFONTCOLOR(color, BKGDCOLOR)
     DrawOutline(LSM_X + LSItems.indent, LSM_Y + w * 13, LSM_W - LSItems.indent - 15, 11, color,
         color);
     PrintX = LSM_X + LSItems.indent + 2;
@@ -1809,10 +1809,10 @@ void DrawMouseSens(void)
     WindowX = 0;
     WindowW = 320;
     PrintY = 82;
-    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR)
     US_CPrint(STR_MOUSEADJ);
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 #ifdef SPANISH
     PrintX = 14;
     PrintY = 95 + 13;
@@ -1919,7 +1919,7 @@ void DrawCtlScreen(void)
 #endif
     WindowX = 0;
     WindowW = 320;
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 
     if (IN_JoyPresent())
         CtlMenu[CTL_JOYENABLE].active = 1;
@@ -2082,10 +2082,10 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
             DrawRtn(1);
             DrawWindow(x - 2, PrintY, CST_SPC, 11, TEXTCOLOR);
             DrawOutline(x - 2, PrintY, CST_SPC, 11, 0, HIGHLIGHT);
-            SETFONTCOLOR(0, TEXTCOLOR);
+            SETFONTCOLOR(0, TEXTCOLOR)
             PrintRtn(which);
             PrintX = x;
-            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
             VW_UpdateScreen();
             WaitKeyUp();
             redraw = 0;
@@ -2106,7 +2106,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
         if ((type != input_t::KEYBOARDBTNS && type != input_t::KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3) || ((type == input_t::KEYBOARDBTNS || type == input_t::KEYBOARDMOVE) && LastScan == sc_Enter)) {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
-            SETFONTCOLOR(0, TEXTCOLOR);
+            SETFONTCOLOR(0, TEXTCOLOR)
 
             if (type == input_t::KEYBOARDBTNS || type == input_t::KEYBOARDMOVE)
                 IN_ClearKeysDown();
@@ -2221,7 +2221,7 @@ void EnterCtrlData(int index, CustomCtrls* cust, void (*DrawRtn)(int), void (*Pr
                 ReadAnyControl(&ci);
             }
 
-            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
             redraw = 1;
             WaitKeyUp();
             continue;
@@ -2372,7 +2372,7 @@ void DrawCustomScreen(void)
     //
     // MOUSE
     //
-    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR)
     WindowX = 0;
     WindowW = 320;
 
@@ -2384,7 +2384,7 @@ void DrawCustomScreen(void)
     VWB_DrawPic(128, 48, C_MOUSEPIC);
 #endif
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print(STR_CRUN);
@@ -2413,7 +2413,7 @@ void DrawCustomScreen(void)
     // JOYSTICK/PAD
     //
 #ifndef SPEAR
-    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR)
     US_CPrint("Joystick/Gravis GamePad\n");
 #else
     PrintY += 13;
@@ -2424,7 +2424,7 @@ void DrawCustomScreen(void)
     VWB_DrawPic(112, 120, C_KEYBOARDPIC);
 #endif
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print(STR_CRUN);
@@ -2452,12 +2452,12 @@ void DrawCustomScreen(void)
     // KEYBOARD
     //
 #ifndef SPEAR
-    SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READCOLOR, BKGDCOLOR)
     US_CPrint("Keyboard\n");
 #else
     PrintY += 13;
 #endif
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print(STR_CRUN);
@@ -2484,7 +2484,7 @@ void DrawCustomScreen(void)
     //
     // KEYBOARD MOVE KEYS
     //
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
 #ifdef SPANISH
     PrintX = 4;
     US_Print(STR_LEFT);
@@ -2540,10 +2540,10 @@ void DrawCustMouse(int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR(color, BKGDCOLOR);
+    SETFONTCOLOR(color, BKGDCOLOR)
 
     if (!mouseenabled) {
-        SETFONTCOLOR(DEACTIVE, BKGDCOLOR);
+        SETFONTCOLOR(DEACTIVE, BKGDCOLOR)
         CusMenu[0].active = 0;
     } else
         CusMenu[0].active = 1;
@@ -2571,10 +2571,10 @@ void DrawCustJoy(int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR(color, BKGDCOLOR);
+    SETFONTCOLOR(color, BKGDCOLOR)
 
     if (!joystickenabled) {
-        SETFONTCOLOR(DEACTIVE, BKGDCOLOR);
+        SETFONTCOLOR(DEACTIVE, BKGDCOLOR)
         CusMenu[3].active = 0;
     } else
         CusMenu[3].active = 1;
@@ -2597,7 +2597,7 @@ void DrawCustKeybd(int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR(color, BKGDCOLOR);
+    SETFONTCOLOR(color, BKGDCOLOR)
 
     PrintY = CST_Y + 13 * 8;
     for (i = 0; i < 4; i++)
@@ -2617,7 +2617,7 @@ void DrawCustKeys(int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR(color, BKGDCOLOR);
+    SETFONTCOLOR(color, BKGDCOLOR)
 
     PrintY = CST_Y + 13 * 10;
     for (i = 0; i < 4; i++)
@@ -2719,7 +2719,7 @@ void DrawChangeView(int view)
     PrintY = (screenHeight / scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320; // TODO: Check this!
-    SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR);
+    SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR)
 
     US_CPrint(STR_SIZE1 "\n");
     US_CPrint(STR_SIZE2 "\n");
@@ -2884,7 +2884,7 @@ void UnCacheLump(int lumpstart, int lumpend)
 
     for (i = lumpstart; i <= lumpend; i++)
         if (grsegs[i])
-            UNCACHEGRCHUNK(i);
+            UNCACHEGRCHUNK(i)
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -2923,7 +2923,7 @@ void SetupControlPanel(void)
     CacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
 
-    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
     fontnumber = 1;
     WindowH = 200;
     if (screenHeight % 200 != 0)
@@ -3287,9 +3287,9 @@ void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items)
         if ((items + i)->active)
             US_Print((items + i)->string);
         else {
-            SETFONTCOLOR(DEACTIVE, BKGDCOLOR);
+            SETFONTCOLOR(DEACTIVE, BKGDCOLOR)
             US_Print((items + i)->string);
-            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR(TEXTCOLOR, BKGDCOLOR)
         }
 
         US_Print("\n");
@@ -3304,9 +3304,9 @@ void DrawMenu(CP_iteminfo* item_i, CP_itemtype* items)
 void SetTextColor(CP_itemtype* items, int hlight)
 {
     if (hlight) {
-        SETFONTCOLOR(color_hlite[items->active], BKGDCOLOR);
+        SETFONTCOLOR(color_hlite[items->active], BKGDCOLOR)
     } else {
-        SETFONTCOLOR(color_norml[items->active], BKGDCOLOR);
+        SETFONTCOLOR(color_norml[items->active], BKGDCOLOR)
     }
 }
 
@@ -3332,7 +3332,7 @@ void ReadAnyControl(ControlInfo* ci)
 {
     int mouseactive = 0;
 
-    IN_ReadControl(0, ci);
+    IN_ReadControl(ci);
 
     if (mouseenabled && IN_IsInputGrabbed()) {
         int mousex, mousey, buttons;
@@ -3551,7 +3551,7 @@ void Message(const char* string)
 
     DrawWindow(WindowX - 5, PrintY - 5, mw + 10, h + 10, TEXTCOLOR);
     DrawOutline(WindowX - 5, PrintY - 5, mw + 10, h + 10, 0, HIGHLIGHT);
-    SETFONTCOLOR(0, TEXTCOLOR);
+    SETFONTCOLOR(0, TEXTCOLOR)
     US_Print(string);
     VW_UpdateScreen();
 }
@@ -3569,7 +3569,7 @@ int StartCPMusic(int song)
 
     lastmusic = song;
     lastoffs = SD_MusicOff();
-    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
+    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic)
 
     SD_StartMusic(STARTMUSIC + song);
     return lastoffs;
@@ -3577,7 +3577,7 @@ int StartCPMusic(int song)
 
 void FreeMusic(void)
 {
-    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic);
+    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic)
 }
 
 ///////////////////////////////////////////////////////////////////////////

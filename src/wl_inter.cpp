@@ -264,16 +264,16 @@ void Victory(void)
     fontnumber = 1;
 
     VW_UpdateScreen();
-    VW_FadeIn();
+    VW_FadeIn()
 
     IN_Ack();
 
-    VW_FadeOut();
+    VW_FadeOut()
     if (screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
 #ifndef SPEAR
-    UNCACHEGRCHUNK(C_TIMECODEPIC);
+    UNCACHEGRCHUNK(C_TIMECODEPIC)
 #endif
     UnCacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
 
@@ -299,19 +299,19 @@ void Victory(void)
 
 void PG13(void)
 {
-    VW_FadeOut();
+    VW_FadeOut()
     VWB_Bar(0, 0, 320, 200, 0x82); // background
 
     CA_CacheGrChunk(PG13PIC);
     VWB_DrawPic(216, 110, PG13PIC);
     VW_UpdateScreen();
 
-    UNCACHEGRCHUNK(PG13PIC);
+    UNCACHEGRCHUNK(PG13PIC)
 
-    VW_FadeIn();
+    VW_FadeIn()
     IN_UserInput(TickBase * 7);
 
-    VW_FadeOut();
+    VW_FadeOut()
 }
 #endif
 
@@ -619,7 +619,7 @@ void LevelCompleted(void)
         VWB_DrawPic(i, 10 * 8, L_NUM0PIC + (sec % 10));
 
         VW_UpdateScreen();
-        VW_FadeIn();
+        VW_FadeIn()
 
         //
         // FIGURE RATIOS OUT BEFOREHAND
@@ -842,7 +842,7 @@ void LevelCompleted(void)
         Write(10, 16, "15000 bonus!");
 
         VW_UpdateScreen();
-        VW_FadeIn();
+        VW_FadeIn()
 
         GivePoints(15000);
     }
@@ -890,7 +890,7 @@ void LevelCompleted(void)
     }
 #endif
 
-    VW_FadeOut();
+    VW_FadeOut()
     DrawPlayBorder();
 
     UnCacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
@@ -947,12 +947,12 @@ void PreloadGraphics(void)
     WindowH = scaleFactor * 48;
 
     VW_UpdateScreen();
-    VW_FadeIn();
+    VW_FadeIn()
 
     //      PM_Preload (PreloadUpdate);
     PreloadUpdate(10, 10);
     IN_UserInput(70);
-    VW_FadeOut();
+    VW_FadeOut()
 
     DrawPlayBorder();
     VW_UpdateScreen();
@@ -995,7 +995,7 @@ void DrawHighScores(void)
     DrawStripes(10);
 
     VWB_DrawPic(48, 0, HIGHSCORESPIC);
-    UNCACHEGRCHUNK(HIGHSCORESPIC);
+    UNCACHEGRCHUNK(HIGHSCORESPIC)
 
 #ifndef APOGEE_1_0
     VWB_DrawPic(4 * 8, 68, C_NAMEPIC);
@@ -1020,7 +1020,7 @@ void DrawHighScores(void)
 #endif
 
 #ifndef SPEAR
-    SETFONTCOLOR(15, 0x29);
+    SETFONTCOLOR(15, 0x29)
 #else
     SETFONTCOLOR(HIGHLIGHT, 0x29);
 #endif
@@ -1158,7 +1158,7 @@ void CheckHighScore(int32_t score, word other)
 #endif
     DrawHighScores();
 
-    VW_FadeIn();
+    VW_FadeIn()
 
     if (n != -1) {
         //
@@ -1195,7 +1195,7 @@ void CheckHighScore(int32_t score, word other)
 ////////////////////////////////////////////////////////
 void NonShareware(void)
 {
-    VW_FadeOut();
+    VW_FadeOut()
 
     ClearMScreen();
     DrawStripes(10);
@@ -1203,7 +1203,7 @@ void NonShareware(void)
     CA_CacheGrChunk(STARTFONT + 1);
     fontnumber = 1;
 
-    SETFONTCOLOR(READHCOLOR, BKGDCOLOR);
+    SETFONTCOLOR(READHCOLOR, BKGDCOLOR)
     PrintX = 110;
     PrintY = 15;
 
@@ -1213,7 +1213,7 @@ void NonShareware(void)
     US_Print("Attention");
 #endif
 
-    SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR);
+    SETFONTCOLOR(HIGHLIGHT, BKGDCOLOR)
     WindowX = PrintX = 40;
     PrintY = 60;
 #ifdef SPANISH
@@ -1228,7 +1228,7 @@ void NonShareware(void)
     US_Print("        Id Software\n");
 
     VW_UpdateScreen();
-    VW_FadeIn();
+    VW_FadeIn()
     IN_Ack();
 }
 #endif
