@@ -44,7 +44,7 @@ void EndScreen(int palette, int screen)
     CA_CacheGrChunk(palette);
     VL_ConvertPalette(grsegs[palette], pal, 256);
     VL_FadeIn(0, 255, pal, 30);
-    UNCACHEGRCHUNK(palette);
+    UnCacheGrChunk(palette);
     IN_ClearKeysDown();
     IN_Ack();
     VW_FadeOut();
@@ -61,7 +61,7 @@ void EndSpear(void)
     CA_CacheGrChunk(END3PALETTE);
     VL_ConvertPalette(grsegs[END3PALETTE], pal, 256);
     VL_FadeIn(0, 255, pal, 30);
-    UNCACHEGRCHUNK(END3PALETTE);
+    UnCacheGrChunk(END3PALETTE);
     fontnumber = 0;
     fontcolor = 0xd0;
     WindowX = 0;
@@ -142,10 +142,10 @@ void Victory(void)
     VW_UpdateScreen();
     VW_WaitVBL(3 * 70);
 
-    UNCACHEGRCHUNK(BJCOLLAPSE1PIC);
-    UNCACHEGRCHUNK(BJCOLLAPSE2PIC);
-    UNCACHEGRCHUNK(BJCOLLAPSE3PIC);
-    UNCACHEGRCHUNK(BJCOLLAPSE4PIC);
+    UnCacheGrChunk(BJCOLLAPSE1PIC);
+    UnCacheGrChunk(BJCOLLAPSE2PIC);
+    UnCacheGrChunk(BJCOLLAPSE3PIC);
+    UnCacheGrChunk(BJCOLLAPSE4PIC);
     VL_FadeOut(0, 255, 0, 17, 17, 5);
 #endif
 
@@ -166,7 +166,7 @@ void Victory(void)
 #ifndef JAPDEMO
     CA_CacheGrChunk(C_ENDRATIOSPIC);
     VWB_DrawPic(0, 0, C_ENDRATIOSPIC);
-    UNCACHEGRCHUNK(C_ENDRATIOSPIC);
+    UnCacheGrChunk(C_ENDRATIOSPIC);
 #endif
 #else
     Write(18, 2, STR_YOUWIN);
@@ -266,14 +266,13 @@ void Victory(void)
     VW_UpdateScreen();
     VW_FadeIn()
 
-    IN_Ack();
+        IN_Ack();
 
-    VW_FadeOut()
-    if (screenHeight % 200 != 0)
+    VW_FadeOut() if (screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
 #ifndef SPEAR
-    UNCACHEGRCHUNK(C_TIMECODEPIC)
+    UnCacheGrChunk(C_TIMECODEPIC);
 #endif
     UnCacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
 
@@ -300,16 +299,16 @@ void Victory(void)
 void PG13(void)
 {
     VW_FadeOut()
-    VWB_Bar(0, 0, 320, 200, 0x82); // background
+        VWB_Bar(0, 0, 320, 200, 0x82); // background
 
     CA_CacheGrChunk(PG13PIC);
     VWB_DrawPic(216, 110, PG13PIC);
     VW_UpdateScreen();
 
-    UNCACHEGRCHUNK(PG13PIC)
+    UnCacheGrChunk(PG13PIC);
 
     VW_FadeIn()
-    IN_UserInput(TickBase * 7);
+        IN_UserInput(TickBase * 7);
 
     VW_FadeOut()
 }
@@ -549,7 +548,7 @@ void LevelCompleted(void)
 #ifdef JAPAN
     CA_CacheGrChunk(C_INTERMISSIONPIC);
     VWB_DrawPic(0, 0, C_INTERMISSIONPIC);
-    UNCACHEGRCHUNK(C_INTERMISSIONPIC);
+    UnCacheGrChunk(C_INTERMISSIONPIC);
 #endif
     VWB_DrawPic(0, 16, L_GUYPIC);
 
@@ -621,10 +620,11 @@ void LevelCompleted(void)
         VW_UpdateScreen();
         VW_FadeIn()
 
-        //
-        // FIGURE RATIOS OUT BEFOREHAND
-        //
-        kr = sr = tr = 0;
+            //
+            // FIGURE RATIOS OUT BEFOREHAND
+            //
+            kr
+            = sr = tr = 0;
         if (gamestate.killtotal)
             kr = (gamestate.killcount * 100) / gamestate.killtotal;
         if (gamestate.secrettotal)
@@ -844,7 +844,7 @@ void LevelCompleted(void)
         VW_UpdateScreen();
         VW_FadeIn()
 
-        GivePoints(15000);
+            GivePoints(15000);
     }
 
     DrawScore();
@@ -867,7 +867,7 @@ void LevelCompleted(void)
                 "of Spear of Destiny! Now,\n"
                 "go to your local software\n"
                 "store and buy it!");
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UnCacheGrChunk(STARTFONT + 1);
 
         IN_ClearKeysDown();
         IN_Ack();
@@ -883,7 +883,7 @@ void LevelCompleted(void)
                 "of Wolfenstein 3-D! Now,\n"
                 "go to your local software\n"
                 "store and buy it!");
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UnCacheGrChunk(STARTFONT + 1);
 
         IN_ClearKeysDown();
         IN_Ack();
@@ -891,7 +891,7 @@ void LevelCompleted(void)
 #endif
 
     VW_FadeOut()
-    DrawPlayBorder();
+        DrawPlayBorder();
 
     UnCacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
 }
@@ -908,8 +908,7 @@ void LevelCompleted(void)
 =================
 */
 
-bool
-PreloadUpdate(unsigned current, unsigned total)
+bool PreloadUpdate(unsigned current, unsigned total)
 {
     unsigned w = WindowW - scaleFactor * 10;
 
@@ -949,12 +948,12 @@ void PreloadGraphics(void)
     VW_UpdateScreen();
     VW_FadeIn()
 
-    //      PM_Preload (PreloadUpdate);
-    PreloadUpdate(10, 10);
+        //      PM_Preload (PreloadUpdate);
+        PreloadUpdate(10, 10);
     IN_UserInput(70);
     VW_FadeOut()
 
-    DrawPlayBorder();
+        DrawPlayBorder();
     VW_UpdateScreen();
 }
 
@@ -995,7 +994,7 @@ void DrawHighScores(void)
     DrawStripes(10);
 
     VWB_DrawPic(48, 0, HIGHSCORESPIC);
-    UNCACHEGRCHUNK(HIGHSCORESPIC)
+    UnCacheGrChunk(HIGHSCORESPIC);
 
 #ifndef APOGEE_1_0
     VWB_DrawPic(4 * 8, 68, C_NAMEPIC);
@@ -1160,7 +1159,8 @@ void CheckHighScore(int32_t score, word other)
 
     VW_FadeIn()
 
-    if (n != -1) {
+        if (n != -1)
+    {
         //
         // got a high score
         //
@@ -1179,7 +1179,9 @@ void CheckHighScore(int32_t score, word other)
         fontcolor = 15;
         US_LineInput(PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
 #endif
-    } else {
+    }
+    else
+    {
         IN_ClearKeysDown();
         IN_UserInput(500);
     }
@@ -1197,7 +1199,7 @@ void NonShareware(void)
 {
     VW_FadeOut()
 
-    ClearMScreen();
+        ClearMScreen();
     DrawStripes(10);
 
     CA_CacheGrChunk(STARTFONT + 1);
@@ -1229,7 +1231,7 @@ void NonShareware(void)
 
     VW_UpdateScreen();
     VW_FadeIn()
-    IN_Ack();
+        IN_Ack();
 }
 #endif
 #endif
@@ -1609,8 +1611,8 @@ void CopyProtection(void)
 
             SD_PlaySound(BONUS1UPSND);
             SD_WaitSoundDone();
-            UNCACHEGRCHUNK(STARTFONT + 1);
-            UNCACHEGRCHUNK(C_BACKDROPPIC);
+            UnCacheGrChunk(STARTFONT + 1);
+            UnCacheGrChunk(C_BACKDROPPIC);
             UnCacheLump(COPYPROT_LUMP_START, COPYPROT_LUMP_END);
 
             switch (SoundMode) {

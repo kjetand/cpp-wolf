@@ -1490,15 +1490,15 @@ static void DemoLoop()
 
             CA_CacheGrChunk(TITLE1PIC);
             VWB_DrawPic(0, 0, TITLE1PIC);
-            UNCACHEGRCHUNK(TITLE1PIC);
+            UnCacheGrChunk(TITLE1PIC);
 
             CA_CacheGrChunk(TITLE2PIC);
             VWB_DrawPic(0, 80, TITLE2PIC);
-            UNCACHEGRCHUNK(TITLE2PIC);
+            UnCacheGrChunk(TITLE2PIC);
             VW_UpdateScreen();
             VL_FadeIn(0, 255, pal, 30);
 
-            UNCACHEGRCHUNK(TITLEPALETTE);
+            UnCacheGrChunk(TITLEPALETTE);
 #else
             CA_CacheScreen(TITLEPIC);
             VW_UpdateScreen();

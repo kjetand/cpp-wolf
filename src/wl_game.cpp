@@ -1134,7 +1134,7 @@ void PlayDemo(int demonumber)
     PlayLoop();
 
 #ifdef DEMOSEXTERN
-    UNCACHEGRCHUNK(dems[demonumber])
+    UnCacheGrChunk(dems[demonumber]);
 #else
     MM_FreePtr(&demobuffer);
 #endif

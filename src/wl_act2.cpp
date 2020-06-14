@@ -3618,7 +3618,7 @@ void A_StartDeathCam(objstruct* ob)
         PrintX = 68;
         PrintY = 45;
         US_Print(STR_SEEAGAIN);
-        UNCACHEGRCHUNK(STARTFONT + 1)
+        UnCacheGrChunk(STARTFONT + 1);
     } else {
         CacheLump(LEVELEND_LUMP_START, LEVELEND_LUMP_END);
 #ifdef JAPAN

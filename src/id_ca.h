@@ -6,20 +6,8 @@
 #define NUMMAPS   60
 #define MAPPLANES 2
 
-#define UNCACHEGRCHUNK(chunk)     \
-    {                             \
-        if (grsegs[chunk]) {      \
-            free(grsegs[chunk]);  \
-            grsegs[chunk] = NULL; \
-        }                         \
-    }
-#define UNCACHEAUDIOCHUNK(chunk)     \
-    {                                \
-        if (audiosegs[chunk]) {      \
-            free(audiosegs[chunk]);  \
-            audiosegs[chunk] = NULL; \
-        }                            \
-    }
+void UnCacheGrChunk(int chunk) noexcept;
+void UnCacheAudioChunk(int chunk) noexcept;
 
 //===========================================================================
 

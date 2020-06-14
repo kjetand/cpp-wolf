@@ -496,11 +496,11 @@ void US_ControlPanel(ScanCode scancode)
 
             CA_CacheGrChunk(IDGUYS1PIC);
             VWB_DrawPic(0, 0, IDGUYS1PIC);
-            UNCACHEGRCHUNK(IDGUYS1PIC);
+            UnCacheGrChunk(IDGUYS1PIC);
 
             CA_CacheGrChunk(IDGUYS2PIC);
             VWB_DrawPic(0, 80, IDGUYS2PIC);
-            UNCACHEGRCHUNK(IDGUYS2PIC);
+            UnCacheGrChunk(IDGUYS2PIC);
 
             VW_UpdateScreen();
 
@@ -508,7 +508,7 @@ void US_ControlPanel(ScanCode scancode)
             CA_CacheGrChunk(IDGUYSPALETTE);
             VL_ConvertPalette(grsegs[IDGUYSPALETTE], pal, 256);
             VL_FadeIn(0, 255, pal, 30);
-            UNCACHEGRCHUNK(IDGUYSPALETTE);
+            UnCacheGrChunk(IDGUYSPALETTE);
 
             while (Keyboard[sc_I] || Keyboard[sc_D])
                 IN_WaitAndProcessEvents();
@@ -624,10 +624,10 @@ void DrawMainMenu(void)
 #else
         CA_CacheGrChunk(C_MRETGAMEPIC);
         VWB_DrawPic(12 * 8, 20 * 8, C_MRETGAMEPIC);
-        UNCACHEGRCHUNK(C_MRETGAMEPIC);
+        UnCacheGrChunk(C_MRETGAMEPIC);
         CA_CacheGrChunk(C_MENDGAMEPIC);
         VWB_DrawPic(12 * 8, 18 * 8, C_MENDGAMEPIC);
-        UNCACHEGRCHUNK(C_MENDGAMEPIC);
+        UnCacheGrChunk(C_MENDGAMEPIC);
 #endif
         MainMenu[static_cast<byte>(menuitems::backtodemo)].active = 2;
     } else {
@@ -640,10 +640,10 @@ void DrawMainMenu(void)
 #else
         CA_CacheGrChunk(C_MRETDEMOPIC);
         VWB_DrawPic(12 * 8, 20 * 8, C_MRETDEMOPIC);
-        UNCACHEGRCHUNK(C_MRETDEMOPIC);
+        UnCacheGrChunk(C_MRETDEMOPIC);
         CA_CacheGrChunk(C_MSCORESPIC);
         VWB_DrawPic(12 * 8, 18 * 8, C_MSCORESPIC);
-        UNCACHEGRCHUNK(C_MSCORESPIC);
+        UnCacheGrChunk(C_MSCORESPIC);
 #endif
         MainMenu[static_cast<byte>(menuitems::backtodemo)].active = 1;
     }
@@ -788,8 +788,7 @@ int CP_CheckQuick(ScanCode scancode)
             CA_CacheGrChunk(C_CURSOR1PIC);
 #endif
 
-            VW_FadeOut()
-            if (screenHeight % 200 != 0)
+            VW_FadeOut() if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 
             lastgamemusicoffset = StartCPMusic(MENUSONG);
@@ -797,8 +796,7 @@ int CP_CheckQuick(ScanCode scancode)
 
             SETFONTCOLOR(0, 15)
             IN_ClearKeysDown();
-            VW_FadeOut()
-            if (viewsize != 21)
+            VW_FadeOut() if (viewsize != 21)
                 DrawPlayScreen();
 
             if (!startgame && !loadedgame)
@@ -812,12 +810,12 @@ int CP_CheckQuick(ScanCode scancode)
                 IN_CenterMouse(); // Clear accumulated mouse movement
 
 #ifndef SPEAR
-            UNCACHEGRCHUNK(C_CURSOR1PIC)
-            UNCACHEGRCHUNK(C_CURSOR2PIC)
-            UNCACHEGRCHUNK(C_DISKLOADING1PIC)
-            UNCACHEGRCHUNK(C_DISKLOADING2PIC)
-            UNCACHEGRCHUNK(C_SAVEGAMEPIC)
-            UNCACHEGRCHUNK(C_MOUSELBACKPIC)
+            UnCacheGrChunk(C_CURSOR1PIC);
+            UnCacheGrChunk(C_CURSOR2PIC);
+            UnCacheGrChunk(C_DISKLOADING1PIC);
+            UnCacheGrChunk(C_DISKLOADING2PIC);
+            UnCacheGrChunk(C_SAVEGAMEPIC);
+            UnCacheGrChunk(C_MOUSELBACKPIC);
 #else
             UnCacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -855,8 +853,7 @@ int CP_CheckQuick(ScanCode scancode)
             CacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
 
-            VW_FadeOut()
-            if (screenHeight % 200 != 0)
+            VW_FadeOut() if (screenHeight % 200 != 0)
                 VL_ClearScreen(0);
 
             lastgamemusicoffset = StartCPMusic(MENUSONG);
@@ -864,8 +861,7 @@ int CP_CheckQuick(ScanCode scancode)
 
             SETFONTCOLOR(0, 15)
             IN_ClearKeysDown();
-            VW_FadeOut()
-            if (viewsize != 21)
+            VW_FadeOut() if (viewsize != 21)
                 DrawPlayScreen();
 
             if (!startgame && !loadedgame)
@@ -880,12 +876,12 @@ int CP_CheckQuick(ScanCode scancode)
                 IN_CenterMouse(); // Clear accumulated mouse movement
 
 #ifndef SPEAR
-            UNCACHEGRCHUNK(C_CURSOR1PIC)
-            UNCACHEGRCHUNK(C_CURSOR2PIC)
-            UNCACHEGRCHUNK(C_DISKLOADING1PIC)
-            UNCACHEGRCHUNK(C_DISKLOADING2PIC)
-            UNCACHEGRCHUNK(C_LOADGAMEPIC)
-            UNCACHEGRCHUNK(C_MOUSELBACKPIC)
+            UnCacheGrChunk(C_CURSOR1PIC);
+            UnCacheGrChunk(C_CURSOR2PIC);
+            UnCacheGrChunk(C_DISKLOADING1PIC);
+            UnCacheGrChunk(C_DISKLOADING2PIC);
+            UnCacheGrChunk(C_LOADGAMEPIC);
+            UnCacheGrChunk(C_MOUSELBACKPIC);
 #else
             UnCacheLump(BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -2884,7 +2880,7 @@ void UnCacheLump(int lumpstart, int lumpend)
 
     for (i = lumpstart; i <= lumpend; i++)
         if (grsegs[i])
-            UNCACHEGRCHUNK(i)
+            UnCacheGrChunk(i);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3476,7 +3472,7 @@ int GetYorN(int x, int y, int pic)
 
     CA_CacheGrChunk(pic);
     VWB_DrawPic(x * 8, y * 8, pic);
-    UNCACHEGRCHUNK(pic);
+    UnCacheGrChunk(pic);
     VW_UpdateScreen();
     IN_ClearKeysDown();
 
@@ -3569,7 +3565,7 @@ int StartCPMusic(int song)
 
     lastmusic = song;
     lastoffs = SD_MusicOff();
-    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic)
+    UnCacheAudioChunk(STARTMUSIC + lastmusic);
 
     SD_StartMusic(STARTMUSIC + song);
     return lastoffs;
@@ -3577,7 +3573,7 @@ int StartCPMusic(int song)
 
 void FreeMusic(void)
 {
-    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusic)
+    UnCacheAudioChunk(STARTMUSIC + lastmusic);
 }
 
 ///////////////////////////////////////////////////////////////////////////

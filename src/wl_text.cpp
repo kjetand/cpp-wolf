@@ -743,14 +743,14 @@ void HelpScreens(void)
     ShowArticle(text);
 
 #ifdef ARTSEXTERN
-    UNCACHEGRCHUNK(artnum)
+    UnCacheGrChunk(artnum);
 #else
     free(layout);
 #endif
 
     VW_FadeOut()
 
-    FreeMusic();
+        FreeMusic();
 #endif
 }
 #endif
@@ -794,14 +794,14 @@ void EndText(void)
     ShowArticle(text);
 
 #ifdef ARTSEXTERN
-    UNCACHEGRCHUNK(artnum)
+    UnCacheGrChunk(artnum);
 #else
     free(layout);
 #endif
 
     VW_FadeOut()
-    SETFONTCOLOR(0, 15)
-    IN_ClearKeysDown();
+        SETFONTCOLOR(0, 15)
+            IN_ClearKeysDown();
     if (MousePresent && IN_IsInputGrabbed())
         IN_CenterMouse(); // Clear accumulated mouse movement
 

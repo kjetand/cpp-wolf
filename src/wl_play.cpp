@@ -560,7 +560,7 @@ void CheckKeys()
 
         Message(STR_CHEATER1 "\n" STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UnCacheGrChunk(STARTFONT + 1);
         IN_ClearKeysDown();
         IN_Ack();
 
@@ -578,7 +578,7 @@ void CheckKeys()
         ClearSplitVWB();
 
         Message("Debugging keys are\nnow available!");
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UnCacheGrChunk(STARTFONT + 1);
         IN_ClearKeysDown();
         IN_Ack();
 
@@ -600,7 +600,7 @@ void CheckKeys()
                 "then, you already know\n"
                 "that - right, Cheatmeister?!");
 
-        UNCACHEGRCHUNK(STARTFONT + 1);
+        UnCacheGrChunk(STARTFONT + 1);
         IN_ClearKeysDown();
         IN_Ack();
 
@@ -846,7 +846,7 @@ int StopMusic()
 {
     int lastoffs = SD_MusicOff();
 
-    UNCACHEAUDIOCHUNK(STARTMUSIC + lastmusicchunk);
+    UnCacheAudioChunk(STARTMUSIC + lastmusicchunk);
 
     return lastoffs;
 }

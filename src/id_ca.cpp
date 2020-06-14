@@ -23,6 +23,8 @@ loaded into the data segment
 #endif
 
 #include "wl_def.h"
+#include "id_ca.h"
+
 #pragma hdrstop
 
 #define THREEBYTEGRSTARTS
@@ -658,7 +660,7 @@ void CA_Shutdown(void)
         close(audiohandle);
 
     for (i = 0; i < NUMCHUNKS; i++)
-        UNCACHEGRCHUNK(i)
+        UnCacheGrChunk(i);
     free(pictable);
 
     switch (oldsoundmode) {
@@ -673,7 +675,7 @@ void CA_Shutdown(void)
     }
 
     for (i = 0; i < NUMSOUNDS; i++, start++)
-        UNCACHEAUDIOCHUNK(start)
+        UnCacheAudioChunk(start);
 }
 
 //===========================================================================
@@ -771,7 +773,7 @@ void CA_LoadAllSounds(void)
     }
 
     for (i = 0; i < NUMSOUNDS; i++, start++)
-        UNCACHEAUDIOCHUNK(start)
+        UnCacheAudioChunk(start);
 
 cachein:
 
@@ -1044,4 +1046,18 @@ void CA_CannotOpen(const char* string)
     strcat(str, string);
     strcat(str, "!\n");
     Quit(str);
+}
+void UnCacheGrChunk(const int chunk) noexcept
+{
+    if (grsegs[chunk]) {
+        free(grsegs[chunk]);
+        grsegs[chunk] = nullptr;
+    }
+}
+void UnCacheAudioChunk(const int chunk) noexcept
+{
+    if (audiosegs[chunk]) {
+        free(audiosegs[chunk]);
+        audiosegs[chunk] = nullptr;
+    }
 }
